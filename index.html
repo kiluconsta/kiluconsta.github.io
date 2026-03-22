@@ -418,6 +418,26 @@
 </head>
 <body>
 
+
+  <!-- ── PROXY CONFIG — set your Cloudflare Worker URL here ── -->
+  <script>
+    // Replace this with your deployed worker URL (no trailing slash)
+    var PROXY = 'https://young-truth-052a.kiluconsta.workers.dev/';
+
+    var PROXY_HOSTS = ['twimg.com', 'coomer.st', 'redgifs.com'];
+
+    function proxyUrl(url) {
+      if (!url || !PROXY) return url;
+      try {
+        var host = new URL(url).hostname;
+        var needsProxy = PROXY_HOSTS.some(function(h) {
+          return host === h || host.endsWith('.' + h);
+        });
+        return needsProxy ? PROXY + '?url=' + encodeURIComponent(url) : url;
+      } catch(e) { return url; }
+    }
+  </script>
+
 <!-- ══════════════════════════════════════════════════════════════════
      THE VAULT — SECTION REGISTRY
      To add a new section:
@@ -1137,7 +1157,7 @@
 
   // ── Helpers ──────────────────────────────────────────────────
   function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
-  function getSrcUrl(s) { return getEntry(s).url; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
   function getStart(s)  { return getEntry(s).start || 0; }
   function getEnd(s)    { return getEntry(s).end   || null; }
 
@@ -2627,7 +2647,7 @@
 
   // ── Helpers ──────────────────────────────────────────────────
   function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
-  function getSrcUrl(s) { return getEntry(s).url; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
   function getStart(s)  { return getEntry(s).start || 0; }
   function getEnd(s)    { return getEntry(s).end   || null; }
 
@@ -3243,7 +3263,7 @@
 
   // ── Helpers ──────────────────────────────────────────────────
   function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
-  function getSrcUrl(s) { return getEntry(s).url; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
   function getStart(s)  { return getEntry(s).start || 0; }
   function getEnd(s)    { return getEntry(s).end   || null; }
 
@@ -3656,7 +3676,7 @@
 
   // ── Helpers ──────────────────────────────────────────────────
   function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
-  function getSrcUrl(s) { return getEntry(s).url; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
   function getStart(s)  { return getEntry(s).start || 0; }
   function getEnd(s)    { return getEntry(s).end   || null; }
 
@@ -5135,7 +5155,7 @@
 
   // ── Helpers ──────────────────────────────────────────────────
   function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
-  function getSrcUrl(s) { return getEntry(s).url; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
   function getStart(s)  { return getEntry(s).start || 0; }
   function getEnd(s)    { return getEntry(s).end   || null; }
 
@@ -5512,7 +5532,7 @@
 
   // ── Helpers ──────────────────────────────────────────────────
   function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
-  function getSrcUrl(s) { return getEntry(s).url; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
   function getStart(s)  { return getEntry(s).start || 0; }
   function getEnd(s)    { return getEntry(s).end   || null; }
 
@@ -6176,7 +6196,7 @@
 
   // ── Helpers ──────────────────────────────────────────────────
   function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
-  function getSrcUrl(s) { return getEntry(s).url; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
   function getStart(s)  { return getEntry(s).start || 0; }
   function getEnd(s)    { return getEntry(s).end   || null; }
 
