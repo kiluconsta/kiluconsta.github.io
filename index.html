@@ -30,25 +30,17 @@
     }
 
     /* ── ANIMATED GRADIENT BACKGROUND ── */
-    /* Fixed pseudo-element sits behind all content via isolation */
-    body {
-      isolation: isolate;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
+    html {
+      min-height: 100%;
       background:
         radial-gradient(ellipse 55% 45% at 15% 25%, rgba(0, 80, 255, 0.7) 0%, transparent 65%),
         radial-gradient(ellipse 45% 55% at 85% 75%, rgba(220, 0, 180, 0.65) 0%, transparent 65%),
         radial-gradient(ellipse 65% 35% at 65% 15%, rgba(255, 0, 200, 0.5) 0%, transparent 60%),
         radial-gradient(ellipse 35% 50% at 25% 85%, rgba(0, 30, 200, 0.55) 0%, transparent 60%),
         #000008;
-      background-size: 400% 400%;
+      background-size: 200% 200%;
+      background-attachment: scroll;
       animation: gradientShift 14s ease-in-out infinite alternate;
-      z-index: -1;
-      pointer-events: none;
     }
 
     @keyframes gradientShift {
