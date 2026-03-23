@@ -555,6 +555,12 @@
         <div class="tile-label">GIFs</div>
         <div class="tile-bar"></div>
       </div>
+      <div class="home-tile" data-sec="sec12" style="--accent:#BF40BF;">
+        <div class="tile-glow"></div>
+        <div class="tile-icon">🦹🏾‍♂️</div>
+        <div class="tile-label">Animations</div>
+        <div class="tile-bar"></div>
+      </div> 
     </div>
   </div>
   <button id="globalLoopToggle" class="vs-loop-toggle" title="Toggle video loop">&#x1F501; Loop</button>
@@ -9355,6 +9361,422 @@
     </script>
   </div>
 
+  <div id="sec12" class="content-section" data-color="#BF40BF">
+    <button class="back-btn" onclick="showHome()">&#8592; Back</button>
+    <div class="vs-body">
+      <div class="vs-lightbox">
+        <div class="vs-backdrop"></div>
+        <button class="vs-lb-close">&times;</button>
+        <button class="vs-lb-prev">&#10094;</button>
+        <div class="vs-lb-video-wrap">
+          <video class="vs-lb-video" controls playsinline></video>
+        </div>
+        <button class="vs-lb-next">&#10095;</button>
+        <div class="vs-lb-controls">
+          <button class="vs-btn-slideshow">&#9654; Slideshow</button>
+          <button class="vs-btn-shuffle">&#128256; Shuffle</button>
+          <button class="vs-btn-auto">&#10145;&#65039; Auto</button>
+          <button class="vs-btn-fullscreen">&#x26F6; Fullscreen</button>
+          <span class="vs-lb-counter"></span>
+        </div>
+      </div>
+      <video class="vs-scratch" muted crossorigin="anonymous" preload="none"></video>
+    </div>
+    <script>
+    (function() {
+      var __done = false;
+      function __init() {
+        if (__done) return; __done = true;
+        var SEC        = document.getElementById('sec12');
+        var SOURCES    = [
+      null,      
+      "https://video.cartoonsworld.vip/vid1/Atlantis%20the%20Lost%20Empire.mp4",
+      "https://video.cartoonsworld.vip/vid1/Aladdin%20&%20Flynn%20The%20Cursed%20Rod.mp4",
+      "https://api-cdn-us-mp4.rule34.xxx//images/1029/939c81ec39f74477dbae9c102ca94775.mp4?9562884",
+      "https://api-cdn-us-mp4.rule34.xxx//images/1838/c97eb1e3b5f7c4af21ea7edf45952096.mp4?10278934",
+      "https://api-cdn-us-mp4.rule34.xxx//images/1578/720adaacbfb0b42f6ce8d6db300eaf98.mp4?10257346",
+      "https://api-cdn-us-mp4.rule34.xxx//images/3103/d64d185065adfd2a77e0d5bfa6da8396.mp4?10146701",
+      "https://api-cdn-us-mp4.rule34.xxx//images/7751/e9c824f77efe9f0459b6c27714578737.mp4?8849228",
+      "https://ahrimp4.rule34.xxx//images/3472/583b57cf2faff2bdc11b8486ffd594db.mp4?8269989",
+      "https://webm.rule34.xxx//images/2075/30db94fd9ccc89d89275150e69d943c3.mp4?10101144",
+      "https://api-cdn-us-mp4.rule34.xxx//images/4818/e02fbce62f360e12f91226603a860084.mp4?5485864",
+      "https://api-cdn-us-mp4.rule34.xxx//images/4306/ff17a2ceaf7106804775ab580dd40c2f.mp4?4900859",
+      "https://api-cdn-us-mp4.rule34.xxx//images/2901/74a289aebcc1999cca19199f39a7877f.mp4?4603958",
+      "https://api-cdn-us-mp4.rule34.xxx//images/2239/70c082c3bf184be22ba178d67c1d9c5f.mp4?11078098",
+      "https://api-cdn-us-mp4.rule34.xxx//images/1861/51c99a62d9aeb72cc5409bedd7ae627c.mp4?10851594",
+      "https://ahrimp4.rule34.xxx//images/1667/281b48d237bdb620f92f17850f64c3c4.mp4?10806918",
+      "https://api-cdn-us-mp4.rule34.xxx//images/1326/bed9872165e56ce95a3c6549a45d5db7.mp4?10334653",
+      "https://api-cdn-us-mp4.rule34.xxx//images/1305/818bb988385422300a33ae4675862c0c.mp4?10050597",
+      "https://api-cdn-us-mp4.rule34.xxx//images/3822/87011aedb1bfb1902c9e03616f041f5e.mp4?4325676",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2020/08/20908921_MrX-Toon-H_5107738a218b8037fdb699b7498026c5.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2020/08/20909331_MrX-Toon-K_f6a490bc7274aacce3c71cc5ba6c5d7e.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2021/07/37775681_BoboComics_8bd520c696530dc77ceaa70be02d9ac9.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2021/02/30615171_hq_af4aaeb_d7c7b4a3a2a8c662f18566b3afa4b293.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2020/10/23232801_IMG_5782MP_fa66a0a1963b55d4b40fcf5b5b656371.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2021/03/32223901_Cockahonta_0b38f4f2b062075d721f79a3ce3a33b5.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2021/06/36424861_Copy_of_ba_83cd6c32daf7c6a966e0fe17b75c435c.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2021/06/36424881_moviemp4_9f9b51fba0776e081c471e073fd8d588.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2021/06/36424951_tuxedomov_6906e9c2f200f35fa8b00f8dc7273cac.mp4",
+      "https://cdn-videos.lpsg.com/data/video/131975/131975621-5a15da7ba2d426d53347ef45ff74890f.mp4",
+      "https://cdn-videos.lpsg.com/data/video/131975/131975631-425a9acc2997aa88a294e1e68fa7bab7.mp4",
+      "https://cdn-videos.lpsg.com/data/video/131975/131975641-823e9e96d7362a8613ea59669349f9b2.mp4",
+      "https://cdn-videos.lpsg.com/data/video/130000/130000091-62410bbe3a2897d47bb9ac1aadb09b29.mp4",
+      "https://cdn-videos.lpsg.com/data/video/131811/131811771-3b42657d0628f0988bff96dde25d5f90.mp4",
+      "https://cdn-videos.lpsg.com/data/video/131811/131811801-70751ea4103c992628c44d9e300c2851.mp4",
+      "https://cdn-videos.lpsg.com/data/video/109470/109470661-350c6afe75ef7fc6591028c86ab6a12e.mp4",
+      "https://cdn-videos.lpsg.com/data/video/108513/108513771-3e36125f9e9abce1a7f12dd1e4e3c52b.mp4",
+      "https://cdn-videos.lpsg.com/data/video/123799/123799101-20a422aa3719a5f657ca833a45651547.mp4",
+      null,
+      "https://cdn-videos.lpsg.com/data/video/58163/58163541-ee76aa100cc3b88c37fac5d05fd38f62.m4v",
+      "https://cdn-videos.lpsg.com/data/video/58163/58163581-936f278497dbf6019c76e332d6af012d.mp4",
+      "https://cdn-videos.lpsg.com/data/video/58163/58163611-7e422bf805b26b595b6d1e5cf9c42abd.m4v",
+      "https://cdn-videos.lpsg.com/data/video/58163/58163631-0453433b053f5280fb1a22e129cd4721.m4v",
+      "https://cdn-videos.lpsg.com/data/video/58163/58163691-5153675e3efb0326c64c8b861708537f.m4v",
+      "https://cdn-videos.lpsg.com/data/video/70888/70888491-62b2ea3868d511b27ab51bd537d8b82b.m4v",
+      "https://cdn-videos.lpsg.com/data/video/70888/70888531-8cccbaeee8c1d29a36bfc0783b9660c0.m4v",
+      "https://cdn-videos.lpsg.com/data/video/70888/70888451-5d8b023b5b372419b4a41e3aed81de07.m4v",
+      "https://cdn-videos.lpsg.com/data/video/134381/134381751-8c484f8c4c5d820ef55a871e78f1a771.m4v",
+      "https://cdn-videos.lpsg.com/data/video/116001/116001121-596c340019510cc540035349f09be684.m4v",
+      "https://cdn-videos.lpsg.com/data/video/116001/116001431-8f5b81f8381868d9b4e42b7ae3e4f3b3.m4v",
+      "https://cdn-videos.lpsg.com/data/video/134383/134383291-5f13c0158bf13795eb6215c726e5adc8.m4v",
+      "https://cdn-videos.lpsg.com/data/video/134383/134383311-8931a00a6032066c740f22bb1dacce15.m4v",
+      "https://cdn-videos.lpsg.com/data/video/134383/134383341-86d30c713b05ecb92bf9c7103c13f62e.m4v",
+      "https://cdn-videos.lpsg.com/data/video/134383/134383351-a181e4fbd72bcfe1be6e8cc249e94d42.m4v",
+      "https://cdn-videos.lpsg.com/data/video/135860/135860291-00ef42f3b09be52271c8cda7a9849501.m4v",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2021/03/32224131_01VIDEOLON_6534e68e03316d0ee5502849e574c7c1.mp4",
+      "https://cdn-videos.lpsg.com/data/lsvideo/videos/2021/03/32224231_PriapusofM_569ede668a6aa6488c5ae31d951e42d5.mp4",
+      ];
+        var DIV_LABELS = [ 'all', 'Priapus'];
+        /* ENGINE BELOW — do not edit */
+(function(sec, SOURCES, DIV_LABELS) {
+
+  // ── Helpers ──────────────────────────────────────────────────
+  function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
+  function getStart(s)  { return getEntry(s).start || 0; }
+  function getEnd(s)    { return getEntry(s).end   || null; }
+
+  function shuffleArr(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  // ── Build DOM ────────────────────────────────────────────────
+  const body = sec.querySelector('.vs-body');
+  const lightbox  = sec.querySelector('.vs-lightbox');
+  const backdrop  = sec.querySelector('.vs-backdrop');
+  const lbClose   = sec.querySelector('.vs-lb-close');
+  const lbPrev    = sec.querySelector('.vs-lb-prev');
+  const lbNext    = sec.querySelector('.vs-lb-next');
+  const lbVideo   = sec.querySelector('.vs-lb-video');
+  const counter   = sec.querySelector('.vs-lb-counter');
+  const btnShuffle   = sec.querySelector('.vs-btn-shuffle');
+  const btnSlideshow = sec.querySelector('.vs-btn-slideshow');
+  const btnFullscreen= sec.querySelector('.vs-btn-fullscreen');
+  const btnAuto      = sec.querySelector('.vs-btn-auto');
+  const scratchVid   = sec.querySelector('.vs-scratch');
+
+  const PLAY_SVG = `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="40" r="38" fill="rgba(0,0,0,0.45)" stroke="white" stroke-width="2"/>
+    <polygon points="32,24 60,40 32,56" fill="white"/>
+  </svg>`;
+
+  const videoSources = [];
+  const posterQueue  = [];
+  let   posterBusy   = false;
+  let   divCount     = 0;
+
+  SOURCES.forEach(src => {
+    if (src === null) {
+      const div = document.createElement('div');
+      div.className = 'vs-divider';
+      const label = DIV_LABELS[divCount] || ('Part ' + (divCount + 1));
+      divCount++;
+      div.innerHTML = `<div class="vs-divider-img"></div><span class="vs-divider-label">${label}</span>`;
+      body.insertBefore(div, lightbox);
+      return;
+    }
+    const videoIndex = videoSources.length;
+    videoSources.push(src);
+
+    const tile = document.createElement('div');
+    tile.className = 'vs-tile';
+
+    const img = document.createElement('img');
+    img.alt = '';
+    img.style.cssText = 'display:none;';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'vs-play-overlay';
+    overlay.innerHTML = PLAY_SVG;
+
+    tile.append(img, overlay);
+    tile.addEventListener('click', () => openLightbox(videoIndex));
+    body.insertBefore(tile, lightbox);
+    posterQueue.push({ src: getSrcUrl(src), img });
+  });
+
+  // ── Poster capture ───────────────────────────────────────────
+  function processNextPoster() {
+    if (posterBusy || posterQueue.length === 0) return;
+    posterBusy = true;
+    const { src, img } = posterQueue.shift();
+
+    scratchVid.removeAttribute('crossOrigin');
+    scratchVid.removeAttribute('src');
+    scratchVid.load();
+
+    let done = false;
+    const timer = setTimeout(() => finish(null), 4000);
+
+    function finish(dataURL) {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      scratchVid.removeEventListener('loadedmetadata', onMeta);
+      scratchVid.removeEventListener('seeked', onSeeked);
+      scratchVid.removeEventListener('error', onErr);
+      scratchVid.removeAttribute('src');
+      scratchVid.load();
+      if (dataURL) {
+        img.onload = () => { img.style.display = 'block'; };
+        img.src = dataURL;
+      }
+      posterBusy = false;
+      setTimeout(processNextPoster, 30);
+    }
+
+    function onMeta()   { scratchVid.currentTime = 0.2; }
+    function onErr()    { finish(null); }
+    function onSeeked() {
+      const canvas = document.createElement('canvas');
+      canvas.width  = scratchVid.videoWidth  || 320;
+      canvas.height = scratchVid.videoHeight || 180;
+      try {
+        canvas.getContext('2d').drawImage(scratchVid, 0, 0, canvas.width, canvas.height);
+        finish(canvas.toDataURL('image/jpeg', 0.65));
+      } catch(e) { finish(null); }
+    }
+
+    scratchVid.addEventListener('loadedmetadata', onMeta,   { once: true });
+    scratchVid.addEventListener('seeked',         onSeeked, { once: true });
+    scratchVid.addEventListener('error',          onErr,    { once: true });
+    scratchVid.crossOrigin = 'anonymous';
+    scratchVid.src = src;
+    scratchVid.load();
+  }
+  setTimeout(processNextPoster, 200);
+
+  // ── Playback state ───────────────────────────────────────────
+  let index          = 0;
+  let isSlideshow    = false;
+  let isShuffled     = false;
+  let playOrder      = videoSources.map((_, i) => i);
+  let autoEnabled    = false;
+  let autoTimer      = null;
+  const AUTO_MS      = 12000;
+
+  // ── Loop state (shared via globalLoopToggle) ──────────────────────────
+  var loopEnabled = false;
+  var loopBtn     = document.getElementById('globalLoopToggle');
+
+  function updateLoopBtn() {
+    if (!loopBtn) return;
+    loopBtn.classList.toggle('active', loopEnabled);
+  }
+
+  // Show/hide the loop button when this lightbox opens/closes
+  var _origClose = closeLightbox;
+
+  function ensureLoopBtnVisible(show) {
+    if (loopBtn) loopBtn.style.display = show ? 'block' : 'none';
+  }
+
+  // Wire the global button (safe: multiple sections share one button,
+  // only the active section's handler runs because others are hidden)
+  loopBtn && loopBtn.addEventListener('click', function() {
+    loopEnabled = !loopEnabled;
+    lbVideo.loop = loopEnabled && !isSlideshow;
+    updateLoopBtn();
+  });
+
+  // Override open/close to show/hide the button
+  var __realOpen = openLightbox;
+  openLightbox = function(idx) {
+    ensureLoopBtnVisible(true);
+    __realOpen(idx);
+  };
+
+  var __realClose = closeLightbox;
+  closeLightbox = function() {
+    ensureLoopBtnVisible(false);
+    loopEnabled = false;
+    updateLoopBtn();
+    __realClose();
+  };
+
+  function getOrderedSrc(orderIdx) {
+    return videoSources[playOrder[orderIdx]];
+  }
+
+  function updateCounter() {
+    counter.textContent = `${index + 1} / ${videoSources.length}${isShuffled ? '  🔀' : ''}`;
+  }
+
+  function applyTrim(src) {
+    const s = getStart(src);
+    const e = getEnd(src);
+    if (s > 0) {
+      lbVideo.addEventListener('loadedmetadata', function seek() {
+        lbVideo.currentTime = s;
+        lbVideo.removeEventListener('loadedmetadata', seek);
+      });
+    }
+    if (e) {
+      lbVideo.addEventListener('timeupdate', function checkEnd() {
+        if (lbVideo.currentTime >= e) {
+          lbVideo.pause();
+          lbVideo.removeEventListener('timeupdate', checkEnd);
+        }
+      });
+    }
+  }
+
+  function fadeToVideo(src, cb) {
+    lbVideo.classList.add('fading');
+    setTimeout(() => {
+      lbVideo.pause();
+      lbVideo.src = getSrcUrl(src);
+      lbVideo.preload = 'auto';
+      lbVideo.loop = loopEnabled;
+      lbVideo.load();
+      applyTrim(src);
+      lbVideo.play().catch(() => {});
+      lbVideo.classList.remove('fading');
+      cb && cb();
+    }, 300);
+  }
+
+  function showVideo(i) {
+    index = ((i % playOrder.length) + playOrder.length) % playOrder.length;
+    fadeToVideo(getOrderedSrc(index), () => {
+      if (isSlideshow) {
+        lbVideo.removeEventListener('ended', onVideoEnded);
+        lbVideo.addEventListener('ended', onVideoEnded);
+      }
+    });
+    updateCounter();
+  }
+
+  function openLightbox(videoIndex) {
+    const pos = playOrder.indexOf(videoIndex);
+    index = pos !== -1 ? pos : videoIndex;
+    const src = getOrderedSrc(index);
+    lightbox.style.display = 'flex';
+    lbVideo.src = getSrcUrl(src);
+    lbVideo.preload = 'auto';
+    lbVideo.loop = loopEnabled;
+    lbVideo.load();
+    applyTrim(src);
+    lbVideo.play().catch(() => {});
+    updateCounter();
+    updateLoopBtn();
+  }
+
+  function closeLightbox() {
+    lightbox.style.display = 'none';
+    lbVideo.pause();
+    lbVideo.removeAttribute('src');
+    lbVideo.preload = 'none';
+    lbVideo.load();
+    stopSlideshow();
+    clearTimeout(autoTimer);
+  }
+
+  // ── Controls ─────────────────────────────────────────────────
+  backdrop.onclick  = closeLightbox;
+  lbClose.onclick   = closeLightbox;
+  lbPrev.onclick    = () => { stopSlideshow(); showVideo(index - 1); };
+  lbNext.onclick    = () => { stopSlideshow(); showVideo(index + 1); };
+
+  btnShuffle.onclick = () => {
+    isShuffled = !isShuffled;
+    playOrder  = videoSources.map((_, i) => i);
+    if (isShuffled) shuffleArr(playOrder);
+    btnShuffle.style.background = isShuffled ? '#ffe066' : 'white';
+    updateCounter();
+  };
+
+  function onVideoEnded() {
+    if (!isSlideshow) return;
+    showVideo(index + 1);
+  }
+
+  function startSlideshow() {
+    isSlideshow = true;
+    btnSlideshow.textContent = '⏹ Stop';
+    lbVideo.loop = false;  // slideshow advances on ended, so loop must be off
+    lbVideo.addEventListener('ended', onVideoEnded);
+  }
+
+  function stopSlideshow() {
+    isSlideshow = false;
+    btnSlideshow.textContent = '▶ Slideshow';
+    lbVideo.removeEventListener('ended', onVideoEnded);
+  }
+
+  btnSlideshow.onclick = () => (isSlideshow ? stopSlideshow() : startSlideshow());
+
+  btnFullscreen.onclick = () => {
+    if      (lbVideo.requestFullscreen)       lbVideo.requestFullscreen();
+    else if (lbVideo.webkitRequestFullscreen) lbVideo.webkitRequestFullscreen();
+  };
+
+  btnAuto.onclick = () => {
+    autoEnabled = !autoEnabled;
+    btnAuto.textContent = autoEnabled ? '⏸ Auto' : '➡️ Auto';
+  };
+
+  function startAutoTimer() {
+    clearTimeout(autoTimer);
+    if (!autoEnabled) return;
+    autoTimer = setTimeout(() => showVideo(index + 1), AUTO_MS);
+  }
+  lbVideo.addEventListener('playing', startAutoTimer);
+
+  // ── Keyboard ─────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (lightbox.style.display !== 'flex') return;
+    if (e.key === 'ArrowRight') { stopSlideshow(); showVideo(index + 1); }
+    if (e.key === 'ArrowLeft')  { stopSlideshow(); showVideo(index - 1); }
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'f' || e.key === 'F') btnFullscreen.click();
+  });
+
+  // ── Touch swipe ──────────────────────────────────────────────
+  let tx = 0, ty = 0;
+  lightbox.addEventListener('touchstart', e => {
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      stopSlideshow();
+      dx < 0 ? showVideo(index + 1) : showVideo(index - 1);
+    }
+  }, { passive: true });
+
+})(SEC, SOURCES, DIV_LABELS);
+
+      }
+      document.getElementById('sec12').__lazyInit = __init;
+    })();
+    </script>
+  </div>
+  
   <!-- ══════════════════════════════════════════════════════════════════
        TEMPLATE: VIDEO SECTION  (copy from here ↓)
   ════════════════════════════════════════════════════════════════════
