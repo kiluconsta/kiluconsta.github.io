@@ -19,6 +19,256 @@
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════════════════════
+     AGE GATE SPLASH SCREEN
+     ══════════════════════════════════════════════════════════ -->
+<div id="age-gate">
+  <div id="age-gate-card">
+
+    <!-- Icon -->
+    <div id="age-gate-icon">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+        <path d="M32 20v16M32 42v2" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div id="age-gate-label">Adults Only</div>
+    <h1 id="age-gate-title">18+ Content</h1>
+    <p id="age-gate-body">
+      This site contains explicit adult content intended for mature audiences only.
+      By entering you confirm that you are at least <strong>18 years of age</strong>
+      and consent to viewing adult material.
+    </p>
+
+    <div id="age-gate-actions">
+      <button id="age-gate-yes" onclick="ageGateEnter()">
+        I am 18 or older — Enter
+      </button>
+      <button id="age-gate-no" onclick="ageGateExit()">
+        I am under 18 — Leave
+      </button>
+    </div>
+
+    <p id="age-gate-footer">
+      By clicking "Enter" you agree that you are of legal age in your jurisdiction
+      to view adult content.
+    </p>
+
+  </div>
+</div>
+
+<style>
+/* ── AGE GATE ─────────────────────────────────────────────── */
+#age-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  /* Matches the site's own animated liquid glass background */
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 20%, rgba(120,60,255,0.82) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 90% 80%, rgba(255,40,160,0.75) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 70% 10%, rgba(0,160,255,0.65) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 55% at 20% 90%, rgba(80,0,220,0.7) 0%, transparent 60%),
+    #06000f;
+  /* Subtle noise grain */
+  background-attachment: fixed;
+}
+
+/* Grain overlay matching the site */
+#age-gate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+#age-gate-card {
+  position: relative;
+  max-width: 440px;
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 28px;
+  padding: 48px 40px 40px;
+  text-align: center;
+  backdrop-filter: blur(40px) saturate(200%) brightness(1.08);
+  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.32),
+    inset 0 -1px 0 rgba(0,0,0,0.15),
+    0 32px 80px rgba(0,0,0,0.45),
+    0 0 0 1px rgba(255,255,255,0.06);
+  animation: cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+/* Specular highlight */
+#age-gate-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 40%, transparent 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#age-gate-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+}
+#age-gate-icon svg { width: 36px; height: 36px; }
+
+#age-gate-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 10px;
+}
+
+#age-gate-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: rgba(255,255,255,0.95);
+  margin: 0 0 20px;
+  background: linear-gradient(160deg, #fff 30%, rgba(200,180,255,0.9) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#age-gate-body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.6);
+  margin: 0 0 32px;
+  -webkit-text-fill-color: rgba(255,255,255,0.6);
+}
+#age-gate-body strong {
+  color: rgba(255,255,255,0.88);
+  font-weight: 600;
+  -webkit-text-fill-color: rgba(255,255,255,0.88);
+}
+
+#age-gate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+/* Primary — Enter */
+#age-gate-yes {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #06000f;
+  background: rgba(255,255,255,0.95);
+  border: none;
+  border-radius: 50px;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,1);
+}
+#age-gate-yes:hover {
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+}
+#age-gate-yes:active { transform: scale(0.98); }
+
+/* Secondary — Leave */
+#age-gate-no {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: rgba(255,255,255,0.55);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50px;
+  padding: 13px 24px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+#age-gate-no:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.32);
+  color: rgba(255,255,255,0.75);
+}
+#age-gate-no:active { transform: scale(0.98); }
+
+#age-gate-footer {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.28);
+  line-height: 1.5;
+  margin: 0;
+  -webkit-text-fill-color: rgba(255,255,255,0.28);
+}
+
+/* Fade-out animation when entering */
+#age-gate.dismissing {
+  animation: gateFade 0.4s ease forwards;
+}
+@keyframes gateFade {
+  to { opacity: 0; pointer-events: none; }
+}
+</style>
+
+<script>
+(function() {
+  // Check if already verified this session
+  if (sessionStorage.getItem('ageVerified') === '1') {
+    document.getElementById('age-gate').style.display = 'none';
+    return;
+  }
+  // Prevent scroll while gate is visible
+  document.documentElement.style.overflow = 'hidden';
+})();
+
+function ageGateEnter() {
+  sessionStorage.setItem('ageVerified', '1');
+  var gate = document.getElementById('age-gate');
+  gate.classList.add('dismissing');
+  document.documentElement.style.overflow = '';
+  setTimeout(function() { gate.style.display = 'none'; }, 420);
+}
+
+function ageGateExit() {
+  window.location.replace('https://www.google.com');
+}
+</script>
+
+
 
 <!-- ══════════════════════════════════════════════════════════════════
      THE VAULT — SECTION REGISTRY
