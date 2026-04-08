@@ -1,7 +1,7 @@
 // Replace this with your deployed worker URL (no trailing slash)
 var PROXY = 'https://young-truth-052a.kiluconsta.workers.dev';
 
-var PROXY_HOSTS = ['twimg.com', 'video.twimg.com', 'coomer.st', 'redgifs.com', 'tumblr.com', 'lpsg.com', 'rule34.xxx', 'cartoonsworld.vip', 'monstercockland.com'];
+var PROXY_HOSTS = ['twimg.com', 'video.twimg.com', 'coomer.st', 'redgifs.com', 'tumblr.com', 'lpsg.com', 'rule34.xxx', 'cartoonsworld.vip', 'monstercockland.com', 'gayforfuns.com'];
 
 function proxyUrl(url) {
   if (!url || !PROXY) return url;
