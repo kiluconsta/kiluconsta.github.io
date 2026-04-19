@@ -323,7 +323,7 @@ body::after {
   border-radius: 14px;
   overflow: hidden;
   width: 130px;
-  height: 130px;
+  height: 231px;
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s;
   backdrop-filter: blur(12px) saturate(150%);
