@@ -4,7 +4,7 @@ var PROXY = 'https://young-truth-052a.kiluconsta.workers.dev';
 var PROXY_HOSTS = [
   'twimg.com', 'video.twimg.com', 'coomer.st', 'redgifs.com',
   'tumblr.com', 'lpsg.com', 'rule34.xxx', 'cartoonsworld.vip',
-  'monstercockland.com', 'gayforfuns.com'
+  'monstercockland.com', 'gayforfuns.com', 'dropbox.com'
 ];
 
 function proxyUrl(url) {
