@@ -16,6 +16,53 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=SF+Pro+Display:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
+
+  <!-- ── Thumbnail cache (IndexedDB) ── -->
+  <script>
+  var ThumbCache = (function() {
+    var DB_NAME    = 'vault-thumbs';
+    var DB_VERSION = 1;
+    var STORE      = 'thumbs';
+    var db         = null;
+
+    function open(cb) {
+      if (db) return cb(db);
+      var req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = function(e) {
+        e.target.result.createObjectStore(STORE);
+      };
+      req.onsuccess = function(e) {
+        db = e.target.result;
+        cb(db);
+      };
+      req.onerror = function() { cb(null); };
+    }
+
+    function get(key, cb) {
+      open(function(db) {
+        if (!db) return cb(null);
+        try {
+          var tx  = db.transaction(STORE, 'readonly');
+          var req = tx.objectStore(STORE).get(key);
+          req.onsuccess = function() { cb(req.result || null); };
+          req.onerror   = function() { cb(null); };
+        } catch(e) { cb(null); }
+      });
+    }
+
+    function set(key, value) {
+      open(function(db) {
+        if (!db) return;
+        try {
+          var tx = db.transaction(STORE, 'readwrite');
+          tx.objectStore(STORE).put(value, key);
+        } catch(e) {}
+      });
+    }
+
+    return { get: get, set: set };
+  })();
+  </script>
 </head>
 <body>
   <button class="back-btn" onclick="history.back()">← Back</button>
@@ -401,12 +448,27 @@
     posterQueue.push({ src: getSrcUrl(src), img });
   });
 
-  // ── Poster capture ───────────────────────────────────────────
+  // ── Poster capture (with IndexedDB cache) ───────────────────
   function processNextPoster() {
     if (posterBusy || posterQueue.length === 0) return;
     posterBusy = true;
     const { src, img } = posterQueue.shift();
 
+    // Check cache first — if hit, show immediately and move on
+    ThumbCache.get(src, function(cached) {
+      if (cached) {
+        img.onload = () => { img.style.display = 'block'; };
+        img.src = cached;
+        posterBusy = false;
+        setTimeout(processNextPoster, 10);
+        return;
+      }
+      // Cache miss — capture from video
+      captureThumb(src, img);
+    });
+  }
+
+  function captureThumb(src, img) {
     scratchVid.removeAttribute('crossOrigin');
     scratchVid.removeAttribute('src');
     scratchVid.load();
@@ -426,6 +488,7 @@
       if (dataURL) {
         img.onload = () => { img.style.display = 'block'; };
         img.src = dataURL;
+        ThumbCache.set(src, dataURL);  // persist for next visit
       }
       posterBusy = false;
       setTimeout(processNextPoster, 30);
@@ -652,7 +715,7 @@
 })(SEC, SOURCES, DIV_LABELS);
 
       }
-      document.getElementById('sec2').__lazyInit = __init;
+      __init();
     })();
     </script>
 </body>
