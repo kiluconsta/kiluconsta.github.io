@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="referrer" content="no-referrer">
+
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">              <!-- SVG favicon (modern browsers) -->
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">               <!-- ICO fallback (older browsers) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon.png">    <!-- PNG fallbacks -->
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon.png">    <!-- PNG fallbacks -->
+  <link rel="apple-touch-icon" href="../assets/favicon.png">                       <!-- Apple touch icon -->
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=SF+Pro+Display:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <button class="back-btn" onclick="history.back()">← Back</button>
+  
+  <div id="sec0" class="content-section" style="display:block" data-color="#ff2d55">
+    <button class="back-btn" onclick="(function(){var lb=this.closest('.content-section').querySelector('.vs-lightbox');if(lb&&lb.style.display==='flex'){lb.style.display='none';var v=lb.querySelector('video');if(v){v.pause();v.removeAttribute('src');v.load();}}showHome();}).call(this)">&#8592; Back</button>
+    <div class="vs-body">
+
+      <!-- Lightbox -->
+      <div class="vs-lightbox">
+        <div class="vs-backdrop"></div>
+        <button class="vs-lb-close">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="vs-lb-prev">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="vs-lb-video-wrap">
+          <div class="vs-lb-platter">
+            <button class="vs-btn-prev-inline" title="Previous">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+            </button>
+            <button class="vs-btn-shuffle" title="Shuffle">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4zM14.83 13.41l-1.41 1.41 2.55 2.55L14.5 20H20v-5.5l-2.04 2.04z"/></svg>
+            </button>
+            <div class="platter-sep"></div>
+            <button class="vs-btn-slideshow" title="Slideshow">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="vs-btn-loop" title="Loop">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2z"/></svg>
+            </button>
+            <button class="vs-btn-auto" title="Auto-advance">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </button>
+            <div class="platter-sep"></div>
+            <button class="vs-btn-fullscreen" title="Fullscreen">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+            </button>
+            <span class="vs-lb-counter"></span>
+          </div>
+          <video class="vs-lb-video" controls playsinline></video>
+        </div>
+        <button class="vs-lb-next">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <!-- Hidden scratch video for poster capture -->
+      <video class="vs-scratch" muted crossorigin="anonymous" preload="none"></video>
+
+    </div><!-- end vs-body -->
+    
+    <script src="../vault.js"></script>
+    <script>
+    (function() {
+      function __init() {
+        var SEC = document.getElementById('sec0');
+        var SOURCES    = [
+      null,
+      "https://video.twimg.com/amplify_video/1838294326406975489/vid/avc1/1080x1920/J2_lXKg3GqXT5Dlx.mp4",
+      "https://video.twimg.com/amplify_video/1846262212047888385/vid/avc1/1280x720/c_nhapKdgsGg7_8X.mp4",
+      "https://video.twimg.com/amplify_video/1839411850586595328/vid/avc1/720x1290/3k463kNUkBkyGrlk.mp4",
+      "https://video.twimg.com/ext_tw_video/1832780979246710784/pu/vid/avc1/720x1280/HlxNfiZVOGYC1h5C.mp4",
+      "https://video.twimg.com/ext_tw_video/1830978246068113408/pu/vid/avc1/1080x1920/eO7azfBxuPdm-rR7.mp4",
+      "https://video.twimg.com/ext_tw_video/1830727466446368770/pu/vid/avc1/720x1280/wHRAOlZOC-TdJbVt.mp4",
+      "https://video.twimg.com/ext_tw_video/1828226229310255104/pu/vid/avc1/720x1280/JdLpz_8wLyhu_3ZX.mp4",
+      "https://video.twimg.com/amplify_video/1782844035641593860/vid/avc1/720x1180/UcRwDzk7VLIcY6mO.mp4",
+      "https://video.twimg.com/amplify_video/1770254628623659008/vid/avc1/720x1280/z4CT1qi8zrTGnEKZ.mp4",
+      "https://video-t-1.twimg.com/amplify_video/1803167273823145984/vid/avc1/1080x1920/gk53zjKpG7yS5rAZ.mp4",
+      "https://video-t-1.twimg.com/ext_tw_video/1728614823036870656/pu/vid/avc1/720x1280/lf2hvCaNKz5JOEDg.mp4",
+      "https://video-t-1.twimg.com/ext_tw_video/1798414628604551169/pu/vid/avc1/720x1280/HUyXDXflgW4r0hly.mp4",
+      "https://video-t-1.twimg.com/amplify_video/1787470527726002176/vid/avc1/720x1280/lKVRfD9pb6s4tM1Y.mp4",
+      "https://video-t-1.twimg.com/amplify_video/1763973842832330752/vid/avc1/1280x720/5jb8HmA2DAH59PYt.mp4",
+      "https://video.twimg.com/amplify_video/1738999565788049408/vid/avc1/720x1048/cUUduQrCe_7yLtsI.mp4",
+      "https://video.twimg.com/amplify_video/1794931905558958080/vid/avc1/720x1280/BrH8MnCN3JFhqOht.mp4",
+      "https://video.twimg.com/ext_tw_video/1794943288249659392/pu/vid/avc1/720x1280/vczhWG583Fxkkrby.mp4",
+      "https://video.twimg.com/amplify_video/1790559168375746560/vid/avc1/720x1280/63Bo5taBY4gTzC7l.mp4",
+      "https://video.twimg.com/ext_tw_video/1788962212083564544/pu/vid/avc1/720x960/IK9OLq937ro39kRS.mp4",
+      "https://video.twimg.com/ext_tw_video/1695863445395030016/pu/vid/720x720/sqLL9aFNcZs_JHCo.mp4",
+      "https://video.twimg.com/ext_tw_video/1687506050554179584/pu/vid/888x662/trqG6rkoPFBn2OOF.mp4",
+      "https://video.twimg.com/amplify_video/1749750095220744192/vid/avc1/720x1278/B0oIQeThnrWHUyxA.mp4",
+      "https://video.twimg.com/ext_tw_video/1768336377064632320/pu/vid/avc1/1280x720/rFRVoyOS6nQMbGL9.mp4",
+      "https://video.twimg.com/ext_tw_video/1763226988158799872/pu/vid/avc1/720x1560/ufuUwHm8CKblXsJn.mp4",
+      "https://video.twimg.com/amplify_video/1761949913586298882/vid/avc1/720x1234/1eFXrJzVD_BP6d44.mp4",
+      "https://video.twimg.com/amplify_video/1764629765787615232/vid/avc1/720x1560/IG_moyPNLeYnPSUH.mp4",
+      "https://video.twimg.com/ext_tw_video/1761371042877001729/pu/vid/avc1/1280x720/GxTUe7cOIZ-2C9Cq.mp4",
+      "https://video.twimg.com/ext_tw_video/1756779361242353665/pu/vid/avc1/842x720/IWKKctzn9If1a9qW.mp4",
+      "https://video-ft.twimg.com/amplify_video/1679714916540862467/vid/720x1280/qhuGPyWMnFxJ5RXF.mp4",
+      "https://video-ft.twimg.com/ext_tw_video/1728614823036870656/pu/vid/avc1/720x1280/lf2hvCaNKz5JOEDg.mp4",
+      "https://video-ft.twimg.com/amplify_video/1734978300554919937/vid/avc1/720x1156/oCD80SFdNvBPKLy7.mp4",
+      "https://video-ft.twimg.com/ext_tw_video/1742530997244035072/pu/vid/avc1/720x1280/njO61bjdeeIFCIaH.mp4",
+      "https://video-ft.twimg.com/ext_tw_video/1639710735679856640/pu/vid/1280x720/BN006ULE0LlkQ9yk.mp4",
+      "https://video-ft.twimg.com/ext_tw_video/1744101730638327808/pu/vid/avc1/720x1280/_GYjZp06a10BgiRA.mp4",
+      "https://video-ft.twimg.com/amplify_video/1738999565788049408/vid/avc1/720x1048/cUUduQrCe_7yLtsI.mp4",
+      "https://video-ft.twimg.com/amplify_video/1742820865199247361/vid/avc1/720x1280/lQpASYcMCKfVp-sN.mp4",
+      "https://video-t-2.twimg.com/amplify_video/1738162324169457664/vid/avc1/720x1280/d6UPW8x7QMjZjvS7.mp4",
+      "https://video-t-2.twimg.com/amplify_video/1686407508402020352/vid/720x1280/YrVsMFj-cCDyt9JG.mp4",
+      "https://video-t-2.twimg.com/ext_tw_video/1726986907186253824/pu/vid/avc1/720x1280/3ijBwqZ81Snf_oHm.mp4",
+      "https://video-t-2.twimg.com/ext_tw_video/1594709795470204929/pu/vid/720x1280/7JIFYY0qPGWQqSXP.mp4",
+      "https://video-t-2.twimg.com/ext_tw_video/1732757010460905472/pu/vid/avc1/720x1280/bSGMXM7W3HEmvIxP.mp4",
+      "https://video-t-2.twimg.com/ext_tw_video/1708845008982343680/pu/vid/avc1/720x1280/3Ci7EhXuHd-lVapt.mp4",
+      "https://video-t-2.twimg.com/ext_tw_video/1701611883856572416/pu/vid/avc1/720x1280/GpD6ofsT80FgV7wK.mp4",
+      "https://video-t-1.twimg.com/ext_tw_video/1249877575192604672/pu/vid/1280x720/XpurltnAchgqdCQV.mp4",
+      "https://video-t-1.twimg.com/ext_tw_video/1725961077375266816/pu/vid/avc1/720x1280/Y5O8VM2f03_FjnhK.mp4",
+      "https://video-t-1.twimg.com/ext_tw_video/1729952927454806016/pu/vid/avc1/720x1280/BxKFhxbVhUbjJ4UB.mp4",
+      "https://video-t-1.twimg.com/ext_tw_video/1729954558191800320/pu/vid/avc1/1280x720/faSuydUZOdCHLIdJ.mp4",
+      "https://video-t-1.twimg.com/ext_tw_video/1722479843957497856/pu/vid/avc1/1108x720/PPWk19Kpr_Xks8Ut.mp4",
+      "https://video-t-1.twimg.com/amplify_video/1638335569985167360/vid/1080x1920/qMu4u9fXly5OBzBe.mp4",
+      "https://video.twimg.com/ext_tw_video/1700510313215676417/pu/vid/avc1/720x1280/N7tSY1TKq5VUof9Z.mp4",
+      "https://video.twimg.com/amplify_video/1721819102413520896/vid/avc1/720x720/gZrksLYLMIeHmo17.mp4",
+      "https://video.twimg.com/amplify_video/1704227923417251840/vid/avc1/720x1280/Vmj9BzO6kZ5yN6Eb.mp4",
+      "https://video.twimg.com/ext_tw_video/1712831385629593601/pu/vid/avc1/720x1232/ZXQxUIjRjzkfijNW.mp4",
+      "https://video.twimg.com/amplify_video/1710038189526876160/vid/avc1/1232x720/CXqb2buye_YtKxu8.mp4",
+      "https://video.twimg.com/amplify_video/1707492718488829952/vid/avc1/404x720/g4Bf0Cj8GqVIXOp1.mp4",
+      "https://video.twimg.com/ext_tw_video/1577414301719183363/pu/vid/1280x720/juP2cMxy7VdMEAxt.mp4",
+      "https://video.twimg.com/amplify_video/1649240491471536128/vid/1080x1920/5_EL7YO2mTlIRcMr.mp4",
+      "https://video.twimg.com/ext_tw_video/1610074069918949377/pu/vid/608x1080/YJL8kEAq9I9caUde.mp4",
+      "https://video.twimg.com/ext_tw_video/1609957672056508416/pu/vid/720x848/gOaaZ2mjwWgzLe8E.mp4",
+      "https://video.twimg.com/ext_tw_video/1680196899775692800/pu/vid/480x864/_R4ezICZhlymqhe8.mp4",
+      "https://video.twimg.com/amplify_video/1682498725158047747/vid/720x1356/WDwhav1WNfmml-AE.mp4",
+      "https://video.twimg.com/amplify_video/1682137532710961157/vid/608x1080/sq0H9L8tw14ppXqg.mp4",
+      "https://video.twimg.com/amplify_video/1661907837898092544/vid/720x1280/sFCGZRQICwHwK_TC.mp4",
+      "https://video.twimg.com/amplify_video/1679241127268941824/vid/602x1068/tlAjQF3ixwk3dcAG.mp4",
+      "https://video.twimg.com/ext_tw_video/1580212046699921408/pu/vid/720x1280/qiZ78Q87UlKp5uRT.mp4",
+      "https://video.twimg.com/amplify_video/1662933976204599297/vid/720x1280/7DKuOXSTxM_AClRD.mp4",
+      "https://video.twimg.com/amplify_video/1670871705705762818/vid/720x1280/wDMHvpLKPAMjgamI.mp4",
+      "https://video.twimg.com/amplify_video/1668724893565722628/vid/720x1128/Eo12T7YdllZQFP4W.mp4",
+      "https://video.twimg.com/amplify_video/1669823763527901186/vid/720x1288/-ltxxXp8IC7Z3nMl.mp4",
+      "https://video.twimg.com/ext_tw_video/1660426836457791499/pu/vid/720x1280/Vcb0BlESUmj9KjOm.mp4",
+      "https://video.twimg.com/ext_tw_video/1538547864401584129/pu/vid/640x360/s06UJSHa1aZJgtad.mp4",
+      "https://video.twimg.com/ext_tw_video/1227305079256076291/pu/vid/480x480/n27jHhm-DzaTVP_V.mp4",
+      "https://video.twimg.com/ext_tw_video/1649868381892509698/pu/vid/720x1084/CZD5JEKmdikshWvR.mp4",
+      "https://video.twimg.com/ext_tw_video/1382478383695724545/pu/vid/720x1280/3mFJjJde4NGzmbos.mp4",
+      "https://video.twimg.com/ext_tw_video/1657649145216368646/pu/vid/480x848/63YJZWJYHj0P6__k.mp4",
+      "https://video.twimg.com/ext_tw_video/1274894585676742658/pu/vid/720x1280/ACAGz75_0L2mtoPe.mp4",
+      "https://video.twimg.com/ext_tw_video/1634088212564934656/pu/vid/720x1280/2EW6DsC35GqsZZMz.mp4",
+      "https://video.twimg.com/ext_tw_video/1649884947325366272/pu/vid/720x1280/kpzWr6BaY5dDMJfQ.mp4",
+      "https://video.twimg.com/ext_tw_video/1649522028460777473/pu/vid/714x1280/_LnZtFoE35x1Eilk.mp4",
+      "https://video.twimg.com/ext_tw_video/1646130598879035394/pu/vid/720x1280/yzattsmPWVoXLteq.mp4",
+      "https://video.twimg.com/ext_tw_video/1445356573640036352/pu/vid/640x640/Vo6GUyVkvxr-VQx3.mp4",
+      "https://video.twimg.com/ext_tw_video/1635743443015159809/pu/vid/404x720/ZAWXHNfF-dn2J_Q_.mp4",
+      "https://video.twimg.com/ext_tw_video/1614672609601359874/pu/vid/720x1280/dVMo0_y5sZkC6aBL.mp4",
+      "https://video.twimg.com/ext_tw_video/1381273554432495621/pu/vid/1280x720/LX9zjcg6nArX1Acz.mp4",
+      "https://video.twimg.com/ext_tw_video/1529195863041396736/pu/vid/1280x720/og9dFhWAVjAi7pXV.mp4",
+      "https://video.twimg.com/ext_tw_video/1595815096667623424/pu/vid/1080x1920/8lPfTIUtjr5VkY6H.mp4",
+      "https://video.twimg.com/ext_tw_video/1595263467774148608/pu/vid/1280x720/aejAQ4TbVadBglse.mp4",
+      "https://video.twimg.com/ext_tw_video/1490426360459788293/pu/vid/1280x720/akqclpvZMqDQ1avz.mp4",
+      "https://video.twimg.com/ext_tw_video/1593501752317267969/pu/vid/720x1280/SDAEv0_ML-lnI0V1.mp4",
+      "https://video.twimg.com/ext_tw_video/1275630083668168706/pu/vid/720x1280/iqK97mDWPyoH1kd1.mp4",
+      "https://video.twimg.com/ext_tw_video/1570760935219908608/pu/vid/720x1280/ftWO7RDYEFuG0JYK.mp4",
+      "https://video.twimg.com/ext_tw_video/1569076459141988357/pu/vid/720x1256/X94fRxs-SgBL2UYa.mp4",
+      "https://video.twimg.com/ext_tw_video/1567618420736249856/pu/vid/720x1280/rnvyUnxz0JXWS6le.mp4",
+      "https://video.twimg.com/ext_tw_video/1556833514523443200/pu/vid/1280x720/BokcRysJEII43IA1.mp4",
+      "https://video.twimg.com/ext_tw_video/1525533042281955331/pu/vid/720x1280/8wlm_uP9TB6YAXsl.mp4",
+      "https://video.twimg.com/ext_tw_video/1533432727013363712/pu/vid/720x1280/KMTpi1TFylrsofJf.mp4",
+      "https://video.twimg.com/ext_tw_video/1536977313782542336/pu/vid/720x820/7tnl_DY6BmPSHZlQ.mp4",
+      "https://video.twimg.com/ext_tw_video/1545492044411535361/pu/vid/720x1244/0muhRU7TA3VCsZp7.mp4",
+      "https://video.twimg.com/ext_tw_video/1544147689922871297/pu/vid/1280x720/FeVKQTGVWJA1ce4m.mp4",
+      "https://video.twimg.com/ext_tw_video/1543396235335303169/pu/vid/720x1280/78JpvQjJzEAhD5-e.mp4",
+      "https://video.twimg.com/ext_tw_video/1408153791761846272/pu/vid/720x1280/7Vii9xtMbYDSnFnR.mp4",
+      "https://video.twimg.com/ext_tw_video/1303570553995956224/pu/vid/720x1280/Eg3XPS5YmrbW1C49.mp4",
+      "https://video.twimg.com/ext_tw_video/1344005881307017223/pu/vid/720x1280/u07KnGxQEsiMj4Wl.mp4",
+      "https://video.twimg.com/ext_tw_video/1431004145851539466/pu/vid/716x1280/5a96ExqmMLDR9FTR.mp4",
+      "https://video.twimg.com/ext_tw_video/1075347051163017216/pu/vid/360x640/JDBd1zoiiN-PSgKC.mp4",
+      "https://video.twimg.com/ext_tw_video/1328049958407180288/pu/vid/720x1280/TEYmKxi0sqNXY8I4.mp4",
+      "https://video.twimg.com/ext_tw_video/1308879115479588870/pu/vid/720x1280/Igyn1SKT1WaEPBRd.mp4",
+      "https://video.twimg.com/ext_tw_video/1286458357360951296/pu/vid/720x1280/RQKfOfC6PNgCG2vn.mp4",
+      "https://video.twimg.com/ext_tw_video/1464086207969869824/pu/vid/596x348/ifkawdlOo383daJF.mp4",
+      "https://video.twimg.com/ext_tw_video/1335294893107912712/pu/vid/406x720/bon6IyRAwvKftyuY.mp4",
+      "https://video.twimg.com/amplify_video/1212817176236834816/vid/720x720/8qVg5h-VeWr9cf2l.mp4",
+      "https://video.twimg.com/ext_tw_video/1455912134345469952/pu/vid/1280x720/hW-1uQzUWMN6jadv.mp4",
+      null,
+      "https://video-t-2.twimg.com/ext_tw_video/1708676470778765312/pu/vid/avc1/756x720/Y_xQmQrZ2hgXlv5-.mp4",
+      "https://video-t-2.twimg.com/amplify_video/1827759346048270336/vid/avc1/720x900/9Ba0N3jC09LNfEPv.mp4",
+      "https://video.twimg.com/ext_tw_video/1453927877179813890/pu/vid/888x484/dMNIeHwZh68QptQF.mp4",
+      "https://video.twimg.com/ext_tw_video/1580015648792518656/pu/vid/720x1060/BXcs52-MEntYHvur.mp4",
+      "https://video.twimg.com/amplify_video/1841376944065060865/vid/avc1/888x694/RiQVgDpIc96nGn71.mp4",
+      "https://video.twimg.com/ext_tw_video/1531386365669154816/pu/vid/720x1264/HlBn3X3O-uMmvjl1.mp4",
+      "https://video.twimg.com/ext_tw_video/1568498479483191299/pu/vid/720x1200/S4CaHm84pfjff1pi.mp4",
+      "https://video.twimg.com/amplify_video/1841337259292848128/vid/avc1/720x1188/4GyhIbwhpbXc750q.mp4",
+      "https://video.twimg.com/amplify_video/1840818982074417152/vid/avc1/1080x1556/TPYhY7V8amtyQZ57.mp4",
+      "https://video.twimg.com/amplify_video/1811598569930907648/vid/avc1/1920x1080/TgcJKt2Kw67l4WUK.mp4",
+      "https://video.twimg.com/amplify_video/1840517938333327361/vid/avc1/888x490/GYPI4aOmP3snB3M8.mp4",
+      "https://video.twimg.com/amplify_video/1839874489909223425/vid/avc1/888x488/FJrGPc4X7IW2H-3A.mp4",
+      "https://video.twimg.com/amplify_video/1840773852860645376/vid/avc1/720x1280/1TKFza3VvxiY82L_.mp4",
+      "https://video.twimg.com/ext_tw_video/1803211236542132224/pu/vid/avc1/720x1280/GPuQz20ZlrcpL9nc.mp4",
+      "https://video.twimg.com/ext_tw_video/1839880589131874304/pu/vid/avc1/888x486/MeUy64Qk5BIZ-dF-.mp4",
+      "https://video.twimg.com/amplify_video/1817122055982059520/vid/avc1/960x720/OweuYrO_bPEmDuq8.mp4",
+      "https://video.twimg.com/amplify_video/1838675803875274752/vid/avc1/720x1204/C6wvjrz6DF-DSN1J.mp4",
+      "https://video.twimg.com/amplify_video/1763662689216139264/vid/avc1/720x1200/IVv_Bjkgx6gp_Qnt.mp4",
+      "https://video.twimg.com/amplify_video/1835552593256337408/vid/avc1/1280x720/Ad6q6u2yhDu218Rl.mp4",
+      "https://video.twimg.com/amplify_video/1836986985778380800/vid/avc1/1280x720/dWL3n-EhD-83aPBz.mp4",
+      "https://video.twimg.com/amplify_video/1837219728235913216/vid/avc1/720x1238/V8OteGbg1Z_VIPJ1.mp4",
+      "https://video.twimg.com/ext_tw_video/1524288359249629184/pu/vid/1920x1060/tEkvtVQVghEAG7k7.mp4",
+      "https://video.twimg.com/ext_tw_video/1513291278355767304/pu/vid/1280x712/Vr3iXEy8mkBWpJqW.mp4",
+      null,
+      "https://video-s.twimg.com/ext_tw_video/1868322730673651712/pu/vid/avc1/720x1280/WnLJE0_Olgo6eMyY.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1859260010041368576/pu/vid/avc1/890x720/LxaPGGfuKAFIs42a.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1714019969967562752/pu/vid/avc1/720x1116/Q02CnZ57dgXZSN_t.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1853522604633567233/pu/vid/avc1/720x1280/MUCIQV9IZPNmxMvK.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1643927140218417152/pu/vid/720x1280/Wn_HAyahq2G25vo7.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1852641224529711104/pu/vid/avc1/720x1280/D85_zYrtuQ8CujSm.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1657819105548816384/pu/vid/720x1280/9kMxdRhxJUP9yf4x.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1767576400125423616/pu/vid/avc1/1280x720/BY2dv56EdU5oFqoF.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1657783551452934147/pu/vid/720x1280/ID3o5weI7upHr6O9.mp4",
+      null,
+      "https://video-s.twimg.com/amplify_video/1913318231864918016/vid/avc1/1080x1350/Of0urAgK4BkCW2Bj.mp4",
+      "https://video-s.twimg.com/amplify_video/1912124867031252993/vid/avc1/1080x1920/F-QEoECWiv-vCKgf.mp4",
+      "https://video-s.twimg.com/amplify_video/1831030039317721088/vid/avc1/888x468/EY_ALHriwcpOuVdC.mp4",
+      "https://video-s.twimg.com/amplify_video/1904650993582956545/vid/avc1/1080x1920/-w93JEe6r2lr165g.mp4",
+      "https://video-s.twimg.com/amplify_video/1912882473286909953/vid/avc1/894x672/STil7o7NjDkZsfh5.mp4",
+      "https://video-s.twimg.com/amplify_video/1900603433247260672/vid/avc1/720x898/LaYuLNylnLw-PuSv.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1864175659138076676/pu/vid/avc1/720x1280/59mvaM8TW2TUYBSH.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1762805234143756288/pu/vid/avc1/720x960/jdXpmuHwebvd8PSy.mp4",
+      "https://video-s.twimg.com/amplify_video/1911446350387884032/vid/avc1/1920x1080/zI04xPh8GdS8xSsg.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1874899491100192768/pu/vid/avc1/720x960/1avKBB9MQhzxEI3v.mp4",
+      "https://video-s.twimg.com/amplify_video/1912929403283107840/vid/avc1/1080x1920/gcujGVSq8J7bhpSt.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1106419533605228544/pu/vid/406x720/LJU6f-_SuMFjSJvB.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1909773657372508160/pu/vid/avc1/720x1152/T-MPEhLiH9d6dHC-.mp4",
+      "https://video-s.twimg.com/amplify_video/1906881848598261760/vid/avc1/1080x1920/uIxEbrXFhyeCREkl.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1824471816108126209/pu/vid/avc1/1280x720/KwbjOnsvImjSOTtl.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1811099977378041857/pu/vid/avc1/1108x620/AjHau9L-_bV6NjuS.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1906161677852348416/pu/vid/avc1/720x1280/YNe38wbn8V1F5hqW.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1857793081237463040/pu/vid/avc1/720x1280/kwCGftJFTcfwle9B.mp4",
+      "https://video-s.twimg.com/amplify_video/1910847372915064833/vid/avc1/720x1280/fA0JIu3P0SE3WXIF.mp4",
+      "https://video-s.twimg.com/amplify_video/1909625450747326464/vid/avc1/720x960/ZnMaN4A0ILSHhsQm.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1911050165944782848/pu/vid/avc1/720x1280/KtleEXwgqmKtIP62.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1873954515491426304/pu/vid/avc1/720x1280/VkDZDlhwH5cCU2Sf.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1907125610498924544/pu/vid/avc1/1280x720/bfvbswnGK2KzW_W7.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1896482239644360704/pu/vid/avc1/720x1112/dPGZcT3WgDyy1FrG.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1910708219543961600/pu/vid/avc1/720x1280/sMmqWgS3vOtIQFT_.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1910510701002493952/pu/vid/avc1/720x1232/0TFmCEnowiBpnnYb.mp4",
+      "https://video-s.twimg.com/amplify_video/1909644770881765376/vid/avc1/1080x1920/qoC5TM0Gymm4qXFv.mp4",
+      "https://video-s.twimg.com/amplify_video/1908905626622656512/vid/avc1/720x1278/mTARI-ovA5JdFzy0.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1909119189433921536/pu/vid/avc1/852x480/W07nl0GQRvOtlvhQ.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1909119189425782784/pu/vid/avc1/360x640/zjMrp2mwSNhJXqnQ.mp4",
+      "https://video-s.twimg.com/tweet_video/Gn6Nya-XwAA2WAb.mp4",
+      "https://video-s.twimg.com/tweet_video/Gn6Nya-XAAAtxow.mp4",
+      "https://video-s.twimg.com/amplify_video/1894897558972985344/vid/avc1/720x1280/ixNME_fUb7dmY1EI.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1898109562776858624/pu/vid/avc1/1920x1080/g_YydhMbg7PBv3QE.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1899489668141379584/pu/vid/avc1/720x850/llpF09ajUc7mskM0.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1848124432746774528/pu/vid/avc1/720x1280/A2dtP4785JuMZBbh.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1908526963695714304/pu/vid/avc1/720x1280/BNKsGJtS6vKBHISs.mp4",
+      "https://video-s.twimg.com/amplify_video/1882316414402404352/vid/avc1/890x668/WFTP2CPhlvkzIzvs.mp4",
+      "https://video-s.twimg.com/amplify_video/1908319949879189504/vid/avc1/1080x1920/IFHScl9wTzKcLcTG.mp4",
+      "https://video-s.twimg.com/amplify_video/1882581371169742848/vid/avc1/1080x1920/I_r9QMPBB7cOTayY.mp4",
+      "https://video-s.twimg.com/amplify_video/1896321047219339264/vid/avc1/720x1280/oN8kUYvSRXV27eda.mp4",
+      null,
+      "https://video-s.twimg.com/ext_tw_video/1801633734304927744/pu/vid/avc1/720x1252/szjSD0w4qTrPf7eX.mp4",
+      "https://video-s.twimg.com/amplify_video/1663296658044747776/vid/720x1060/gQ9gM8mujGbhm2aO.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1782777211646509056/pu/vid/avc1/720x1194/ZVUegZFutu8MMllY.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1852252461861359616/pu/vid/avc1/720x970/10izVNbgDoTKb6uP.mp4",
+      "https://video-s.twimg.com/amplify_video/1926338729557295104/vid/avc1/720x1190/WLS4sq2XCBQml7o0.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1791551846244585472/pu/vid/avc1/720x1194/XMZeumuiDgBtwlON.mp4",
+      "https://video-s.twimg.com/amplify_video/1662294064262443010/vid/720x1080/P-EaeIfVG2zF39Rw.mp4",
+      "https://video-s.twimg.com/amplify_video/1924036842363523072/vid/avc1/720x1266/qlTFu-jerx739Gw6.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1768120629981843456/pu/vid/avc1/720x1168/bVsXDxQ9zu5RSzoN.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1789328598232625152/pu/vid/avc1/720x1226/VdsV9bbmk5Bmy4Yz.mp4",
+      "https://video-s.twimg.com/amplify_video/1749329480492191744/vid/avc1/720x1118/jStvAcpJ9bPkS88i.mp4",
+      "https://video-s.twimg.com/amplify_video/1899731510959497216/vid/avc1/720x1266/vgb4mGEJ-TGRyqOt.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1767803007171985408/pu/vid/avc1/720x1266/BVG7f-2KRmkDDc4R.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1828868534014824448/pu/vid/avc1/694x1280/eHx-gi64I936yZF8.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1849344653427986432/pu/vid/avc1/720x1058/q0h-viUUpNVS8vxP.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1779001192536059904/pu/vid/avc1/720x896/b0vJNMLdlI_ugXKN.mp4",
+      "https://video-s.twimg.com/amplify_video/1898300998516424704/vid/avc1/720x1160/nusM3bNJ-mBaULta.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1815068848284123136/pu/vid/avc1/720x1270/--eBHWv8ERtzD5MD.mp4",
+      "https://video-s.twimg.com/amplify_video/1639278609620713473/vid/1080x1370/HA-gwHnllJRxT9v9.mp4",
+      "https://video-s.twimg.com/amplify_video/1897622457722314752/vid/avc1/720x1264/m8rCPB87-XflgwrZ.mp4",
+      "https://video-s.twimg.com/amplify_video/1896822101593505792/vid/avc1/720x1146/7Evw6UK8WEglPH2J.mp4",
+      "https://video-s.twimg.com/amplify_video/1896631194650898432/vid/avc1/720x1184/MBq1Cqa9GyGMLxJT.mp4",
+      "https://video-s.twimg.com/amplify_video/1692432105027088384/vid/720x1212/jgw2Kw2BHAWcWK7P.mp4",
+      "https://video-s.twimg.com/amplify_video/1705245542631309312/vid/avc1/720x922/In73KjhApA4Dvv4X.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1842084610030600192/pu/vid/avc1/720x1182/mmcrHlRuvC09WAH9.mp4",
+      "https://video-s.twimg.com/amplify_video/1707103549128355840/vid/avc1/720x1092/tYgGgr7ll107uU3w.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1888822233952378881/pu/vid/avc1/720x932/B9JeAvJ-sLCALqkp.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1888655279383793664/pu/vid/avc1/720x1166/HTm-7TapahkX6mRn.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1887908897819709440/pu/vid/avc1/720x1194/LEeaDLSnNoOmfk5A.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1885580852416970752/pu/vid/avc1/720x766/At5K7c_azw-2CatD.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1792265631330619392/pu/vid/avc1/720x1038/Nl9-kBwf3vvTY_m0.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1884788293948084224/pu/vid/avc1/720x1096/VtTAOyT1XpC7GX00.mp4",
+      "https://video-s.twimg.com/amplify_video/1680366667027841024/vid/720x1090/Xcitr9IKKbmwRmZZ.mp4",
+      "https://video-s.twimg.com/amplify_video/1682674635920527360/vid/720x928/tiWWLddWYQxYCF9-.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1875610764641230848/pu/vid/avc1/720x1150/G6sd97G4dfrEpWeI.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1874370613877387264/pu/vid/avc1/720x1202/nDuEqhkfhF7W3oBX.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1874138116174323712/pu/vid/avc1/720x1188/55nBAZMh-L9TP9HK.mp4",
+      "https://video-s.twimg.com/amplify_video/1683585431479406592/vid/720x996/ScwGZ6Ayg4AvUAjg.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1649677567744688129/pu/vid/720x1086/BkiZ9nwH67A6kh6M.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1792092241311543296/pu/vid/avc1/720x1166/66BY7ZTKULGu-GR-.mp4",
+      "https://video-s.twimg.com/amplify_video/1707216433456046080/vid/avc1/720x1142/JjWNBpTYiHczGryx.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1802026763557666817/pu/vid/avc1/720x1218/x8hydFYesYizONhQ.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1865972834402447360/pu/vid/avc1/708x1280/4V9nhgkEN8POym1R.mp4",
+      "https://video-s.twimg.com/amplify_video/1617274286796079104/vid/1080x1322/VYSokDHgaR_ec88p.mp4",
+      "https://video-s.twimg.com/amplify_video/1754564232258170880/vid/avc1/720x1152/XdjDqR8sNL0WuhcJ.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1865645611246125056/pu/vid/avc1/720x1224/PV-hW6Fd9HJKAk52.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1865548211760316416/pu/vid/avc1/720x758/8pOiuQru_a2oWqfX.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1710817979825582080/pu/vid/avc1/720x972/XnpHCgpaFCjf7Jas.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1865128801581043712/pu/vid/avc1/1280x702/sv3U-evaLls-TlGN.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1864792725154848769/pu/vid/avc1/720x1266/LFrj49lKxhg_9JHe.mp4",
+      "https://video-s.twimg.com/amplify_video/1739913444151980032/vid/avc1/720x1108/jkd9oHccMWNRSNOy.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1864569554585681920/pu/vid/avc1/720x1270/vX3BUDWBu2uNCdLU.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1864234289887350784/pu/vid/avc1/720x1194/xNXBAjyquybP-1eC.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1862973123668099072/pu/vid/avc1/720x1064/TsmJtiU02kn4XAu4.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1612224121122979840/pu/vid/720x862/SsbGZDjNA9TXIOOG.mp4",
+      "https://video-s.twimg.com/amplify_video/1704895842023542784/vid/avc1/720x982/_ySBpMa6cr5FNjlM.mp4",
+      "https://video-s.twimg.com/amplify_video/1668106303779246080/vid/720x988/hUXZIfPhtbBGZDR-.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1605975619925184514/pu/vid/720x1204/44tBWsKQCsV_-bSY.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1806233873195630592/pu/vid/avc1/720x1248/XtehewsXxA7z6nFl.mp4",
+      null,
+      "https://video-s.twimg.com/amplify_video/1948222634149171200/vid/avc1/1080x1920/HMe-OI7B6-6YUkQL.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1852938011564183552/pu/vid/avc1/698x1240/kPlPCgu1FvbboG-d.mp4",
+      "https://video-s.twimg.com/amplify_video/1919198112876568576/vid/avc1/1080x1730/ZOBi17l37SwkJZT0.mp4",
+      "https://video-s.twimg.com/amplify_video/1911957482366189568/vid/avc1/1080x1920/FzXgZpg3TkPWQLIu.mp4",
+      "https://video-s.twimg.com/amplify_video/1907979197186031616/vid/avc1/1080x1620/9iZ2F3y6V-Xi5ZV-.mp4",
+      "https://video-s.twimg.com/amplify_video/2002129797439500290/vid/avc1/2160x3840/i6s6znLjRrxUYVg6.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1896420747859386368/pu/vid/avc1/592x1280/L-TJgjYKDdzTVOrX.mp4",
+      "https://video-s.twimg.com/amplify_video/1876047532289101824/vid/avc1/720x960/iaEO47jL3TFed4ey.mp4",
+      "https://video-s.twimg.com/amplify_video/1948715558058213379/vid/avc1/1080x1920/FqMchY6aERttUkmm.mp4",
+      "https://video-s.twimg.com/amplify_video/1905419321079152640/vid/avc1/720x1280/X8YDFbbLye1scaA3.mp4",
+      "https://video-s.twimg.com/amplify_video/1881565627204206592/vid/avc1/1080x1356/Iv8p03s4jAsLqS6T.mp4",
+      "https://video-s.twimg.com/amplify_video/1920572479212290048/vid/avc1/2160x3234/JfirYjFzBALh7vs7.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1959938560074608640/pu/vid/avc1/464x848/DHUSDzQ0GJW4Y-VF.mp4",
+      "https://video-s.twimg.com/amplify_video/1913755165926010881/vid/avc1/720x1080/RHB0bOnz_QsnIv8D.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1777817703111098368/pu/vid/avc1/720x1280/5Zwacza_dnO8JBuc.mp4",
+      "https://video-s.twimg.com/amplify_video/1966665019262636032/vid/avc1/2160x2880/aDfKuUIB0un5XCe6.mp4",
+      "https://video-s.twimg.com/amplify_video/1886251719257989120/vid/avc1/720x1280/15d4Sdst-z6QOByp.mp4",
+      "https://video-s.twimg.com/amplify_video/1877820416460566528/vid/avc1/1080x1280/iUU6c383PVf6Dyhw.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1875604108851195904/pu/vid/avc1/1280x720/OFoUnib0IKZ3LOc5.mp4",
+      "https://video-s.twimg.com/amplify_video/1942173216929206272/vid/avc1/720x1280/ZsbvAw8aS6qqhWYo.mp4",
+      "https://video-s.twimg.com/amplify_video/2002145089108230144/vid/avc1/656x1232/Vk_nMLiH7obz0K87.mp4",
+      "https://video-s.twimg.com/amplify_video/1953118855406006273/vid/avc1/1080x1920/PJ7jn1toGMBFWAgF.mp4",
+      "https://video-s.twimg.com/amplify_video/1930268667238817792/vid/avc1/720x1280/RFDaHqJRVdu9ZNDH.mp4",
+      "https://video-s.twimg.com/amplify_video/1769404048233394176/vid/avc1/720x1280/IPEkFKqeTaq8kMq2.mp4",
+      "https://video-s.twimg.com/amplify_video/1875718677997481988/vid/avc1/1080x1080/0TchX3vi6f1orDOW.mp4",
+      "https://video-s.twimg.com/amplify_video/1956415559383293952/vid/avc1/720x1280/D4OD3OKi3mVN4X7v.mp4",
+      "https://video-s.twimg.com/amplify_video/1951681154551050240/vid/avc1/1078x1920/U3AOb6Ie9rZhmlwo.mp4",
+      "https://video-s.twimg.com/amplify_video/1898765630410547200/vid/avc1/720x1280/nei3thRGPhP_-gD1.mp4",
+      "https://video-s.twimg.com/amplify_video/1691113195639848962/vid/720x1280/sJhp-nPqsBTDIeqX.mp4",
+      "https://video-s.twimg.com/amplify_video/1840513906755993600/vid/avc1/732x720/-E49NDVbyQMu_kgY.mp4",
+      "https://video-s.twimg.com/amplify_video/1879657557637103617/vid/avc1/720x1280/oLMFm_orU5VKaV2b.mp4",
+      "https://video-s.twimg.com/amplify_video/1833262163471020032/vid/avc1/1080x1438/-DPgZvzDqQACA0iT.mp4",
+      "https://video-s.twimg.com/amplify_video/1877135788959219712/vid/avc1/1080x1920/bSrCHi4CXM4qzFzA.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1880352480472502272/pu/vid/avc1/720x1168/Hw3i0Sn1qgcSYC9-.mp4",
+      "https://video-s.twimg.com/amplify_video/1862581508537724928/vid/avc1/1080x1920/aRsZjKtIdauUDDKd.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1742530997244035072/pu/vid/avc1/720x1280/njO61bjdeeIFCIaH.mp4",
+      "https://video-s.twimg.com/amplify_video/1928234945584971776/vid/avc1/1080x1920/U-WVupyiRizLqc6T.mp4",
+      "https://video-s.twimg.com/amplify_video/1898765630406377472/vid/avc1/720x1280/5xglOvDAHNLwWq6j.mp4",
+      "https://video-s.twimg.com/amplify_video/1985801902831849472/vid/avc1/720x1280/4BajsYe0w8xUdHrV.mp4",
+      "https://video-s.twimg.com/amplify_video/1894546385606762496/vid/avc1/1920x1080/McvBmfyFWGuAfCbu.mp4",
+      "https://video-s.twimg.com/amplify_video/1831808173960769536/vid/avc1/1280x720/Nzqj0z_ZoK6hkxbN.mp4",
+      "https://video-s.twimg.com/amplify_video/1920156427760394241/vid/avc1/1080x1920/nZ7EzJE1kEU2b7BH.mp4",
+      "https://video-s.twimg.com/amplify_video/1936275026379976704/vid/avc1/1280x720/AJBiAlcXKCEpCBWe.mp4",
+      "https://video-s.twimg.com/amplify_video/1898614837334224896/vid/avc1/720x1280/wWC62dIg0bX8ieSR.mp4",
+      "https://video-s.twimg.com/amplify_video/1896823690471342080/vid/avc1/1080x1080/Fl8s3kNh2qFwX2pE.mp4",
+      "https://video-s.twimg.com/amplify_video/1917806203876564997/vid/avc1/1080x1920/bHcZ-q_kvldrT_df.mp4",
+      "https://video-s.twimg.com/amplify_video/1913006932312367105/vid/avc1/720x1150/QGQ8kyyvObWHT0Cm.mp4",
+      "https://video-s.twimg.com/amplify_video/1896855384754663424/vid/avc1/720x960/-uOKvzFpxjw8HB-M.mp4",
+      "https://video-s.twimg.com/amplify_video/1898765630418866176/vid/avc1/720x1280/mlyIr36TodsBy2Ka.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1876403494061510657/pu/vid/avc1/1280x720/qt9bqFFm9AkEHckI.mp4",
+      "https://video-s.twimg.com/amplify_video/1822268626285596672/vid/avc1/720x960/_aDnUvKgV_-tDIET.mp4",
+      "https://video-s.twimg.com/amplify_video/1884014865192210432/vid/avc1/1080x1920/kwQyJwJdb4thSkAI.mp4",
+      "https://video-s.twimg.com/amplify_video/2001451689870606336/vid/avc1/720x1280/OZQMzWF9axdAxDIS.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1872314072944771072/pu/vid/avc1/720x1280/urmJtJPuD3HZN5T8.mp4",
+      "https://video-s.twimg.com/amplify_video/2002145089112489985/vid/avc1/720x820/qg8ftZfe7v4J1oki.mp4",
+      "https://video-s.twimg.com/amplify_video/1879321419621834752/vid/avc1/720x1280/IWaHKj0qA2qFVFry.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1876642101166817280/pu/vid/avc1/720x1280/Ns_cbPBCHsfT60Q7.mp4",
+      "https://video-s.twimg.com/amplify_video/1914114695402754049/vid/avc1/1080x1920/VWjLmrDjDNi2E_-N.mp4",
+      "https://video-s.twimg.com/amplify_video/1835290673181761536/vid/avc1/1080x1920/uwBCjtTGJd5Ija8_.mp4",
+      "https://video-s.twimg.com/amplify_video/1950636703305039872/vid/avc1/720x966/ThcfiW9Ijdr0lG3m.mp4",
+      "https://video-s.twimg.com/amplify_video/1876083170455568384/vid/avc1/1080x1560/cEJhtgL9WqECcQ4s.mp4",
+      "https://video-s.twimg.com/amplify_video/1959324887027191808/vid/avc1/1080x1920/aeOvwrunzmscjygX.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1796245398962503680/pu/vid/avc1/720x1280/e-MdhFbDgc1DNJTp.mp4",
+      "https://video-s.twimg.com/amplify_video/1963000330393661440/vid/avc1/1080x1920/8fnb9zZZOp9hUxEn.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1856064977708134400/pu/vid/avc1/720x1280/pZ3VZuJ-94kwo00Z.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1768820584551415808/pu/vid/avc1/688x1280/TLwBxiZaWa4MHA2I.mp4",
+      "https://video-s.twimg.com/amplify_video/1852791076559663104/vid/avc1/1280x720/pVpO_191lLUX42_W.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1927688703570264064/pu/vid/avc1/720x1246/xi8dZ0qxikoha9WC.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1087560672139866114/pu/vid/720x1280/BRzu6rmu1vLhtSb2.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1877019718151745537/pu/vid/avc1/1280x720/JNyPCaNI1J_VkjRv.mp4",
+      "https://video-s.twimg.com/amplify_video/1880144114445959168/vid/avc1/1080x1920/GnYrmM3pZfV4wO2V.mp4",
+      "https://video-s.twimg.com/amplify_video/1948158736998055937/vid/avc1/720x1280/NRSbyAr7XlbUrLcb.mp4",
+      "https://video-s.twimg.com/amplify_video/1807311624732016640/vid/avc1/1920x1080/lRXKZ3q6ZZQCgNup.mp4",
+      "https://video-s.twimg.com/amplify_video/1989353795306795008/vid/avc1/1080x1920/_to1J3bx-lR5dwvW.mp4",
+      "https://video-s.twimg.com/amplify_video/1826992608465338368/vid/avc1/1080x1920/JZQzX5hRxV4TtqB9.mp4",
+      "https://video-s.twimg.com/amplify_video/1959606104540733440/vid/avc1/1080x1920/223a6L9P4yVv5nnG.mp4",
+      "https://video-s.twimg.com/amplify_video/1884631276088623104/vid/avc1/844x720/S-NJTBHOC01kB6op.mp4",
+      "https://video-s.twimg.com/amplify_video/1898771911414300672/vid/avc1/720x1280/ocKS7P_QxfA_xNnW.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1877382315938123776/pu/vid/avc1/720x1280/377TFyegQrWT1deY.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1852670535722803200/pu/vid/avc1/480x480/Iw_Bi-jv4Uqg8PAF.mp4",
+      "https://video-s.twimg.com/amplify_video/1928760787838881792/vid/avc1/2160x3840/kHPBV6AboE4kO83Z.mp4",
+      "https://video-s.twimg.com/amplify_video/1948920772530966529/vid/avc1/720x1280/MntFUl1yM4wr3dzb.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1999350253829365761/pu/vid/avc1/720x1090/4_G2xZSPas4DnxB7.mp4",
+      "https://video-s.twimg.com/amplify_video/2001384907503697920/vid/avc1/1440x2560/XYjP9KiVqEywDLFj.mp4",
+      "https://video-s.twimg.com/amplify_video/1920969486070673409/vid/avc1/720x1280/xxr0jiuqjta7tawN.mp4",
+      "https://video-s.twimg.com/amplify_video/1928313250409488384/vid/avc1/720x1280/cbvlP1y0JSbWguqz.mp4",
+      null,
+      "https://video-s.twimg.com/ext_tw_video/1578036561047785473/pu/vid/720x906/6pI-yo3ST75KdYKS.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1874138116174323712/pu/vid/avc1/720x1188/55nBAZMh-L9TP9HK.mp4",
+      "https://video-s.twimg.com/amplify_video/1801652847710253056/vid/avc1/720x1282/rVYpEKgUsLmdP0AO.mp4",
+      "https://video-s.twimg.com/amplify_video/1897775696081989632/vid/avc1/718x1280/-N1_xL1XQ-r5j75u.mp4",
+      "https://video-s.twimg.com/amplify_video/1897775696069439489/vid/avc1/720x1142/GMchbdNSjP4gvKy9.mp4",
+      "https://video-s.twimg.com/amplify_video/1874893286462119936/vid/avc1/1280x720/0vGmxWVrFgKZwEmH.mp4",
+      "https://video-s.twimg.com/amplify_video/1833262163471020032/vid/avc1/1080x1438/-DPgZvzDqQACA0iT.mp4",
+      "https://video-s.twimg.com/amplify_video/1896725476799815680/vid/avc1/1080x1920/MgPCcHlPMhMufUmi.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1851298156539232257/pu/vid/avc1/720x720/f5vyJujZDuNjImCf.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1665048789063745537/pu/vid/720x1280/Y8SChHi4mUydrRWs.mp4",
+      "https://video-s.twimg.com/amplify_video/1834337178345746432/vid/avc1/1080x1920/8MI4OmrfgeqCc_S7.mp4",
+      "https://video-s.twimg.com/amplify_video/1783377955944587264/vid/avc1/720x1560/X1jmMpr-_vaKmIqk.mp4",
+      "https://video-s.twimg.com/amplify_video/1894644939130032129/vid/avc1/720x944/__lVv_k_nzKpwkj1.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1823973161571897344/pu/vid/avc1/720x840/vkvrS0RG4KB71L6q.mp4",
+      "https://video-s.twimg.com/amplify_video/1674856078478114816/vid/720x1280/T7qYt6vqPVNtfnMi.mp4",
+      "https://video-s.twimg.com/amplify_video/1849047025137979392/vid/avc1/720x1280/oV1BDT8sTi5Z9C0L.mp4",
+      "https://video-s.twimg.com/amplify_video/1841413644766310400/vid/avc1/1920x1080/HHbxxzPG-XS_D_Ck.mp4",
+      "https://video-s.twimg.com/amplify_video/1892583278692925440/vid/avc1/720x1280/mFshEPra09xsWMe5.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1891132794924883968/pu/vid/avc1/720x1138/ztXaS6Z3EyNCO2YG.mp4",
+      "https://video-s.twimg.com/amplify_video/1894535962606145537/vid/avc1/720x720/s-Fgx7v3Sw-KwvS4.mp4",
+      "https://video-s.twimg.com/ext_tw_video/730415870896439296/pu/vid/540x360/PxbgPi9ovHASyT0J.mp4",
+      "https://video-s.twimg.com/amplify_video/1892349580139720704/vid/avc1/1080x1920/EHM5vvsN22QWTsAw.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1892720500482154496/pu/vid/avc1/848x464/wnBBrNel3GKg8uuQ.mp4",
+      "https://video-s.twimg.com/amplify_video/1892268418524495872/vid/avc1/1080x1080/RKQ5h-wmVJRDWSVJ.mp4",
+      "https://video-s.twimg.com/amplify_video/1891532987789082627/vid/avc1/720x1280/2Fm6zHGrdODFjXNl.mp4",
+      "https://video-s.twimg.com/amplify_video/1891674573747126272/vid/avc1/296x640/jsPegCwKjq71BL-k.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1889441692899532800/pu/vid/avc1/720x1240/aJJKvrNnNMKgNSbN.mp4",
+      "https://video-s.twimg.com/amplify_video/1891248155674497025/vid/avc1/720x1016/xyswR1Z79DfY_YFB.mp4",
+      "https://video-s.twimg.com/amplify_video/1890957508845383680/vid/avc1/1920x1080/LM2O5z0jMILQajbX.mp4",
+      "https://video-s.twimg.com/amplify_video/1890151144015466496/vid/avc1/720x1280/43HkWjji_NmHvUEt.mp4",
+      "https://video-s.twimg.com/amplify_video/1890059041902034944/vid/avc1/720x1282/GcmUBQB6pV1tuGfr.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1650947385302843392/pu/vid/656x1168/NZjz09wkPkCIaM1_.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1889735794199302144/pu/vid/avc1/720x1280/4ZoLeIioOUCPtJov.mp4",
+      "https://video-s.twimg.com/amplify_video/1798734660824162304/vid/avc1/720x1280/_qgnutXujudTFaxX.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1887896090092916736/pu/vid/avc1/1280x720/6BXKdj6DKLkaAJjF.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1887908897819709440/pu/vid/avc1/720x1194/LEeaDLSnNoOmfk5A.mp4",
+      "https://video-s.twimg.com/amplify_video/1887703396309762048/vid/avc1/720x1280/gmyOHcXAqnGCtMqw.mp4",
+      "https://video-s.twimg.com/amplify_video/1689061630217183232/vid/720x960/lOOm4Wr4F_urBsQY.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1887703763063820288/pu/vid/avc1/720x1162/Y-cHSo7NC456P1zd.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1887632012363644928/pu/vid/avc1/368x656/P-xpo7ssaNR_3apE.mp4",
+      "https://video-s.twimg.com/amplify_video/1878518340399886337/vid/avc1/1080x1920/P7qV8NcrTWPzQyDu.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1887545075640541184/pu/vid/avc1/720x1280/u8FVlZv9ihMe5lrn.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1467046054755459074/pu/vid/720x1280/IxPi2vC4QsVtlDhA.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1403747949893541897/pu/vid/720x926/a7zkmcmOBm7HNMXZ.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1677552063268413441/pu/vid/672x1232/ps3hs3mzcyG7K8yT.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1638799978742050819/pu/vid/720x1280/PXQ8hevMX0bZZK7F.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1802681823991881728/pu/vid/avc1/1280x720/-Madax3KUz28KPM6.mp4",
+      "https://video-s.twimg.com/amplify_video/1810322036402597888/vid/avc1/1920x1080/6GiYFDurHBu4KQDK.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1846273736367804416/pu/vid/avc1/480x634/WaY15tbaK3sbWopg.mp4",
+      "https://video-s.twimg.com/amplify_video/1856940622721986560/vid/avc1/1080x1920/GT2p6Fl_smde8AhV.mp4",
+      "https://video-s.twimg.com/amplify_video/1809434336959016960/vid/avc1/1080x1920/bjehROdECb4WPu_p.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1136064640134369280/pu/vid/540x960/HMGO-GvX_pSj-k3I.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1753922248711311360/pu/vid/avc1/848x480/c4QfRGpfFUPQN-jp.mp4",
+      "https://video-s.twimg.com/ext_tw_video/1209783484811808769/pu/vid/640x352/E9WKtTiY1SVzlaR-.mp4",
+      "https://video-s.twimg.com/amplify_video/1852671040809586688/vid/avc1/1080x1920/xMF_HDFhLwCXfQfR.mp4",
+      null,
+      "https://media.redgifs.com/BigMellowMole.mp4",
+      "https://media.redgifs.com/DownrightSteelBluetickcoonhound.mp4",
+      "https://media.redgifs.com/AcrobaticCriticalXiphiasgladius.mp4",
+      "https://media.redgifs.com/DimCuddlyIberianmidwifetoad.mp4",
+      "https://media.redgifs.com/PeskyMediumforestgreenSouthernhairnosedwombat.mp4",
+      "https://media.redgifs.com/HappygoluckyProperScorpion.mp4",
+      "https://media.redgifs.com/NarrowWoodenIndusriverdolphin.mp4",
+      "https://media.redgifs.com/UnsightlyNavajowhiteAfricancivet.mp4",
+      "https://media.redgifs.com/MammothPerfectHackee.mp4",
+      "https://media.redgifs.com/IckyLoyalTarsier.mp4",
+      "https://media.redgifs.com/MenacingDifficultIndianpalmsquirrel.mp4",
+      "https://media.redgifs.com/RundownSeparateNoctule.mp4",
+      "https://media.redgifs.com/BowedMiniatureRainbowlorikeet.mp4",
+      "https://media.redgifs.com/AdoredTriangularSilkworm.mp4",
+      "https://media.redgifs.com/TinyDistantPrawn.mp4",
+      "https://media.redgifs.com/UnhappyIdenticalDikkops.mp4",
+      "https://media.redgifs.com/MadeupPlayfulBarasingha.mp4",
+      "https://media.redgifs.com/TrustySereneAmericanwigeon.mp4",
+      "https://media.redgifs.com/PlayfulFickleIchneumonfly.mp4",
+      "https://media.redgifs.com/EachStrongCarp.mp4",
+      "https://media.redgifs.com/GoodIdolizedArmadillo.mp4",
+      "https://media.redgifs.com/GummyWeakMerganser.mp4",
+      "https://media.redgifs.com/GreatComplicatedKillifish.mp4",
+      "https://media.redgifs.com/ExcellentSecretHound.mp4",
+      "https://media.redgifs.com/KindlyPuzzlingLionfish.mp4",
+      "https://media.redgifs.com/PaltryBriskAtlanticspadefish.mp4",
+      "https://media.redgifs.com/TomatoJadedAquaticleech.mp4",
+      "https://media.redgifs.com/CompassionateSoggyIzuthrush.mp4",
+      "https://media.redgifs.com/SmugEssentialBetafish.mp4",
+      "https://media.redgifs.com/PeruThriftyAuk.mp4",
+      "https://media.redgifs.com/LumpyLankyMantaray.mp4",
+      "https://media.redgifs.com/AridShadowyAmericangoldfinch.mp4",
+      "https://media.redgifs.com/DampLooseKagu.mp4",
+      "https://media.redgifs.com/DarkslategrayConsciousBlacklab.mp4",
+      "https://media.redgifs.com/FluffyLuckyBobcat.mp4",
+      "https://media.redgifs.com/FirsthandWideeyedLungfish.mp4",
+      "https://media.redgifs.com/ElegantJealousHairstreakbutterfly.mp4",
+      "https://media.redgifs.com/HandmadeHeftyNewt.mp4",
+      "https://media.redgifs.com/IndigoPettyFoxhound.mp4",
+      "https://media.redgifs.com/WarmFrequentIrishdraughthorse.mp4",
+      "https://media.redgifs.com/HoarseDenseHarrierhawk.mp4",
+      "https://media.redgifs.com/WideeyedImmaculateGrebe.mp4",
+      "https://media.redgifs.com/PrivateEvergreenMuskrat.mp4",
+      "https://media.redgifs.com/TurquoiseEmbellishedHoverfly.mp4",
+      "https://media.redgifs.com/ExoticBluevioletSouthernhairnosedwombat.mp4",
+      "https://media.redgifs.com/BumpySaltyBellfrog.mp4",
+      "https://media.redgifs.com/GrownLegalFreshwatereel.mp4",
+      "https://media.redgifs.com/TheseTrustworthyAfricanparadiseflycatcher.mp4",
+      "https://media.redgifs.com/DraftyMessyQuetzal.mp4",
+      "https://media.redgifs.com/AltruisticHilariousTopi.mp4",
+      "https://media.redgifs.com/SandybrownHealthyBass.mp4",
+      "https://media.redgifs.com/GratefulDefiantGadwall.mp4",
+      "https://media.redgifs.com/WorthlessNuttyMongrel.mp4",
+      "https://media.redgifs.com/UnwillingWindySlug.mp4",
+      "https://media.redgifs.com/CleanIncomparableRail.mp4",
+      "https://media.redgifs.com/AutomaticPopularCorydorascatfish.mp4",
+      "https://media.redgifs.com/GraveGullibleGraysquirrel.mp4",
+      "https://media.redgifs.com/SwiftAthleticLeech.mp4",
+      "https://media.redgifs.com/RadiantScaredIntermediateegret.mp4",
+      "https://media.redgifs.com/EasygoingBrownAtlanticblackgoby.mp4",
+      "https://media.redgifs.com/MonthlyDoubleCommabutterfly.mp4",
+      "https://media.redgifs.com/VitalRelievedQuelea.mp4",
+      "https://media.redgifs.com/FruitfulWelcomeIberianbarbel.mp4",
+      "https://media.redgifs.com/DecentPleasantCob.mp4",
+      "https://media.redgifs.com/KosherFemaleYeti.mp4",
+      "https://media.redgifs.com/UpbeatDarlingEasteuropeanshepherd.mp4",
+      "https://media.redgifs.com/GullibleSuperiorBlacklab.mp4",
+      "https://media.redgifs.com/DarkorchidSvelteMarten.mp4",
+      "https://media.redgifs.com/CapitalRingedSwallowtail.mp4",
+      "https://media.redgifs.com/PurpleRowdyAstarte.mp4",
+      "https://media.redgifs.com/DampProbableAntlion.mp4",
+      "https://media.redgifs.com/ImpressionableArcticArgali.mp4",
+      "https://media.redgifs.com/AgileMintyBrahmanbull.mp4",
+      "https://media.redgifs.com/WrathfulDiligentScarab.mp4",
+      "https://media.redgifs.com/GruesomeDarkgreyAnemonecrab.mp4",
+      "https://media.redgifs.com/TheseNocturnalIbadanmalimbe.mp4",
+      "https://media.redgifs.com/OrangeThoroughNightcrawler.mp4",
+      "https://media.redgifs.com/DoubleYawningFish.mp4",
+      "https://media.redgifs.com/SpeedyAzureCapybara.mp4",
+      "https://media.redgifs.com/KnowingDamagedMule.mp4",
+      "https://media.redgifs.com/ChillyCloudyFieldmouse.mp4",
+      "https://media.redgifs.com/MetallicScaryAruanas.mp4",
+      "https://media.redgifs.com/ShinyCleanMockingbird.mp4",
+      "https://media.redgifs.com/PrizeUntimelyYellowwhitebutterfly.mp4",
+      "https://media.redgifs.com/JitterySteelblueEquine.mp4",
+      "https://media.redgifs.com/IdenticalNegativeDikkops.mp4",
+      "https://media.redgifs.com/DigitalAthleticRockrat.mp4",
+      "https://media.redgifs.com/ShimmeringWealthyIvorygull.mp4",
+      "https://media.redgifs.com/SturdyJubilantAffenpinscher.mp4",
+      "https://media.redgifs.com/BonyWildFugu.mp4",
+      "https://media.redgifs.com/FrivolousUsedHalicore.mp4",
+      "https://media.redgifs.com/UnitedMediumaquamarineSpringtail.mp4",
+      "https://media.redgifs.com/BitterAustereLabradorretriever.mp4",
+      "https://media.redgifs.com/ThoseShoddyLovebird.mp4",
+      "https://media.redgifs.com/BestGrownGlobefish.mp4",
+      "https://media.redgifs.com/QuaintSlateblueEland.mp4",
+      "https://media.redgifs.com/UnhappyFlamboyantAmericancrocodile.mp4",
+      "https://media.redgifs.com/HatefulSardonicMudpuppy.mp4",
+      "https://media.redgifs.com/BubblyAmusedStinkpot.mp4",
+      "https://media.redgifs.com/SphericalSlowTapaculo.mp4",
+      "https://media.redgifs.com/KnottyAdmirableMullet.mp4",
+      "https://media.redgifs.com/OlivedrabWornBeagle.mp4",
+      "https://media.redgifs.com/DrySoftLunamoth.mp4",
+      "https://media.redgifs.com/SqueakyFabulousPenguin.mp4",
+      "https://media.redgifs.com/DigitalLazyReynard.mp4",
+      "https://media.redgifs.com/SteelAssuredNabarlek.mp4",
+      "https://media.redgifs.com/ElementaryCrimsonOpossum.mp4",
+      "https://media.redgifs.com/RedBrownEwe.mp4",
+      "https://media.redgifs.com/StrictHugeSouthernhairnosedwombat.mp4",
+      "https://media.redgifs.com/NearLightgreyIndianrhinoceros.mp4",
+      "https://media.redgifs.com/PreviousWorldlyBlackfootedferret.mp4",
+      "https://media.redgifs.com/TremendousSevereTenrec.mp4",
+      "https://media.redgifs.com/WretchedDeeppinkIndianpangolin.mp4",
+      "https://media.redgifs.com/SandybrownSturdyNeedletail.mp4",
+      "https://media.redgifs.com/CultivatedPrettyWaterbug.mp4",
+      "https://media.redgifs.com/AlarmedShyMoa.mp4",
+      "https://media.redgifs.com/SunnyFriendlyMajungatholus.mp4",
+      "https://media.redgifs.com/UltimateSparseGarpike.mp4",
+      "https://media.redgifs.com/ShorttermNearIvorygull.mp4",
+      "https://media.redgifs.com/NeglectedRoughBoa.mp4",
+      "https://media.redgifs.com/DampImaginativeReindeer.mp4",
+      "https://media.redgifs.com/IncredibleIndianredCalf.mp4",
+      "https://media.redgifs.com/ItchyImperturbableMalamute.mp4",
+      "https://media.redgifs.com/FavorableMaroonIaerismetalmark.mp4",
+      "https://media.redgifs.com/HeavyAcclaimedAmethystgemclam.mp4",
+      "https://media.redgifs.com/DarlingOrderlyAldabratortoise.mp4",
+      "https://media.redgifs.com/OffensiveBisqueAmericancurl.mp4",
+      "https://media.redgifs.com/OnerlookedWellinformedBarnowl.mp4",
+      "https://media.redgifs.com/CluelessFewOwlbutterfly.mp4",
+      "https://media.redgifs.com/DiligentScratchyLonghornbeetle.mp4",
+      "https://media.redgifs.com/LikableDecentHoverfly.mp4",
+      "https://media.redgifs.com/ElementaryArcticDegu.mp4",
+      "https://media.redgifs.com/SmoothArtisticWisent.mp4",
+      "https://media.redgifs.com/ChubbyWellgroomedOstracod.mp4",
+      "https://media.redgifs.com/FloweryNiftyDragonfly.mp4",
+      "https://media.redgifs.com/MaleReasonablePterosaurs.mp4",
+      "https://media.redgifs.com/UntriedCreepyEnglishpointer.mp4",
+      "https://media.redgifs.com/ElectricDroopyInchworm.mp4",
+      "https://media.redgifs.com/SubmissiveMidnightblueImago.mp4",
+      "https://media.redgifs.com/SteelblueStrongBedbug.mp4",
+      "https://media.redgifs.com/ZealousWoozyTigershark.mp4",
+      "https://media.redgifs.com/KhakiPeskyCowrie.mp4",
+      "https://media.redgifs.com/FrozenMindlessCurassow.mp4",
+      "https://media.redgifs.com/BurdensomeUnconsciousAndeancat.mp4",
+      "https://media.redgifs.com/CarelessValuableFunnelweaverspider.mp4",
+      "https://media.redgifs.com/SuburbanUnhealthyEuropeanpolecat.mp4",
+      "https://media.redgifs.com/MellowSugaryAnkole.mp4",
+      "https://media.redgifs.com/AmpleMildDunnart.mp4",
+      "https://media.redgifs.com/UnfitCostlyNorthernspottedowl.mp4",
+      "https://media.redgifs.com/BrownAverageCleanerwrasse.mp4",
+      "https://media.redgifs.com/StraightUnsteadyUrchin.mp4",
+      "https://media.redgifs.com/DimgreyBackHorseshoecrab.mp4",
+      "https://media.redgifs.com/RaggedMammothChevrotain.mp4",
+      "https://media.redgifs.com/MediumblueAjarMara.mp4",
+      "https://media.redgifs.com/LoudSardonicIndianspinyloach.mp4",
+      "https://media.redgifs.com/EvenSinfulRaptors.mp4",
+      "https://media.redgifs.com/RoundDeliciousGibbon.mp4",
+      "https://media.redgifs.com/DoubleDarkgreenGraysquirrel.mp4",
+      "https://media.redgifs.com/ComplexBlackArachnid.mp4",
+      "https://media.redgifs.com/ShockingLoathsomeJellyfish.mp4",
+      "https://media.redgifs.com/TriflingMotionlessIguana.mp4",
+      "https://media.redgifs.com/LiveOliveAzurevasesponge.mp4",
+      "https://media.redgifs.com/TameDecimalQuahog.mp4",
+      "https://media.redgifs.com/ShockedSardonicAlabamamapturtle.mp4",
+      "https://media.redgifs.com/AstonishingMeanBuzzard.mp4",
+      "https://media.redgifs.com/FrightenedDarkseagreenPeafowl.mp4",
+      "https://media.redgifs.com/AcademicSuddenHind.mp4",
+      "https://media.redgifs.com/WaterloggedNormalHammerheadshark.mp4",
+      "https://media.redgifs.com/PinkHighBlackbear.mp4",
+      "https://media.redgifs.com/GleefulUltimateEmperorpenguin.mp4",
+      "https://media.redgifs.com/SmoothRosyVelociraptor.mp4",
+      "https://media.redgifs.com/CleanShyBlacklab.mp4",
+      "https://media.redgifs.com/RoastedRedEeve.mp4",
+      "https://media.redgifs.com/AntiquewhiteShrillOriole.mp4",
+      "https://media.redgifs.com/TestyNonstopAustraliankestrel.mp4",
+      "https://media.redgifs.com/SilverTerrificDogfish.mp4",
+        "https://media.redgifs.com/FatSnarlingGreatargus.mp4",
+      "https://media.redgifs.com/OvercookedCostlyEelelephant.mp4",
+      "https://media.redgifs.com/EquatorialSmallGypsymoth.mp4",
+      "https://media.redgifs.com/ShadyFrightenedClam.mp4",
+      "https://media.redgifs.com/SturdyWelcomeEnglishpointer.mp4",
+      "https://media.redgifs.com/PresentHideousPomeranian.mp4",
+      "https://media.redgifs.com/AdvancedIndigoLynx.mp4",
+      "https://media.redgifs.com/AutomaticVoluminousOrangutan.mp4",
+      "https://media.redgifs.com/UniformVillainousAsianpiedstarling.mp4",
+      "https://media.redgifs.com/PreviousCommonYearling.mp4",
+      "https://media.redgifs.com/InexperiencedSurprisedScarletibis.mp4",
+      "https://media.redgifs.com/WickedVacantPolliwog.mp4",
+      "https://media.redgifs.com/IdleMountainousHorseshoecrab.mp4",
+      "https://media.redgifs.com/EntireStrangeGonolek.mp4",
+      "https://media.redgifs.com/OlivedrabGrossDiplodocus.mp4",
+      "https://media.redgifs.com/RashDarkgoldenrodCuttlefish.mp4",
+      "https://media.redgifs.com/NeighboringSandybrownSawfish.mp4",
+      "https://media.redgifs.com/NegligibleFrigidDamselfly.mp4",
+      "https://media.redgifs.com/SecretCrazyXenops.mp4",
+      "https://media.redgifs.com/SpotlessUnrealisticElkhound.mp4",
+      "https://media.redgifs.com/OilyCourageousSeahorse.mp4",
+      "https://media.redgifs.com/AstonishingSpitefulCheetah.mp4",
+      "https://media.redgifs.com/OldComposedWatussi.mp4",
+      "https://media.redgifs.com/HonoredRowdyTamarin.mp4",
+      "https://media.redgifs.com/HumongousGreenAdamsstaghornedbeetle.mp4",
+      "https://media.redgifs.com/OblongMoistNightingale.mp4",
+      "https://media.redgifs.com/WebbedAbsoluteHammerheadshark.mp4",
+      "https://media.redgifs.com/LightslategrayPeruZebra.mp4",
+      "https://media.redgifs.com/StandardDeeppinkChinesecrocodilelizard.mp4",
+      "https://media.redgifs.com/AwkwardLinearAbyssiniangroundhornbill.mp4",
+      null,
+      "https://video.twimg.com/amplify_video/1914475571884777472/vid/avc1/1080x1920/NcL6VR_Mb_nyI0qb.mp4",
+      "https://video.twimg.com/amplify_video/1913403329390288897/vid/avc1/720x1280/xmmZazvqVkYurVvW.mp4",
+      "https://video.twimg.com/amplify_video/1770407630659518464/vid/avc1/720x1280/14OYulK8HglRgdwG.mp4",
+      "https://video.twimg.com/ext_tw_video/1913810467039977472/pu/vid/avc1/720x1280/5CzcelkVUatHgMFx.mp4",
+      "https://video.twimg.com/ext_tw_video/1667678302390067201/pu/vid/720x1054/wIt3YMtSmNHHzUiw.mp4",
+      "https://video.twimg.com/amplify_video/1899805964905390080/vid/avc1/1080x1920/m_kDQhq5LhgHHvAC.mp4",
+      "https://video.twimg.com/ext_tw_video/1867766712688320512/pu/vid/avc1/720x720/s5vLinfAs_xPLRJW.mp4",
+      "https://video.twimg.com/amplify_video/1889793737699557377/vid/avc1/1280x718/dSNbJ0xFDnRB6NFi.mp4",
+      "https://video.twimg.com/amplify_video/1874124040966754304/vid/avc1/1080x1920/knjG66yGUY_7mM8Y.mp4",
+      null,
+      "https://us-01.gff.network/2025/09/30/jerking-off-in-the-bathroom-and-shooting-a-huge-load-trent-williams-trentw-1759235488532/index.m3u8",
+      "https://us-02.gff.network/2025/10/02/jerking-my-young-cock-until-i-make-myself-cum-nick-fenway-nickfenway-1759403671229/index.m3u8",
+      "https://us-02.gff.network/2025/09/07/jerking-my-big-thick-cock-and-tasting-my-load-raphael-grey-addictionadd2-1757252896569/index.m3u8",
+      "https://us-02.gff.network/2025/08/17/anonymous-guy-sucks-my-dick-and-i-blow-my-load-over-his-face-raphael-grey-addictionadd2-1755360448113/index.m3u8",
+      "https://us-02.gff.network/2025/09/04/jerking-off-with-my-toy-and-shooting-my-load-curved-king-curvedking.inc-1756987675968/index.m3u8",
+      "https://us-02.gff.network/2025/07/14/stroking-my-cock-and-showing-off-my-muscles-bohdan-musclegod_ua-1752417068668/index.m3u8",
+      "https://us-02.gff.network/2025/06/12/jerking-off-while-wearing-my-wolverine-mask-capy-mrcapy-1749724809479/index.m3u8",
+      "https://us-01.gff.network/2026/01/18/quick-jerk-off-in-the-restroom-capy-mrcapy-1768736601558-e8l80w/index.m3u8",
+      "https://us-02.gff.network/2025/05/19/fucking-myself-with-a-dildo-and-jerking-my-cock-til-i-cum-gabriel-antonio-sobrenomeantonio-1747647648977/index.m3u8",
+      "https://us-01.gff.network/2025/05/14/quick-late-night-jerk-off-dubian-jauregui-dubianjauregui-1747212266409/index.m3u8",
+      "https://us-01.gff.network/2025/05/01/jerking-off-in-my-underwear-and-cumming-over-my-exercise-ball-gabriel-antonio-sobrenomeantonio-1746070231953/index.m3u8",
+      "https://us-01.gff.network/2026/03/31/jordan-jerks-off-after-baseball-jordanxbrandt-1774879765430-4e9yww/index.m3u8",
+      "https://us-02.gff.network/2026/03/25/stroking-my-cock-and-cumming-all-over-the-floor-alphadallas6969-1774358722519-7di2oq/index.m3u8",
+      "https://us-01.gff.network/2026/03/25/stroking-my-cock-and-cumming-over-myself-alphadallas6969-1774358812637-nztq4m/index.m3u8",
+      "https://us-02.gff.network/2026/03/25/stroking-my-big-daddy-dick-until-i-cum-big-dick-buddy-bigdbuddyxxx-1774357657267-zel79i/index.m3u8",
+      "https://us-01.gff.network/2026/03/24/stroking-my-thick-cock-and-cumming-over-my-underwear-big-dick-buddy-bigdbuddyxxx-1774273938984-88pr6m/index.m3u8",
+      "https://us-01.gff.network/2026/03/11/philippe-soulier-filoufitt-fucks-ashton-summers-ossanjurjo-1773159573950-w6h26/index.m3u8",
+      "https://us-02.gff.network/2026/03/08/jordans-cumpilation-jordanxbrandt1-1772969040104-lorlvq/index.m3u8",
+      "https://us-01.gff.network/2026/02/21/nycpole9-fucks-thickknpretti-1771651413166-fijhp/index.m3u8",
+      "https://us-02.gff.network/2026/02/21/jerking-off-in-bed-until-i-cum-jacksen-luna-1771676779105-lyjur/index.m3u8",
+      "https://us-01.gff.network/2026/02/01/evan-pitcher-evanpitcher-fucks-zarataco-zarataco-1769947322699-6gkh4o/index.m3u8",
+      "https://us-01.gff.network/2026/01/03/edger-nyc-edgerxnyc-edges-rico-marlon-1767405250657-d9018a/index.m3u8",
+      "https://us-02.gff.network/2025/12/25/luis-vieira-thelv-fucks-brody-meyer-brodymeyer-1766585997464-e3wan9/index.m3u8",
+      "https://us-01.gff.network/2025/12/19/jerking-my-thick-cock-and-making-myself-cum-raphael-grey-addictionadd2-1766113774296-f7h0ta/index.m3u8",
+      "https://us-02.gff.network/2025/12/11/showing-off-my-young-muscular-body-and-fucking-my-toy-benjamin-verbeck-therealbenitalian-1765453177069-kzay3/index.m3u8",
+      "https://us-02.gff.network/wup/c1/42/99/4f/6b/f2/56/34/655b3af7ea8dc2543d5707d3927ef082/Jerking-off-in-the-back-seat-of-the-car-while-my-mate-drives-Andyleexxx/index.m3u8",
+      "https://us-02.gff.network/2025/12/03/stroking-my-big-cock-and-cumming-over-my-muscular-body-brody-biggs-brodybiggsvip-1764762952119-teunig/index.m3u8",
+      "https://us-02.gff.network/2025/11/14/stroking-my-big-cock-in-bed-until-i-cum-valk-valkhorne-1763041600005/index.m3u8",
+      "https://us-02.gff.network/2026/02/05/david-christian-dombeeef-fucks-elijah-wilde-1770252264778-fn86d/index.m3u8",
+      "https://us-02.gff.network/2025/11/07/fucking-my-toy-and-making-myself-cum-hard-david-christian-dombeeef-1762434230858-v4aloj/index.m3u8",
+      "https://us-02.gff.network/2025/04/23/david-christian-dombeeef-fucks-diego-grant-fulltimepapi-1745409544039/index.m3u8",
+      "https://us-02.gff.network/2026/02/05/edging-my-cock-with-my-toy-and-cumming-hard-over-myself-david-christian-dombeeef-1770253361670-62f0zo/index.m3u8",
+      "https://us-02.gff.network/2022/09/23/5c1ac9d196e7dc8449c96db7ab5dccfb/Getting-a-hand-job-and-shooting-a-big-load-David-Christian-Dombeeef/index.m3u8",
+      "https://us-01.gff.network/2022/09/23/cc77235f99dae8f4f99f47dc89dec5ca/Getting-my-cock-edged-and-milked-David-Christian-Dombeeef/index.m3u8",
+      "https://us-01.gff.network/2025/08/18/lydian-grey-lydiangrey-fucks-raw-david-rawdavidx-1755524209880/index.m3u8",
+      "https://us-01.gff.network/2023/05/04/Late-night-jerk-off-FitNarad/index.m3u8",
+    ];
+        var DIV_LABELS = ['① BOYS LOVE TO CUM 💦', '② BroAssPhat', '③ cmrz', '④ GoonersNetwork', '⑤ 🅺🆁🅾🆃🅲🅷🅴🅳 💦💦', '⑥ Manjuicepod', '⑦ Mr. BigStroke', '⑧ redgifs', '⑨ short_cummers','⑩ Gay for Funs'];
+        
+(function(sec, SOURCES, DIV_LABELS) {
+
+  // ── Helpers ──────────────────────────────────────────────────
+  function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
+  function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
+  function getStart(s)  { return getEntry(s).start || 0; }
+  function getEnd(s)    { return getEntry(s).end   || null; }
+
+  function shuffleArr(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  // ── Build DOM ────────────────────────────────────────────────
+  const body = sec.querySelector('.vs-body');
+  const lightbox  = sec.querySelector('.vs-lightbox');
+  const backdrop  = sec.querySelector('.vs-backdrop');
+  const lbClose   = sec.querySelector('.vs-lb-close');
+  const lbPrev    = sec.querySelector('.vs-lb-prev');
+  const lbNext    = sec.querySelector('.vs-lb-next');
+  const lbVideo   = sec.querySelector('.vs-lb-video');
+  const counter   = sec.querySelector('.vs-lb-counter');
+  const btnShuffle    = sec.querySelector('.vs-btn-shuffle');
+  const btnSlideshow  = sec.querySelector('.vs-btn-slideshow');
+  const btnFullscreen = sec.querySelector('.vs-btn-fullscreen');
+  const btnAuto       = sec.querySelector('.vs-btn-auto');
+  const btnLoop       = sec.querySelector('.vs-btn-loop');
+  const btnPrevInline = sec.querySelector('.vs-btn-prev-inline');
+  const scratchVid    = sec.querySelector('.vs-scratch');
+
+  const PLAY_SVG = `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="28,20 64,40 28,60" fill="white"/>
+  </svg>`;
+
+  const videoSources = [];
+  const posterQueue  = [];
+  let   posterBusy   = false;
+  let   divCount     = 0;
+
+  SOURCES.forEach(src => {
+    if (src === null) {
+      const div = document.createElement('div');
+      div.className = 'vs-divider';
+      const label = DIV_LABELS[divCount] || ('Part ' + (divCount + 1));
+      divCount++;
+      div.innerHTML = `<div class="vs-divider-img"></div><span class="vs-divider-label">${label}</span>`;
+      body.insertBefore(div, lightbox);
+      return;
+    }
+    const videoIndex = videoSources.length;
+    videoSources.push(src);
+
+    const tile = document.createElement('div');
+    tile.className = 'vs-tile';
+
+    const img = document.createElement('img');
+    img.alt = '';
+    img.style.cssText = 'display:none;';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'vs-play-overlay';
+    overlay.innerHTML = PLAY_SVG;
+
+    tile.append(img, overlay);
+    tile.addEventListener('click', () => openLightbox(videoIndex));
+    body.insertBefore(tile, lightbox);
+    posterQueue.push({ src: getSrcUrl(src), img });
+  });
+
+  // ── Poster capture ───────────────────────────────────────────
+  function processNextPoster() {
+    if (posterBusy || posterQueue.length === 0) return;
+    posterBusy = true;
+    const { src, img } = posterQueue.shift();
+
+    scratchVid.removeAttribute('crossOrigin');
+    scratchVid.removeAttribute('src');
+    scratchVid.load();
+
+    let done = false;
+    const timer = setTimeout(() => finish(null), 4000);
+
+    function finish(dataURL) {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      scratchVid.removeEventListener('loadedmetadata', onMeta);
+      scratchVid.removeEventListener('seeked', onSeeked);
+      scratchVid.removeEventListener('error', onErr);
+      scratchVid.removeAttribute('src');
+      scratchVid.load();
+      if (dataURL) {
+        img.onload = () => { img.style.display = 'block'; };
+        img.src = dataURL;
+      }
+      posterBusy = false;
+      setTimeout(processNextPoster, 30);
+    }
+
+    function onMeta()   { scratchVid.currentTime = 0.2; }
+    function onErr()    { finish(null); }
+    function onSeeked() {
+      const canvas = document.createElement('canvas');
+      canvas.width  = scratchVid.videoWidth  || 320;
+      canvas.height = scratchVid.videoHeight || 180;
+      try {
+        canvas.getContext('2d').drawImage(scratchVid, 0, 0, canvas.width, canvas.height);
+        finish(canvas.toDataURL('image/jpeg', 0.65));
+      } catch(e) { finish(null); }
+    }
+
+    scratchVid.addEventListener('loadedmetadata', onMeta,   { once: true });
+    scratchVid.addEventListener('seeked',         onSeeked, { once: true });
+    scratchVid.addEventListener('error',          onErr,    { once: true });
+    scratchVid.crossOrigin = 'anonymous';
+    scratchVid.src = src;
+    scratchVid.load();
+  }
+  setTimeout(processNextPoster, 200);
+
+  // ── Playback state ───────────────────────────────────────────
+  let index          = 0;
+  let isSlideshow    = false;
+  let isShuffled     = false;
+  let playOrder      = videoSources.map((_, i) => i);
+  let autoEnabled    = false;
+  let autoTimer      = null;
+  const AUTO_MS      = 12000;
+
+
+
+  function getOrderedSrc(orderIdx) {
+    return videoSources[playOrder[orderIdx]];
+  }
+
+  function updateCounter() {
+    counter.textContent = `${index + 1} / ${videoSources.length}${isShuffled ? '  🔀' : ''}`;
+  }
+
+  function applyTrim(src) {
+    const s = getStart(src);
+    const e = getEnd(src);
+    if (s > 0) {
+      lbVideo.addEventListener('loadedmetadata', function seek() {
+        lbVideo.currentTime = s;
+        lbVideo.removeEventListener('loadedmetadata', seek);
+      });
+    }
+    if (e) {
+      lbVideo.addEventListener('timeupdate', function checkEnd() {
+        if (lbVideo.currentTime >= e) {
+          lbVideo.pause();
+          lbVideo.removeEventListener('timeupdate', checkEnd);
+        }
+      });
+    }
+  }
+
+  function fadeToVideo(src, cb) {
+    lbVideo.classList.add('fading');
+    setTimeout(() => {
+      lbVideo.pause();
+      lbVideo.src = getSrcUrl(src);
+      lbVideo.preload = 'auto';
+      lbVideo.loop = loopEnabled;
+      lbVideo.load();
+      applyTrim(src);
+      lbVideo.play().catch(() => {});
+      lbVideo.classList.remove('fading');
+      cb && cb();
+    }, 300);
+  }
+
+  function showVideo(i) {
+    index = ((i % playOrder.length) + playOrder.length) % playOrder.length;
+    fadeToVideo(getOrderedSrc(index), () => {
+      if (isSlideshow) {
+        lbVideo.removeEventListener('ended', onVideoEnded);
+        lbVideo.addEventListener('ended', onVideoEnded);
+      }
+    });
+    updateCounter();
+  }
+
+  function openLightbox(videoIndex) {
+    const pos = playOrder.indexOf(videoIndex);
+    index = pos !== -1 ? pos : videoIndex;
+    const src = getOrderedSrc(index);
+    lightbox.style.display = 'flex';
+    lbVideo.src = getSrcUrl(src);
+    lbVideo.preload = 'auto';
+    lbVideo.loop = typeof loopEnabled !== 'undefined' ? loopEnabled : false;
+    lbVideo.load();
+    applyTrim(src);
+    lbVideo.play().catch(() => {});
+    updateCounter();
+  }
+
+  function closeLightbox() {
+    lightbox.style.display = 'none';
+    lbVideo.pause();
+    lbVideo.removeAttribute('src');
+    lbVideo.preload = 'none';
+    lbVideo.load();
+    stopSlideshow();
+    clearTimeout(autoTimer);
+  }
+
+  // ── Controls ─────────────────────────────────────────────────
+  backdrop.onclick  = closeLightbox;
+  lbClose.onclick   = closeLightbox;
+  lbPrev.onclick    = () => { stopSlideshow(); showVideo(index - 1); };
+  lbNext.onclick    = () => { stopSlideshow(); showVideo(index + 1); };
+  btnPrevInline.onclick = () => { stopSlideshow(); showVideo(index - 1); };
+
+  btnShuffle.onclick = () => {
+    isShuffled = !isShuffled;
+    playOrder  = videoSources.map((_, i) => i);
+    if (isShuffled) shuffleArr(playOrder);
+    btnShuffle.classList.toggle('active', isShuffled);
+    updateCounter();
+  };
+
+  // ── Loop button (inline in platter) ──────────────────────────
+  var loopEnabled = false;
+  function updateLoopBtn() {
+    btnLoop.classList.toggle('active', loopEnabled);
+    lbVideo.loop = loopEnabled && !isSlideshow;
+  }
+  btnLoop.onclick = () => {
+    loopEnabled = !loopEnabled;
+    updateLoopBtn();
+  };
+
+  function onVideoEnded() {
+    if (!isSlideshow) return;
+    showVideo(index + 1);
+  }
+
+  // Slideshow icon toggling
+  const ICON_PLAY = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+  const ICON_STOP = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>`;
+
+  function startSlideshow() {
+    isSlideshow = true;
+    btnSlideshow.innerHTML = ICON_STOP;
+    lbVideo.loop = false;
+    lbVideo.addEventListener('ended', onVideoEnded);
+    // Advance on error too
+    lbVideo.addEventListener('error', onVideoError);
+  }
+
+  function stopSlideshow() {
+    isSlideshow = false;
+    btnSlideshow.innerHTML = ICON_PLAY;
+    lbVideo.removeEventListener('ended', onVideoEnded);
+    lbVideo.removeEventListener('error', onVideoError);
+  }
+
+  function onVideoError() {
+    if (!isSlideshow) return;
+    setTimeout(() => showVideo(index + 1), 400);
+  }
+
+  btnSlideshow.onclick = () => (isSlideshow ? stopSlideshow() : startSlideshow());
+
+  // Auto icon toggling
+  const ICON_AUTO_ON  = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5v-9l6 4.5-6 4.5z"/></svg>`;
+  const ICON_AUTO_OFF = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>`;
+
+  btnAuto.onclick = () => {
+    autoEnabled = !autoEnabled;
+    btnAuto.innerHTML = autoEnabled ? ICON_AUTO_OFF : ICON_AUTO_ON;
+    btnAuto.classList.toggle('active', autoEnabled);
+  };
+
+  btnFullscreen.onclick = () => {
+    if      (lbVideo.requestFullscreen)       lbVideo.requestFullscreen();
+    else if (lbVideo.webkitEnterFullscreen) lbVideo.webkitEnterFullscreen();
+  };
+
+  function startAutoTimer() {
+    clearTimeout(autoTimer);
+    if (!autoEnabled) return;
+    autoTimer = setTimeout(() => showVideo(index + 1), AUTO_MS);
+  }
+  lbVideo.addEventListener('playing', startAutoTimer);
+
+  // Advance slideshow on load error
+  lbVideo.addEventListener('error', function() {
+    if (!isSlideshow) return;
+    setTimeout(() => showVideo(index + 1), 400);
+  });
+
+  // ── Keyboard ─────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (lightbox.style.display !== 'flex') return;
+    if (e.key === 'ArrowRight') { stopSlideshow(); showVideo(index + 1); }
+    if (e.key === 'ArrowLeft')  { stopSlideshow(); showVideo(index - 1); }
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'f' || e.key === 'F') btnFullscreen.click();
+  });
+
+  // ── Touch swipe ──────────────────────────────────────────────
+  let tx = 0, ty = 0;
+  lightbox.addEventListener('touchstart', e => {
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      stopSlideshow();
+      dx < 0 ? showVideo(index + 1) : showVideo(index - 1);
+    }
+  }, { passive: true });
+
+})(SEC, SOURCES, DIV_LABELS);
+
+      }
+      document.getElementById('sec0').__lazyInit = __init;
+    })();
+    </script>
+
+</body>
+</html>
