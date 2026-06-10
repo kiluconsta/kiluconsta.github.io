@@ -20,28 +20,44 @@ html, body {
   overflow-x: hidden;
 }
 
-/* ── ANIMATED LIQUID GRADIENT BACKGROUND ── */
+/* ── ANIMATED LIQUID GRADIENT BACKGROUND ──
+   GPU-composited: gradient lives on a fixed layer moved with
+   transform — no repaints, no background-position animation,
+   no background-attachment:fixed (which breaks scrolling perf,
+   especially on mobile Safari). */
 html {
   min-height: 100%;
-  background:
-    radial-gradient(ellipse 60% 50% at 10% 20%, rgba(120, 60, 255, 0.82) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 60% at 90% 80%, rgba(255, 40, 160, 0.75) 0%, transparent 30%),
-    radial-gradient(ellipse 70% 40% at 70% 10%, rgba(0, 160, 255, 0.65) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 55% at 20% 90%, rgba(80, 0, 220, 0.7) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 45% at 50% 50%, rgba(200, 80, 255, 0.3) 0%, transparent 50%),
-    #06000f;
-  background-size: 150% 200%;
-  background-attachment: fixed;
-  animation: liquidShift 18s ease-in-out infinite alternate;
+  background: #06000f;
 }
 
-@keyframes liquidShift {
-  0%   { background-position: 0% 0%;   }
-  20%  { background-position: 70% 15%;  }
-  40%  { background-position: 20% 75%;  }
-  60%  { background-position: 85% 45%;  }
-  80%  { background-position: 35% 90%;  }
-  100% { background-position: 60% 20%;  }
+.bg-liquid {
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 30% 25% at 30% 35%, rgba(120, 60, 255, 0.82) 0%, transparent 60%),
+    radial-gradient(ellipse 25% 30% at 70% 65%, rgba(255, 40, 160, 0.75) 0%, transparent 30%),
+    radial-gradient(ellipse 35% 20% at 60% 30%, rgba(0, 160, 255, 0.65) 0%, transparent 55%),
+    radial-gradient(ellipse 20% 27% at 35% 70%, rgba(80, 0, 220, 0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 27% 22% at 50% 50%, rgba(200, 80, 255, 0.3) 0%, transparent 50%);
+  animation: liquidDrift 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes liquidDrift {
+  0%   { transform: translate3d(0%, 0%, 0) rotate(0deg); }
+  25%  { transform: translate3d(6%, -4%, 0) rotate(2deg); }
+  50%  { transform: translate3d(-5%, 6%, 0) rotate(-2deg); }
+  75%  { transform: translate3d(4%, 3%, 0) rotate(1deg); }
+  100% { transform: translate3d(-3%, -5%, 0) rotate(-1deg); }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .bg-liquid { animation: none; }
+  .home-tile { animation: none !important; }
 }
 
 /* Noise grain overlay */
@@ -144,8 +160,8 @@ body::after {
   justify-content: center;
   animation: tileIn .7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   /* Frosted glass effect */
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(-1.1);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(-1.1);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(1.1);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(1.1);
   /* Subtle inner shadow for depth */
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.35),
@@ -326,9 +342,12 @@ body::after {
   height: 180px;
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s;
-  backdrop-filter: blur(12px) saturate(150%);
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  /* perf: no backdrop-filter on grid tiles — hundreds of blur passes
+     kill scroll performance; translucent bg reads identically here */
+  background: rgba(28,28,38,0.55);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 4px 16px rgba(0,0,0,0.3);
+  content-visibility: auto;
+  contain-intrinsic-size: 130px 130px;
 }
 .vs-tile:hover {
   transform: scale(1.06) translateY(-2px);
@@ -433,8 +452,8 @@ body::after {
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 50px;
   padding: 5px 8px;
-  backdrop-filter: blur(16px) saturate(200%) brightness(-1.1);
-  -webkit-backdrop-filter: blur(16px) saturate(200%) brightness(-1.1);
+  backdrop-filter: blur(16px) saturate(200%) brightness(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(200%) brightness(1.1);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     inset 0 -1px 0 rgba(0,0,0,0.2),
@@ -556,9 +575,11 @@ body::after {
   padding: 2px;
   width: 70px; height: 70px;
   cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* perf: no per-tile backdrop blur */
+  background: rgba(28,28,38,0.5);
   transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  content-visibility: auto;
+  contain-intrinsic-size: 70px 70px;
 }
 .is-tile:hover {
   transform: scale(1.08) translateY(-2px);
@@ -647,3 +668,215 @@ body::after {
   font-family: -apple-system, 'SF Pro Display', sans-serif;
 }
 
+
+/* ════════════════════════════════════════════════════════════
+   UI IMPROVEMENTS
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Skeleton shimmer while thumbnails load ── */
+.vs-tile.loading,
+.is-tile.loading {
+  background-image: linear-gradient(
+    110deg,
+    rgba(255,255,255,0.03) 8%,
+    rgba(255,255,255,0.10) 18%,
+    rgba(255,255,255,0.03) 33%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vs-tile.loading, .is-tile.loading { animation: none; }
+}
+
+/* ── Section jump nav (video pages) ── */
+.vs-jump-nav {
+  position: fixed;
+  top: 16px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 9500;
+  display: flex;
+  gap: 6px;
+  max-width: min(80vw, 720px);
+  overflow-x: auto;
+  padding: 6px 8px;
+  background: rgba(18,18,24,0.6);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50px;
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 8px 28px rgba(0,0,0,0.4);
+  scrollbar-width: none;
+}
+.vs-jump-nav::-webkit-scrollbar { display: none; }
+.vs-jump-pill {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: rgba(255,255,255,0.7);
+  background: transparent;
+  border: none;
+  border-radius: 50px;
+  padding: 6px 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.vs-jump-pill:hover {
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.95);
+}
+
+/* ── Keyboard shortcuts overlay ── */
+.vs-help-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  cursor: pointer;
+}
+.vs-help-overlay.show { display: flex; }
+.vs-help-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 24px;
+  padding: 32px 40px;
+  max-width: 380px;
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 24px 64px rgba(0,0,0,0.5);
+  cursor: default;
+}
+.vs-help-card h2 {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.95);
+  margin: 0 0 18px;
+}
+.vs-help-card dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 18px;
+  margin: 0 0 18px;
+}
+.vs-help-card dt {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 7px;
+  padding: 3px 9px;
+  text-align: center;
+  min-width: 32px;
+}
+.vs-help-card dd {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  margin: 0;
+  align-self: center;
+}
+.vs-help-hint {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.5;
+}
+
+/* ── Tile count badges (home grid) ── */
+.tile-count {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.75);
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50px;
+  padding: 3px 8px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ── Recently viewed row (home) ── */
+.recent-row {
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 28px;
+}
+.recent-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+.recent-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.recent-strip::-webkit-scrollbar { display: none; }
+.recent-tile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50px;
+  padding: 8px 16px 8px 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.recent-tile:hover {
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.35);
+  transform: translateY(-1px);
+}
+.recent-tile:active { transform: scale(0.97); }
+.recent-icon { font-size: 1.2rem; line-height: 1; }
+.recent-name {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: rgba(255,255,255,0.85);
+  white-space: nowrap;
+}
+
+/* Push video page content down so jump nav doesn't overlap */
+.vs-body { padding-top: 76px; }
+
+/* On narrow screens move jump nav below the back button */
+@media (max-width: 640px) {
+  .vs-jump-nav {
+    top: 64px;
+    max-width: calc(100vw - 32px);
+  }
+  .vs-body { padding-top: 120px; }
+}

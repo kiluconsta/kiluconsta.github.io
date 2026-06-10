@@ -10,11 +10,13 @@
   <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon.png">    <!-- PNG fallbacks -->
   <link rel="apple-touch-icon" href="../assets/favicon.png">                       <!-- Apple touch icon -->
   
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#06000f">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Vault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=SF+Pro+Display:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="../styles.css">
 
   <!-- ── Thumbnail cache (IndexedDB) ── -->
@@ -65,6 +67,7 @@
   </script>
 </head>
 <body>
+<div class="bg-liquid"></div>
   <button class="back-btn" onclick="history.back()">← Back</button>
   
   <div id="sec0" class="content-section" style="display:block" data-color="#ff2d55">
@@ -812,6 +815,20 @@
   let   posterBusy   = false;
   let   divCount     = 0;
 
+  // Lazy poster observer — queue capture only for tiles near viewport
+  const posterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const tile = entry.target;
+      posterObserver.unobserve(tile);
+      if (tile.__posterData) {
+        posterQueue.push(tile.__posterData);
+        tile.__posterData = null;
+        processNextPoster();
+      }
+    });
+  }, { rootMargin: '400px' });
+
   SOURCES.forEach(src => {
     if (src === null) {
       const div = document.createElement('div');
@@ -826,7 +843,8 @@
     videoSources.push(src);
 
     const tile = document.createElement('div');
-    tile.className = 'vs-tile';
+    tile.className = 'vs-tile loading';
+    tile.dataset.vi = videoIndex;
 
     const img = document.createElement('img');
     img.alt = '';
@@ -839,7 +857,9 @@
     tile.append(img, overlay);
     tile.addEventListener('click', () => openLightbox(videoIndex));
     body.insertBefore(tile, lightbox);
-    posterQueue.push({ src: getSrcUrl(src), img });
+    // Lazy poster: only queue when tile approaches viewport
+    tile.__posterData = { src: getSrcUrl(src), img };
+    posterObserver.observe(tile);
   });
 
   // ── Poster capture (with IndexedDB cache) ───────────────────
@@ -851,7 +871,7 @@
     // Check cache first — if hit, show immediately and move on
     ThumbCache.get(src, function(cached) {
       if (cached) {
-        img.onload = () => { img.style.display = 'block'; };
+        img.onload = () => { img.style.display = 'block'; const t = img.closest('.vs-tile'); if (t) t.classList.remove('loading'); };
         img.src = cached;
         posterBusy = false;
         setTimeout(processNextPoster, 10);
@@ -880,9 +900,11 @@
       scratchVid.removeAttribute('src');
       scratchVid.load();
       if (dataURL) {
-        img.onload = () => { img.style.display = 'block'; };
+        img.onload = () => { img.style.display = 'block'; const t = img.closest('.vs-tile'); if (t) t.classList.remove('loading'); };
         img.src = dataURL;
         ThumbCache.set(src, dataURL);  // persist for next visit
+      } else {
+        const t = img.closest('.vs-tile'); if (t) t.classList.remove('loading');
       }
       posterBusy = false;
       setTimeout(processNextPoster, 30);
@@ -995,6 +1017,9 @@
     lbVideo.load();
     stopSlideshow();
     clearTimeout(autoTimer);
+    // Scroll memory: center the tile of the video that was playing
+    const curTile = body.querySelector('.vs-tile[data-vi="' + playOrder[index] + '"]');
+    if (curTile) curTile.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   // ── Controls ─────────────────────────────────────────────────
@@ -1077,6 +1102,16 @@
   }
   lbVideo.addEventListener('playing', startAutoTimer);
 
+  // Preload next video for instant slideshow/nav transitions
+  const preloader = document.createElement('video');
+  preloader.preload = 'auto';
+  preloader.muted = true;
+  lbVideo.addEventListener('playing', function() {
+    const next = getOrderedSrc((index + 1) % playOrder.length);
+    const url  = getSrcUrl(next);
+    if (preloader.src !== url) preloader.src = url;
+  });
+
   // Advance slideshow on load error
   lbVideo.addEventListener('error', function() {
     if (!isSlideshow) return;
@@ -1092,19 +1127,64 @@
     if (e.key === 'f' || e.key === 'F') btnFullscreen.click();
   });
 
-  // ── Touch swipe ──────────────────────────────────────────────
-  let tx = 0, ty = 0;
+  // ── Touch gestures: swipe nav, swipe-down dismiss, double-tap seek ──
+  let tx = 0, ty = 0, lastTap = 0;
   lightbox.addEventListener('touchstart', e => {
     tx = e.touches[0].clientX; ty = e.touches[0].clientY;
   }, { passive: true });
   lightbox.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - tx;
     const dy = e.changedTouches[0].clientY - ty;
+    // Swipe down → dismiss player
+    if (Math.abs(dy) > Math.abs(dx) && dy > 80) { closeLightbox(); return; }
+    // Horizontal swipe → navigate
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
       stopSlideshow();
       dx < 0 ? showVideo(index + 1) : showVideo(index - 1);
+      return;
     }
+    // Double-tap on video → seek ±10s (left half back, right half forward)
+    const now = Date.now();
+    if (now - lastTap < 300 && e.target === lbVideo) {
+      const rect = lbVideo.getBoundingClientRect();
+      const x = e.changedTouches[0].clientX - rect.left;
+      if (x < rect.width / 2) lbVideo.currentTime = Math.max(0, lbVideo.currentTime - 10);
+      else lbVideo.currentTime = Math.min(lbVideo.duration || 1e9, lbVideo.currentTime + 10);
+    }
+    lastTap = now;
   }, { passive: true });
+
+  // ── Section jump nav (pill bar built from divider labels) ────
+  const dividers = Array.from(body.querySelectorAll('.vs-divider'));
+  if (dividers.length > 1) {
+    const nav = document.createElement('div');
+    nav.className = 'vs-jump-nav';
+    dividers.forEach((d, i) => {
+      const lbl  = d.querySelector('.vs-divider-label');
+      const pill = document.createElement('button');
+      pill.className = 'vs-jump-pill';
+      pill.textContent = lbl ? lbl.textContent : ('Part ' + (i + 1));
+      pill.addEventListener('click', () => d.scrollIntoView({ block: 'start', behavior: 'smooth' }));
+      nav.appendChild(pill);
+    });
+    document.body.appendChild(nav);
+  }
+
+  // ── Keyboard shortcuts overlay (press ?) ─────────────────────
+  const helpOverlay = document.createElement('div');
+  helpOverlay.className = 'vs-help-overlay';
+  helpOverlay.innerHTML = '<div class="vs-help-card"><h2>Keyboard shortcuts</h2><dl>' +
+    '<dt>&rarr;</dt><dd>Next video</dd>' +
+    '<dt>&larr;</dt><dd>Previous video</dd>' +
+    '<dt>F</dt><dd>Fullscreen</dd>' +
+    '<dt>Esc</dt><dd>Close player</dd>' +
+    '<dt>?</dt><dd>Toggle this help</dd>' +
+    '</dl><div class="vs-help-hint">Double-tap video edges to seek &plusmn;10s &middot; Swipe down to close</div></div>';
+  document.body.appendChild(helpOverlay);
+  helpOverlay.addEventListener('click', () => helpOverlay.classList.remove('show'));
+  document.addEventListener('keydown', e => {
+    if (e.key === '?') helpOverlay.classList.toggle('show');
+  });
 
 })(SEC, SOURCES, DIV_LABELS);
 
@@ -1113,5 +1193,16 @@
     })();
     </script>
 
+
+  <!-- Record visit for "Recently viewed" on home -->
+  <script>
+  try {
+    var __slug = location.pathname.split('/').pop().replace('.html', '');
+    var __rv = JSON.parse(localStorage.getItem('vault-recent') || '[]');
+    __rv = __rv.filter(function(x) { return x.slug !== __slug; });
+    __rv.unshift({ slug: __slug, t: Date.now() });
+    localStorage.setItem('vault-recent', JSON.stringify(__rv.slice(0, 6)));
+  } catch(e) {}
+  </script>
 </body>
 </html>
