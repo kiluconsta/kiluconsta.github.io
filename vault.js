@@ -44,13 +44,13 @@ document.querySelectorAll('.home-tile').forEach(function(tile) {
 // ── Tile count badges ─────────────────────────────────────────
 // Item counts per collection (update when adding/removing media)
 var TILE_COUNTS = {
-  "animations": 1906,
+  "animations": 54,
   "bluesky-likes": 249,
   "bomb-ass-dee-pt-2": 1113,
   "bomb-ass-dee": 636,
   "coomer": 48,
-  "dropbox": 461,
-  "gifs": 54,
+  "dropbox": 1906,
+  "gifs": 461,
   "images": 234,
   "meatsenpaii": 2,
   "sandf": 140,
