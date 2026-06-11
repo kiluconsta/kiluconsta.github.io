@@ -65,6 +65,7 @@
     return { get: get, set: set };
   })();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
 </head>
 <body>
 <div class="bg-liquid"></div>
@@ -354,6 +355,7 @@
       "https://www.dropbox.com/scl/fi/t92n74vpawwyoooz455am/WA1zZAefXrdSNoNs.mp4?rlkey=2x7d151kjdvffspslw59b99ev&st=mxml4wrn&raw=1",
       "https://www.dropbox.com/scl/fi/f6eefn9dmm9zpfxh98n4a/W4Vb2yPWAxOXnC3b.mp4?rlkey=a3czch59pqfd2pba4tynlvyk1&st=sm2i0grq&raw=1",
       "https://www.dropbox.com/scl/fi/kov7aadq3g9buprg3i2e7/w3MSfLEUh04IaPZM.mp4?rlkey=eg3mn37niu5miul2nsdkcyx25&st=tz7n7a12&raw=1",
+      "https://www.dropbox.com/scl/fi/gxlx3rrqdi53f04cj5e0d/vZoqEHKHPfOgzg1u.mp4?rlkey=xr1dm5cxbnucf1ekpkmhcztjx&st=25afifzu&raw=1",
       "https://www.dropbox.com/scl/fi/wire2cwgah0qnn6qrtm31/vZgpnqGfAqKejCin.mp4?rlkey=wjfho4pfe2ecjikyf4xda5a3b&st=nsrodxbs&raw=1",
       "https://www.dropbox.com/scl/fi/ln5yo4noriiuaff4zedr7/VyqSpQzBTwRUwr4z.mp4?rlkey=hl0xpak6uhmxxd2tv3f1429zh&st=t523vet1&raw=1",
       "https://www.dropbox.com/scl/fi/x7izmgzxcb2ft4c82lkne/VXfnLvDlUx7YH-Bv.mp4?rlkey=i2zdr5z4ilafefb0356g93xgx&st=kwa6f2xs&raw=1",
@@ -2039,6 +2041,38 @@
 
   // ── Helpers ──────────────────────────────────────────────────
   function getEntry(s)  { return (s && typeof s === 'object') ? s : { url: s }; }
+
+  // ── HLS attach helper ────────────────────────────────────────
+  // Safari plays .m3u8 natively; Chromium needs hls.js (via MSE).
+  // Non-HLS sources use a plain .src assignment.
+  function attachVideoSrc(videoEl, url) {
+    // Tear down any previous hls.js instance on this element
+    if (videoEl.__hls) { try { videoEl.__hls.destroy(); } catch(e){} videoEl.__hls = null; }
+
+    var isHls = /\.m3u8(\?|$)/i.test(url);
+    if (!isHls) { videoEl.src = url; return; }
+
+    if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native HLS (Safari / iOS)
+      videoEl.src = url;
+    } else if (window.Hls && window.Hls.isSupported()) {
+      // hls.js (Chromium, Firefox)
+      var hls = new Hls({ maxBufferLength: 30, maxMaxBufferLength: 60 });
+      hls.on(Hls.Events.ERROR, function(evt, data) {
+        if (!data.fatal) return;
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
+        else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+        else { try { hls.destroy(); } catch(e){} videoEl.__hls = null; }
+      });
+      hls.loadSource(url);
+      hls.attachMedia(videoEl);
+      videoEl.__hls = hls;
+    } else {
+      // Last-resort fallback
+      videoEl.src = url;
+    }
+  }
+
   function getSrcUrl(s) { return proxyUrl(getEntry(s).url); }
   function getStart(s)  { return getEntry(s).start || 0; }
   function getEnd(s)    { return getEntry(s).end   || null; }
@@ -2187,8 +2221,27 @@
     scratchVid.addEventListener('seeked',         onSeeked, { once: true });
     scratchVid.addEventListener('error',          onErr,    { once: true });
     scratchVid.crossOrigin = 'anonymous';
-    scratchVid.src = src;
-    scratchVid.load();
+
+    // Wrap finish to also tear down any hls.js instance used for capture
+    const _finish = finish;
+    finish = function(d) {
+      if (scratchVid.__hls) { try { scratchVid.__hls.destroy(); } catch(e){} scratchVid.__hls = null; }
+      _finish(d);
+    };
+
+    // HLS posters need hls.js on Chromium; native on Safari
+    const isHls = /\.m3u8(\?|$)/i.test(src);
+    if (isHls && !scratchVid.canPlayType('application/vnd.apple.mpegurl')
+              && window.Hls && window.Hls.isSupported()) {
+      const h = new Hls({ maxBufferLength: 4 });
+      h.on(Hls.Events.ERROR, function(e, d) { if (d.fatal) finish(null); });
+      h.loadSource(src);
+      h.attachMedia(scratchVid);
+      scratchVid.__hls = h;
+    } else {
+      scratchVid.src = src;
+      scratchVid.load();
+    }
   }
   setTimeout(processNextPoster, 200);
 
@@ -2234,10 +2287,10 @@
     lbVideo.classList.add('fading');
     setTimeout(() => {
       lbVideo.pause();
-      lbVideo.src = getSrcUrl(src);
       lbVideo.preload = 'auto';
       lbVideo.loop = loopEnabled;
-      lbVideo.load();
+      attachVideoSrc(lbVideo, getSrcUrl(src));
+      if (!lbVideo.__hls) lbVideo.load();
       applyTrim(src);
       lbVideo.play().catch(() => {});
       lbVideo.classList.remove('fading');
@@ -2261,10 +2314,10 @@
     index = pos !== -1 ? pos : videoIndex;
     const src = getOrderedSrc(index);
     lightbox.style.display = 'flex';
-    lbVideo.src = getSrcUrl(src);
     lbVideo.preload = 'auto';
     lbVideo.loop = typeof loopEnabled !== 'undefined' ? loopEnabled : false;
-    lbVideo.load();
+    attachVideoSrc(lbVideo, getSrcUrl(src));
+    if (!lbVideo.__hls) lbVideo.load();
     applyTrim(src);
     lbVideo.play().catch(() => {});
     updateCounter();
@@ -2273,6 +2326,7 @@
   function closeLightbox() {
     lightbox.style.display = 'none';
     lbVideo.pause();
+    if (lbVideo.__hls) { try { lbVideo.__hls.destroy(); } catch(e){} lbVideo.__hls = null; }
     lbVideo.removeAttribute('src');
     lbVideo.preload = 'none';
     lbVideo.load();
@@ -2370,7 +2424,8 @@
   lbVideo.addEventListener('playing', function() {
     const next = getOrderedSrc((index + 1) % playOrder.length);
     const url  = getSrcUrl(next);
-    if (preloader.src !== url) preloader.src = url;
+    // Only warm non-HLS sources; hls.js manages its own buffering
+    if (!/\.m3u8(\?|$)/i.test(url) && preloader.src !== url) preloader.src = url;
   });
 
   // Advance slideshow on load error
