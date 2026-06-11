@@ -4,17 +4,35 @@ var PROXY = 'https://young-truth-052a.kiluconsta.workers.dev';
 var PROXY_HOSTS = [
   'twimg.com', 'video.twimg.com', 'coomer.st', 'redgifs.com',
   'tumblr.com', 'lpsg.com', 'rule34.xxx', 'cartoonsworld.vip',
-  'monstercockland.com', 'gayforfuns.com'
+  'monstercockland.com', 'gayforfuns.com',
+  'dropbox.com', 'dropboxusercontent.com'
 ];
 
 function proxyUrl(url) {
   if (!url || !PROXY) return url;
+  url = normalizeDropbox(url);
   try {
     var host = new URL(url).hostname;
     var needsProxy = PROXY_HOSTS.some(function(h) {
       return host === h || host.endsWith('.' + h);
     });
     return needsProxy ? PROXY + '?url=' + encodeURIComponent(url) : url;
+  } catch(e) { return url; }
+}
+
+// Dropbox share links (www.dropbox.com/...?dl=0) return an HTML preview
+// page, not the file. Rewrite to the direct-content host with raw=1 so
+// the <video> element receives actual bytes instead of a webpage.
+function normalizeDropbox(url) {
+  try {
+    if (url.indexOf('dropbox.com') === -1) return url;
+    var u = new URL(url);
+    if (u.hostname === 'www.dropbox.com' || u.hostname === 'dropbox.com') {
+      u.hostname = 'dl.dropboxusercontent.com';
+    }
+    u.searchParams.delete('dl');
+    u.searchParams.set('raw', '1');
+    return u.toString();
   } catch(e) { return url; }
 }
 
@@ -44,13 +62,13 @@ document.querySelectorAll('.home-tile').forEach(function(tile) {
 // ── Tile count badges ─────────────────────────────────────────
 // Item counts per collection (update when adding/removing media)
 var TILE_COUNTS = {
-  "animations": 54,
+  "animations": 1906,
   "bluesky-likes": 249,
   "bomb-ass-dee-pt-2": 1113,
   "bomb-ass-dee": 636,
   "coomer": 48,
-  "dropbox": 1906,
-  "gifs": 461,
+  "dropbox": 461,
+  "gifs": 54,
   "images": 234,
   "meatsenpaii": 2,
   "sandf": 140,
