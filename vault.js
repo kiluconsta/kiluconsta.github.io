@@ -137,3 +137,15 @@ document.addEventListener('click', function(e) {
 function showHome() {
   window.location.href = '/';
 }
+
+// ── Power management ──────────────────────────────────────────
+// Pause CSS animations (background, shimmer) whenever the tab is
+// hidden, so a backgrounded tab stops consuming GPU/CPU. This is
+// the single biggest fix for the laptop heating up while idle.
+(function() {
+  function applyIdle() {
+    document.documentElement.classList.toggle('power-idle', document.hidden);
+  }
+  document.addEventListener('visibilitychange', applyIdle);
+  applyIdle();
+})();

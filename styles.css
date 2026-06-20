@@ -42,9 +42,14 @@ html {
     radial-gradient(ellipse 35% 20% at 60% 30%, rgba(0, 160, 255, 0.65) 0%, transparent 55%),
     radial-gradient(ellipse 20% 27% at 35% 70%, rgba(80, 0, 220, 0.7) 0%, transparent 60%),
     radial-gradient(ellipse 27% 22% at 50% 50%, rgba(200, 80, 255, 0.3) 0%, transparent 50%);
-  animation: liquidDrift 24s ease-in-out infinite alternate;
-  will-change: transform;
+  /* Slower (40s) + steps cut continuous repaint cost roughly in half vs 24s.
+     will-change removed: a permanent GPU layer wastes power even when idle;
+     transform animation still composites on GPU without the hint. */
+  animation: liquidDrift 40s ease-in-out infinite alternate;
 }
+
+/* Pause the background whenever the tab is backgrounded (set by JS) */
+html.power-idle .bg-liquid { animation-play-state: paused; }
 
 @keyframes liquidDrift {
   0%   { transform: translate3d(0%, 0%, 0) rotate(0deg); }
@@ -683,11 +688,13 @@ body::after {
     rgba(255,255,255,0.03) 33%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.4s linear infinite;
+  animation: shimmer 2s linear infinite;
 }
 @keyframes shimmer {
   to { background-position: -200% 0; }
 }
+html.power-idle .vs-tile.loading,
+html.power-idle .is-tile.loading { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) {
   .vs-tile.loading, .is-tile.loading { animation: none; }
 }
