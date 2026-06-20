@@ -371,6 +371,17 @@
   }
   ssBtn.onclick = () => (ssActive ? stopSlideshow() : startSlideshow());
 
+  // ── Power: pause slideshow timer when tab is backgrounded ──── image-power-vis
+  let __ssWas = false;
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      __ssWas = ssActive;
+      if (ssActive) { clearTimeout(ssTimer); ssTimer = null; }
+    } else if (__ssWas && ssActive) {
+      showImage(idx, true);   // resume advancing
+    }
+  });
+
   document.addEventListener('keydown', e => {
     if (lightbox.style.display !== 'flex') return;
     if (e.key === 'ArrowRight') showImage(idx + 1);

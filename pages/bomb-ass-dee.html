@@ -860,7 +860,7 @@
         processNextPoster();
       }
     });
-  }, { rootMargin: '400px' });
+  }, { rootMargin: '150px' });
 
   SOURCES.forEach(src => {
     if (src === null) {
@@ -898,6 +898,7 @@
   // ── Poster capture (with IndexedDB cache) ───────────────────
   function processNextPoster() {
     if (posterBusy || posterQueue.length === 0) return;
+    if (document.hidden) return;   // don't decode video frames in a hidden tab
     posterBusy = true;
     const { src, img } = posterQueue.shift();
 
@@ -940,18 +941,21 @@
         const t = img.closest('.vs-tile'); if (t) t.classList.remove('loading');
       }
       posterBusy = false;
-      setTimeout(processNextPoster, 30);
+      setTimeout(processNextPoster, 120);
     }
 
     function onMeta()   { scratchVid.currentTime = 0.2; }
     function onErr()    { finish(null); }
     function onSeeked() {
+      const vw = scratchVid.videoWidth  || 320;
+      const vh = scratchVid.videoHeight || 180;
+      const scale = Math.min(1, 320 / vw);   // cap thumbnails at 320px wide
       const canvas = document.createElement('canvas');
-      canvas.width  = scratchVid.videoWidth  || 320;
-      canvas.height = scratchVid.videoHeight || 180;
+      canvas.width  = Math.round(vw * scale);
+      canvas.height = Math.round(vh * scale);
       try {
         canvas.getContext('2d').drawImage(scratchVid, 0, 0, canvas.width, canvas.height);
-        finish(canvas.toDataURL('image/jpeg', 0.65));
+        finish(canvas.toDataURL('image/jpeg', 0.6));
       } catch(e) { finish(null); }
     }
 
@@ -1164,6 +1168,26 @@
     const url  = getSrcUrl(next);
     // Only warm non-HLS sources; hls.js manages its own buffering
     if (!/\.m3u8(\?|$)/i.test(url) && preloader.src !== url) preloader.src = url;
+  });
+
+  // ── Power: stop all decoding when the tab is backgrounded ─────
+  let __wasPlaying = false;
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      // Pause the open video (stops decode + the coil-whine/buzz)
+      __wasPlaying = lightbox.style.display === 'flex' && !lbVideo.paused;
+      if (__wasPlaying) lbVideo.pause();
+      clearTimeout(autoTimer);
+      // Abort any in-flight poster capture cleanly
+      if (scratchVid.__hls) { try { scratchVid.__hls.destroy(); } catch(e){} scratchVid.__hls = null; }
+      scratchVid.removeAttribute('src');
+      scratchVid.load();
+      posterBusy = false;
+    } else {
+      // Resume poster queue when visible again
+      processNextPoster();
+      if (__wasPlaying) { lbVideo.play().catch(() => {}); __wasPlaying = false; }
+    }
   });
 
   // Advance slideshow on load error
