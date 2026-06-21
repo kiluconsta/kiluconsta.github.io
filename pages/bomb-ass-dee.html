@@ -851,13 +851,31 @@
   // Lazy poster observer — queue capture only for tiles near viewport
   const posterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
       const tile = entry.target;
-      posterObserver.unobserve(tile);
-      if (tile.__posterData) {
-        posterQueue.push(tile.__posterData);
-        tile.__posterData = null;
-        processNextPoster();
+      if (entry.isIntersecting) {
+        // Queue a capture if we haven't yet
+        if (tile.__posterData) {
+          posterQueue.push(tile.__posterData);
+          tile.__posterData = null;
+          processNextPoster();
+        } else {
+          // Re-show released poster from cache (instant, no re-decode of video)
+          const img = tile.querySelector('img');
+          if (img && !img.src && tile.__cachedPoster) {
+            img.src = tile.__cachedPoster;
+            img.style.display = 'block';
+            tile.classList.remove('loading');
+          }
+        }
+      } else {
+        // Scrolled far away — release the decoded poster bitmap to free RAM.
+        // Keep the data URL on the tile so it re-shows instantly on return.
+        const img = tile.querySelector('img');
+        if (img && img.src) {
+          tile.__cachedPoster = img.src;
+          img.removeAttribute('src');
+          img.style.display = 'none';
+        }
       }
     });
   }, { rootMargin: '150px' });
@@ -905,6 +923,7 @@
     // Check cache first — if hit, show immediately and move on
     ThumbCache.get(src, function(cached) {
       if (cached) {
+        const t0 = img.closest('.vs-tile'); if (t0) t0.__cachedPoster = cached;
         img.onload = () => { img.style.display = 'block'; const t = img.closest('.vs-tile'); if (t) t.classList.remove('loading'); };
         img.src = cached;
         posterBusy = false;
@@ -934,6 +953,7 @@
       scratchVid.removeAttribute('src');
       scratchVid.load();
       if (dataURL) {
+        const t0 = img.closest('.vs-tile'); if (t0) t0.__cachedPoster = dataURL;
         img.onload = () => { img.style.display = 'block'; const t = img.closest('.vs-tile'); if (t) t.classList.remove('loading'); };
         img.src = dataURL;
         ThumbCache.set(src, dataURL);  // persist for next visit
@@ -1072,6 +1092,11 @@
     lbVideo.removeAttribute('src');
     lbVideo.preload = 'none';
     lbVideo.load();
+    // Release the preloaded next-video buffer too
+    if (typeof preloader !== 'undefined' && preloader.src) {
+      preloader.removeAttribute('src');
+      preloader.load();
+    }
     stopSlideshow();
     clearTimeout(autoTimer);
     // Scroll memory: center the tile of the video that was playing

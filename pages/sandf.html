@@ -262,15 +262,22 @@
   const frag = document.createDocumentFragment();
   const insertBefore = lightbox;
 
+  // Bidirectional lazy load: load thumbnail when near viewport, and
+  // RELEASE the decoded image (clear src) when scrolled far away so the
+  // browser can reclaim its memory. Keeps observing so it reloads on return.
   const io = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
       const tile = entry.target;
       const img  = tile.querySelector('img');
-      if (img && !img.src) img.src = thumbURL(IMGS[+tile.dataset.index]);
-      io.unobserve(tile);
+      if (!img) return;
+      if (entry.isIntersecting) {
+        if (!img.src) img.src = thumbURL(IMGS[+tile.dataset.index]);
+      } else {
+        // Off-screen and past the buffer margin — free the bitmap
+        if (img.src) { img.removeAttribute('src'); tile.classList.add('loading'); }
+      }
     });
-  }, { rootMargin: '100% 0px', threshold: 0 });
+  }, { rootMargin: '50% 0px', threshold: 0 });
 
   IMGS.forEach((url, i) => {
     const tile = document.createElement('div');
@@ -358,7 +365,7 @@
 
   function closeLightbox() {
     lightbox.style.display = 'none';
-    lbImg.src = '';
+    lbImg.removeAttribute('src');   // release the full-res decoded image
     stopSlideshow();
   }
 
