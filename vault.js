@@ -5,7 +5,7 @@ var PROXY_HOSTS = [
   'twimg.com', 'video.twimg.com', 'coomer.st', 'redgifs.com',
   'tumblr.com', 'lpsg.com', 'rule34.xxx', 'cartoonsworld.vip',
   'monstercockland.com', 'gayforfuns.com', 'gff.network',
-  'dropbox.com', 'dropboxusercontent.com'
+  'dropbox.com', 'dropboxusercontent.com', 'googleusercontent.com'
 ];
 
 function proxyUrl(url) {
