@@ -1788,7 +1788,7 @@
   const durationCache = new Map();
   async function getGifDuration(index) {
     if (durationCache.has(index)) return durationCache.get(index);
-    const FALLBACK = 6000;
+    const FALLBACK = 2222;
     const url = IMGS[index];
 
     // Only animated GIFs have parseable frame delays. Static images
