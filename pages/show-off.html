@@ -371,8 +371,21 @@
   async function getGifDuration(index) {
     if (durationCache.has(index)) return durationCache.get(index);
     const FALLBACK = 6000;
+    const url = IMGS[index];
+
+    // Only animated GIFs have parseable frame delays. Static images
+    // (jpg/png/webp, incl. Google Photos =w2000 links) have no GIF
+    // frame blocks — skip the byte fetch entirely and use the fallback.
+    // This avoids a needless cross-origin fetch (and its CORS failure).
+    const looksGif = /\.gif(\?|$)/i.test(url) || /image\/gif/i.test(url);
+    if (!looksGif) {
+      durationCache.set(index, FALLBACK);
+      return FALLBACK;
+    }
+
     try {
-      const res = await fetch(IMGS[index]);
+      // Route through the proxy so the byte fetch carries CORS headers.
+      const res = await fetch(proxyUrl(url));
       if (!res.ok) throw new Error('fetch failed');
       const buf  = await res.arrayBuffer();
       const data = new Uint8Array(buf);
