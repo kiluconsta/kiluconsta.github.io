@@ -887,3 +887,192 @@ html.power-idle .is-tile.loading { animation-play-state: paused; }
   }
   .vs-body { padding-top: 120px; }
 }
+
+
+/* ════════════════════════════════════════════════════════════
+   FAVOURITES — heart toggles + favourites collection
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Heart button (shared base) ── */
+.fav-heart {
+  -webkit-appearance: none; appearance: none;
+  background: transparent; border: none; padding: 0; margin: 0;
+  cursor: pointer; line-height: 0;
+  color: rgba(255,255,255,0.92);
+  transition: color 0.15s, transform 0.12s, background 0.15s, opacity 0.18s;
+}
+.fav-heart svg {
+  width: 16px; height: 16px; display: block;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round;
+}
+.fav-heart.is-fav { color: #ff375f; }
+.fav-heart.is-fav svg { fill: currentColor; stroke: none; }
+.fav-heart.just-toggled { animation: fav-pop 0.34s ease; }
+@keyframes fav-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.32); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fav-heart.just-toggled { animation: none; }
+}
+
+/* ── Corner chip variant (on thumbnail tiles + favourite cards) ── */
+.vs-tile > .fav-heart,
+.is-tile > .fav-heart,
+.fav-card > .fav-heart {
+  position: absolute; top: 6px; right: 6px; z-index: 4;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(10,10,16,0.45);
+  border: 1px solid rgba(255,255,255,0.18);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  backdrop-filter: blur(8px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 6px rgba(0,0,0,0.35);
+  opacity: 0.5;
+}
+.vs-tile > .fav-heart:hover,
+.is-tile > .fav-heart:hover,
+.fav-card > .fav-heart:hover {
+  background: rgba(20,20,28,0.65);
+  transform: scale(1.12);
+}
+/* Always show when favourited or when the tile is hovered */
+.vs-tile:hover > .fav-heart,
+.is-tile:hover > .fav-heart,
+.fav-card:hover > .fav-heart,
+.fav-heart.is-fav { opacity: 1; }
+
+/* Smaller chip on the 70px image tiles */
+.is-tile > .fav-heart { width: 22px; height: 22px; top: 4px; right: 4px; }
+.is-tile > .fav-heart svg { width: 13px; height: 13px; }
+
+/* ── Inline variant inside the video control platter (right end) ── */
+.vs-lb-platter .fav-heart.is-fav { color: #ff375f; }
+.vs-lb-platter .fav-heart svg { width: 19px; height: 19px; }
+
+/* ── Inline variant inside the image lightbox controls bar ── */
+.is-lb-controls .fav-heart {
+  width: 40px; height: 34px; border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.9);
+}
+.is-lb-controls .fav-heart svg { width: 18px; height: 18px; }
+.is-lb-controls .fav-heart:hover { background: rgba(255,255,255,0.25); }
+.is-lb-controls .fav-heart.is-fav {
+  color: #ff375f;
+  border-color: rgba(255,55,95,0.55);
+  background: rgba(255,55,95,0.12);
+}
+
+/* ════════════════════════════════════════════════════════════
+   FAVOURITES COLLECTION PAGE
+   ════════════════════════════════════════════════════════════ */
+.fav-page-title {
+  width: 100%; text-align: center;
+  padding: 28px 16px 4px;
+  font-size: 1.9rem; font-weight: 300; letter-spacing: 0.06em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  color: rgba(255,255,255,0.92);
+}
+.fav-page-sub {
+  width: 100%; text-align: center;
+  color: rgba(255,255,255,0.5); font-size: 0.85rem; letter-spacing: 0.03em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  margin-bottom: 8px;
+}
+
+.fav-grid {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  justify-content: center; align-items: flex-start;
+  padding: 24px 40px 80px; min-height: 50vh;
+}
+
+.fav-card {
+  position: relative;
+  width: 150px; height: 200px;
+  border-radius: 16px; overflow: hidden;
+  background: rgba(28,28,38,0.5);
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 24px rgba(0,0,0,0.35);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s, border-color 0.2s;
+  content-visibility: auto;
+  contain-intrinsic-size: 150px 200px;
+}
+.fav-card:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 14px 36px rgba(0,0,0,0.45);
+  border-color: rgba(255,255,255,0.4);
+}
+.fav-card img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  background: rgba(255,255,255,0.04);
+}
+
+/* Play glyph overlay for video favourites */
+.fav-play {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%);
+}
+.fav-play svg {
+  width: 44px; height: 44px;
+  fill: rgba(255,255,255,0.92);
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+}
+
+/* Collection hyperlink tag (bottom of card) */
+.fav-tag {
+  position: absolute; left: 8px; bottom: 8px; right: 8px; z-index: 3;
+  display: inline-flex; align-items: center; gap: 5px;
+  max-width: calc(100% - 16px);
+  padding: 5px 10px; border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.95); text-decoration: none;
+  background: rgba(10,10,16,0.5);
+  border: 1px solid rgba(255,255,255,0.18);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  transition: background 0.15s, border-color 0.15s;
+}
+.fav-tag:hover {
+  background: rgba(30,30,42,0.7);
+  border-color: var(--accent, rgba(255,255,255,0.5));
+}
+.fav-tag .fav-tag-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent, #888); flex-shrink: 0;
+  box-shadow: 0 0 6px var(--accent, transparent);
+}
+.fav-tag .fav-tag-name {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Skeleton while a video poster captures */
+.fav-card.loading {
+  background-image: linear-gradient(110deg,
+    rgba(255,255,255,0.03) 8%, rgba(255,255,255,0.10) 18%, rgba(255,255,255,0.03) 33%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+html.power-idle .fav-card.loading { animation-play-state: paused; }
+
+/* Empty state */
+.fav-empty {
+  width: 100%; text-align: center;
+  padding: 80px 24px;
+  color: rgba(255,255,255,0.55);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+}
+.fav-empty .fav-empty-heart { font-size: 48px; opacity: 0.4; margin-bottom: 14px; }
+.fav-empty h2 { font-weight: 400; font-size: 1.25rem; margin: 0 0 8px; color: rgba(255,255,255,0.8); }
+.fav-empty p { margin: 0; font-size: 0.9rem; }
