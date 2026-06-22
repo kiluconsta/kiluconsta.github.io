@@ -309,6 +309,7 @@
     overlay.innerHTML = PLAY_SVG;
 
     tile.append(img, overlay);
+    tile.dataset.favUrl = getEntry(src).url;
     tile.addEventListener('click', () => openLightbox(videoIndex));
     body.insertBefore(tile, lightbox);
     // Lazy poster: only queue when tile approaches viewport
@@ -465,6 +466,7 @@
 
   function showVideo(i) {
     index = ((i % playOrder.length) + playOrder.length) % playOrder.length;
+    if (window.__vaultFavUI) window.__vaultFavUI.setCurrent(getEntry(getOrderedSrc(index)).url);
     fadeToVideo(getOrderedSrc(index), () => {
       if (isSlideshow) {
         lbVideo.removeEventListener('ended', onVideoEnded);
@@ -478,6 +480,7 @@
     const pos = playOrder.indexOf(videoIndex);
     index = pos !== -1 ? pos : videoIndex;
     const src = getOrderedSrc(index);
+    if (window.__vaultFavUI) window.__vaultFavUI.setCurrent(getEntry(src).url);
     lightbox.style.display = 'flex';
     lbVideo.preload = 'auto';
     lbVideo.loop = typeof loopEnabled !== 'undefined' ? loopEnabled : false;
@@ -691,6 +694,10 @@
   document.addEventListener('keydown', e => {
     if (e.key === '?') helpOverlay.classList.toggle('show');
   });
+
+  window.__vaultFavUI = (window.Favourites && Favourites.initSection)
+    ? Favourites.initSection(sec, { type: 'video', platterEl: sec.querySelector('.vs-lb-platter') })
+    : { setCurrent: function(){} };
 
 })(SEC, SOURCES, DIV_LABELS);
 

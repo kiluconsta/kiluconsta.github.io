@@ -1782,6 +1782,7 @@
     const tile = document.createElement('div');
     tile.className = 'is-tile loading';
     tile.dataset.index = i;
+    tile.dataset.favUrl = url;
     const img = document.createElement('img');
     img.alt = 'Media';
     img.decoding = 'async';
@@ -1844,6 +1845,7 @@
   function showImage(i, fromSlideshow = false) {
     cancelTimer();
     idx = ((i % IMGS.length) + IMGS.length) % IMGS.length;
+    if (window.__vaultFavUI) window.__vaultFavUI.setCurrent(IMGS[idx]);
     lbImg.style.opacity = '0';
     lbImg.src = '';
     lbImg.src = IMGS[idx];
@@ -1907,6 +1909,10 @@
     if (e.key === 'ArrowLeft')  showImage(idx - 1);
     if (e.key === 'Escape')     closeLightbox();
   });
+
+  window.__vaultFavUI = (window.Favourites && Favourites.initSection)
+    ? Favourites.initSection(sec, { type: 'image', platterEl: sec.querySelector('.is-lb-controls') })
+    : { setCurrent: function(){} };
 
 })(SEC, IMGS);
 
