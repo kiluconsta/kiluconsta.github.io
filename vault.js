@@ -46,26 +46,27 @@ function slugify(text) {
     .replace(/^-+|-+$/g, '');
 }
 
-// ── Collection metadata ───────────────────────────────────────
-// Single source of truth for collection display (label / icon / accent),
-// keyed by slug. Used by collection pages (to record which collection a
-// favourite belongs to) and by the favourites page (to render the
-// hyperlink tag). Keep in sync with the home tiles in index.html.
+// ── Collection registry ───────────────────────────────────────
+// Single source of truth for every collection: label, icon, accent,
+// media type, and item count. The home grid, count badges, type
+// filter, recently-viewed strip, and favourite tags are all driven
+// from here. To add a collection: add an entry below in display order
+// and create the matching pages/<slug>.html.
 var COLLECTION_META = {
-  "bomb-ass-dee":      { label: "Bomb Ass Dee",      icon: "💣",      accent: "#ff2d55" },
-  "bomb-ass-dee-pt-2": { label: "Bomb Ass Dee Pt.2", icon: "💥",      accent: "#ff6b00" },
-  "bluesky-likes":     { label: "BlueSky Likes",     icon: "🦋",      accent: "#0085ff" },
-  "coomer":            { label: "Coomer",            icon: "🍑",      accent: "#9b59b6" },
-  "sandf":             { label: "S&F",               icon: "🔥",      accent: "#00ff9f" },
-  "images":            { label: "Images",            icon: "🖼️",      accent: "#ffcc00" },
-  "x-likes-long":      { label: "X Likes (Long)",    icon: "𝕏",       accent: "#1da1f2" },
-  "meatsenpaii":       { label: "MeatSenpaii",       icon: "🥩",      accent: "#ff4757" },
-  "x-likes-short":     { label: "X Likes (Short)",   icon: "⚡",      accent: "#00d2ff" },
-  "tumblr":            { label: "Tumblr",            icon: "📐",      accent: "#5a31f4" },
-  "show-off":          { label: "Show Off",          icon: "✨",      accent: "#ffd700" },
-  "gifs":              { label: "GIFs",              icon: "🟢",      accent: "#2ecc71" },
-  "animations":        { label: "Animations",        icon: "🦹🏾‍♂️",     accent: "#e056fd" },
-  "dropbox":           { label: "Dropbox",           icon: "📥",      accent: "#0061ff" }
+  "bomb-ass-dee":      { label: "Bomb Ass Dee",      icon: "💣",      accent: "#ff2d55", type: "video", count: 636 },
+  "bomb-ass-dee-pt-2": { label: "Bomb Ass Dee Pt.2", icon: "💥",      accent: "#ff6b00", type: "video", count: 1113 },
+  "bluesky-likes":     { label: "BlueSky Likes",     icon: "🦋",      accent: "#0085ff", type: "video", count: 249 },
+  "coomer":            { label: "Coomer",            icon: "🍑",      accent: "#9b59b6", type: "video", count: 48 },
+  "sandf":             { label: "S&F",               icon: "🔥",      accent: "#00ff9f", type: "image", count: 140 },
+  "images":            { label: "Images",            icon: "🖼️",      accent: "#ffcc00", type: "image", count: 234 },
+  "x-likes-long":      { label: "X Likes (Long)",    icon: "𝕏",       accent: "#1da1f2", type: "video", count: 531 },
+  "meatsenpaii":       { label: "MeatSenpaii",       icon: "🥩",      accent: "#ff4757", type: "video", count: 2 },
+  "x-likes-short":     { label: "X Likes (Short)",   icon: "⚡",      accent: "#00d2ff", type: "video", count: 299 },
+  "tumblr":            { label: "Tumblr",            icon: "📐",      accent: "#ff6584", type: "image", count: 819 },
+  "show-off":          { label: "Show Off",          icon: "✨",      accent: "#ffe66d", type: "image", count: 221 },
+  "gifs":              { label: "GIFs",              icon: "🟢",      accent: "#a8ff78", type: "image", count: 54 },
+  "animations":        { label: "Animations",        icon: "🦹🏾‍♂️",     accent: "#BF40BF", type: "video", count: 1906 },
+  "dropbox":           { label: "Dropbox",           icon: "📥",      accent: "#FFFFFF", type: "video", count: 461 }
 };
 
 // ── Favourites store ──────────────────────────────────────────
@@ -209,119 +210,187 @@ var Favourites = (function() {
   };
 })();
 
-var secIdToSlug = {};
-var slugToTile  = {};
-
-document.querySelectorAll('.home-tile').forEach(function(tile) {
-  var secId   = tile.dataset.sec;
-  var labelEl = tile.querySelector('.tile-label');
-  if (secId && labelEl) {
-    var slug = slugify(labelEl.textContent);
-    secIdToSlug[secId] = slug;
-    slugToTile[slug]   = tile;
-  }
-});
-
-// ── Tile count badges ─────────────────────────────────────────
-// Item counts per collection (update when adding/removing media)
-var TILE_COUNTS = {
-  "animations": 1906,
-  "bluesky-likes": 249,
-  "bomb-ass-dee-pt-2": 1113,
-  "bomb-ass-dee": 636,
-  "coomer": 48,
-  "dropbox": 461,
-  "gifs": 54,
-  "images": 234,
-  "meatsenpaii": 2,
-  "sandf": 140,
-  "show-off": 221,
-  "tumblr": 819,
-  "x-likes-long": 531,
-  "x-likes-short": 299
-};
-
-Object.keys(slugToTile).forEach(function(slug) {
-  var count = TILE_COUNTS[slug];
-  if (!count) return;
-  var badge = document.createElement('span');
-  badge.className = 'tile-count';
-  badge.textContent = count >= 1000 ? (count / 1000).toFixed(1).replace('.0','') + 'k' : count;
-  slugToTile[slug].appendChild(badge);
-});
-
-// ── Favourites collection tile (first collection on the home grid) ──
+// ── Home: registry-driven grid + search + filter ──────────────
 (function() {
-  var grid = document.querySelector('.home-grid');
-  if (!grid) return;                          // home page only
-  secIdToSlug['favourites'] = 'favourites';   // wire up delegated navigation
+  var grid = document.getElementById('home-grid');
+  if (!grid) return;                       // home page only
 
-  var tile = document.createElement('div');
-  tile.className = 'home-tile';
-  tile.dataset.sec = 'favourites';
-  tile.style.setProperty('--accent', '#ff375f');
-  tile.innerHTML =
-    '<div class="tile-glow"></div>' +
-    '<div class="tile-icon">❤️</div>' +
-    '<div class="tile-label">Favourites</div>' +
-    '<div class="tile-bar"></div>';
-
-  var n = Favourites.count();
-  if (n > 0) {
-    var badge = document.createElement('span');
-    badge.className = 'tile-count';
-    badge.textContent = n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : n;
-    tile.appendChild(badge);
+  function fmtCount(n) {
+    return n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : String(n);
   }
 
-  grid.insertBefore(tile, grid.firstChild);
-})();
+  function buildTile(opts) {
+    var tile = document.createElement('div');
+    tile.className = 'home-tile' + (opts.fav ? ' is-fav-tile' : '');
+    tile.dataset.slug  = opts.slug;
+    tile.dataset.type  = opts.type || '';
+    tile.dataset.label = (opts.label || '').toLowerCase();
+    tile.style.setProperty('--accent', opts.accent || '#7c3cff');
+    tile.tabIndex = 0;
+    tile.setAttribute('role', 'link');
+    tile.setAttribute('aria-label', opts.label);
 
-// ── Recently viewed row ───────────────────────────────────────
-(function() {
-  var recent;
-  try { recent = JSON.parse(localStorage.getItem('vault-recent') || '[]'); }
-  catch(e) { recent = []; }
-  if (!recent.length) return;
+    var html =
+      '<div class="tile-glow"></div>' +
+      '<div class="tile-icon">' + opts.icon + '</div>' +
+      '<div class="tile-label">' + opts.label + '</div>' +
+      '<div class="tile-bar"></div>';
+    if (!opts.fav && opts.type) {
+      html += '<div class="tile-type">' + (opts.type === 'video' ? 'Video' : 'Image') + '</div>';
+    }
+    tile.innerHTML = html;
 
-  var grid = document.querySelector('.home-grid');
-  if (!grid) return;
+    if (opts.count != null) {
+      var badge = document.createElement('span');
+      badge.className = 'tile-count';
+      badge.textContent = fmtCount(opts.count);
+      tile.appendChild(badge);
+    }
+    return tile;
+  }
 
-  var row = document.createElement('div');
-  row.className = 'recent-row';
-  row.innerHTML = '<div class="recent-label">Recently viewed</div>';
+  // Favourites tile first
+  grid.appendChild(buildTile({
+    slug: 'favourites', label: 'Favourites', icon: '❤️',
+    accent: '#ff375f', type: '', count: Favourites.count(), fav: true
+  }));
 
-  var strip = document.createElement('div');
-  strip.className = 'recent-strip';
-
-  recent.forEach(function(item) {
-    var src = slugToTile[item.slug];
-    if (!src) return;
-    var mini = document.createElement('div');
-    mini.className = 'recent-tile';
-    mini.dataset.sec = src.dataset.sec;          // delegation handles click
-    mini.style.setProperty('--accent', getComputedStyle(src).getPropertyValue('--accent'));
-    var icon  = src.querySelector('.tile-icon');
-    var label = src.querySelector('.tile-label');
-    mini.innerHTML =
-      '<span class="recent-icon">'  + (icon  ? icon.textContent  : '') + '</span>' +
-      '<span class="recent-name">'  + (label ? label.textContent : '') + '</span>';
-    strip.appendChild(mini);
+  // Collection tiles (object key order == display order)
+  Object.keys(COLLECTION_META).forEach(function(slug) {
+    var m = COLLECTION_META[slug];
+    grid.appendChild(buildTile({
+      slug: slug, label: m.label, icon: m.icon, accent: m.accent,
+      type: m.type, count: m.count, fav: false
+    }));
   });
 
-  if (strip.children.length) {
-    row.appendChild(strip);
-    grid.parentNode.insertBefore(row, grid);
-  }
-})();
+  var tiles = grid.querySelectorAll('.home-tile');
+  tiles.forEach(function(t, i) { t.style.animationDelay = Math.min(i * 0.04, 0.6) + 's'; });
 
-// ── Navigation (event delegation — covers tiles + recent strip) ──
-document.addEventListener('click', function(e) {
-  var el = e.target.closest('[data-sec]');
-  if (!el) return;
-  var slug = secIdToSlug[el.dataset.sec];
-  if (slug) window.location.href = 'pages/' + slug + '.html';
-});
+  // ── Navigation ──
+  function go(slug) { if (slug) window.location.href = 'pages/' + slug + '.html'; }
+  grid.addEventListener('click', function(e) {
+    var t = e.target.closest('.home-tile'); if (t) go(t.dataset.slug);
+  });
+  grid.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var t = e.target.closest('.home-tile'); if (t) { e.preventDefault(); go(t.dataset.slug); }
+  });
+
+  // Prefetch collection page on hover/focus for instant navigation
+  var prefetched = {};
+  function prefetch(slug) {
+    if (!slug || slug === 'favourites' || prefetched[slug]) return;
+    prefetched[slug] = true;
+    var l = document.createElement('link');
+    l.rel = 'prefetch'; l.href = 'pages/' + slug + '.html';
+    document.head.appendChild(l);
+  }
+  grid.addEventListener('mouseover', function(e) {
+    var t = e.target.closest('.home-tile'); if (t) prefetch(t.dataset.slug);
+  });
+  grid.addEventListener('focusin', function(e) {
+    var t = e.target.closest('.home-tile'); if (t) prefetch(t.dataset.slug);
+  });
+
+  // ── Search + type filter ──
+  var searchInput = document.getElementById('vault-search');
+  var searchWrap  = document.getElementById('home-search');
+  var clearBtn    = document.getElementById('vault-search-clear');
+  var emptyEl     = document.getElementById('home-empty');
+  var filterBar   = document.getElementById('home-filter');
+  var query = '';
+  var typeFilter = 'all';
+
+  function applyFilter() {
+    var shown = 0;
+    tiles.forEach(function(t) {
+      var isFav = t.dataset.slug === 'favourites';
+      var matchesType =
+        typeFilter === 'all' ? true :
+        isFav ? false :
+        t.dataset.type === typeFilter;
+      var matchesQuery = !query ||
+        t.dataset.label.indexOf(query) !== -1 ||
+        (isFav && 'favourites'.indexOf(query) !== -1);
+      var visible = matchesType && matchesQuery;
+      t.classList.toggle('hidden', !visible);
+      if (visible) shown++;
+    });
+    if (emptyEl) emptyEl.classList.toggle('show', shown === 0);
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      query = searchInput.value.trim().toLowerCase();
+      if (searchWrap) searchWrap.classList.toggle('has-text', query.length > 0);
+      applyFilter();
+    });
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function() {
+      searchInput.value = ''; query = '';
+      if (searchWrap) searchWrap.classList.remove('has-text');
+      applyFilter(); searchInput.focus();
+    });
+  }
+  if (filterBar) {
+    filterBar.addEventListener('click', function(e) {
+      var btn = e.target.closest('.home-filter-btn'); if (!btn) return;
+      typeFilter = btn.dataset.filter;
+      filterBar.querySelectorAll('.home-filter-btn').forEach(function(b) {
+        b.classList.toggle('active', b === btn);
+      });
+      applyFilter();
+    });
+  }
+
+  // Global shortcuts: "/" or Cmd/Ctrl+K focuses search; Esc clears
+  document.addEventListener('keydown', function(e) {
+    var typing = document.activeElement === searchInput;
+    if ((e.key === '/' && !typing) ||
+        ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
+      e.preventDefault(); if (searchInput) searchInput.focus();
+    } else if (e.key === 'Escape' && typing && searchInput.value) {
+      searchInput.value = ''; query = '';
+      if (searchWrap) searchWrap.classList.remove('has-text');
+      applyFilter();
+    }
+  });
+
+  // ── Recently viewed strip ──
+  (function() {
+    var recent;
+    try { recent = JSON.parse(localStorage.getItem('vault-recent') || '[]'); }
+    catch(e) { recent = []; }
+    if (!recent.length) return;
+
+    var row = document.createElement('div');
+    row.className = 'recent-row';
+    row.innerHTML = '<div class="recent-label">Recently viewed</div>';
+    var strip = document.createElement('div');
+    strip.className = 'recent-strip';
+
+    recent.forEach(function(item) {
+      var m = COLLECTION_META[item.slug];
+      if (!m) return;
+      var mini = document.createElement('div');
+      mini.className = 'recent-tile';
+      mini.dataset.slug = item.slug;
+      mini.style.setProperty('--accent', m.accent);
+      mini.innerHTML =
+        '<span class="recent-icon">' + m.icon + '</span>' +
+        '<span class="recent-name">' + m.label + '</span>';
+      mini.addEventListener('click', function() { go(item.slug); });
+      strip.appendChild(mini);
+    });
+
+    if (strip.children.length) {
+      row.appendChild(strip);
+      grid.parentNode.insertBefore(row, grid);
+    }
+  })();
+})();
 
 // ── Back button (called from inside page files) ───────────────
 function showHome() {
@@ -329,9 +398,8 @@ function showHome() {
 }
 
 // ── Power management ──────────────────────────────────────────
-// Pause CSS animations (background, shimmer) whenever the tab is
-// hidden, so a backgrounded tab stops consuming GPU/CPU. This is
-// the single biggest fix for the laptop heating up while idle.
+// Pause CSS animations whenever the tab is hidden so a backgrounded
+// tab stops consuming GPU/CPU.
 (function() {
   function applyIdle() {
     document.documentElement.classList.toggle('power-idle', document.hidden);

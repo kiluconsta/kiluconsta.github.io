@@ -273,117 +273,44 @@ function ageGateExit() {
 
 
 
-<!-- ══════════════════════════════════════════════════════════════════
-     THE VAULT — SECTION REGISTRY
-     To add a new section:
-       1. Pick a type: "video" or "image"
-       2. Copy a home tile block below and update: data-sec, --accent, icon, label
-       3. Copy the matching section template (search "TEMPLATE: VIDEO SECTION"
-          or "TEMPLATE: IMAGE SECTION") and paste before the nav <script>
-       4. In the new section's <script>, update:
-            - sec id (sec12, sec13, …)
-            - SOURCES/IMGS array with your URLs
-            - DIV_LABELS array (video only)
-            - SITE_LINK text/href (image only, optional)
-     ══════════════════════════════════════════════════════════════════ -->
+  <!-- ==================================================================
+       THE VAULT - home shell
+       The collection grid is rendered from the COLLECTION_META registry
+       in vault.js. To add a collection: add an entry there and create
+       pages/<slug>.html. (No tile markup to maintain here.)
+       ================================================================== -->
 
-  <!-- ── HOME ── -->
   <div id="home">
-    <div class="home-header">
-      <div class="home-title">THE VAULT</div>
-      <div class="home-sub">select a collection</div>
+    <div class="home-topbar">
+      <div class="home-brand">THE VAULT</div>
+
+      <div class="home-search" id="home-search">
+        <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input class="home-search-input" id="vault-search" type="text" inputmode="search"
+               autocomplete="off" autocapitalize="off" spellcheck="false"
+               placeholder="Search collections…" aria-label="Search collections">
+        <span class="home-search-kbd">/</span>
+        <button class="home-search-clear" id="vault-search-clear" type="button" aria-label="Clear search">&times;</button>
+      </div>
+
+      <div class="home-filter" id="home-filter" role="group" aria-label="Filter by media type">
+        <button class="home-filter-btn active" type="button" data-filter="all">All</button>
+        <button class="home-filter-btn" type="button" data-filter="video">Videos</button>
+        <button class="home-filter-btn" type="button" data-filter="image">Images</button>
+      </div>
     </div>
-    <div class="home-grid">
-      
-      <div class="home-tile" data-sec="sec0" style="--accent:#ff2d55;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">💣</div>
-        <div class="tile-label">Bomb Ass Dee</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec1" style="--accent:#ff6b00;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">💥</div>
-        <div class="tile-label">Bomb Ass Dee Pt.2</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec2" style="--accent:#0085ff;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">🦋</div>
-        <div class="tile-label">BlueSky Likes</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec3" style="--accent:#9b59b6;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">🍑</div>
-        <div class="tile-label">Coomer</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec4" style="--accent:#00ff9f;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">🔥</div>
-        <div class="tile-label">S&amp;F</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec5" style="--accent:#ffcc00;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">🖼️</div>
-        <div class="tile-label">Images</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec6" style="--accent:#1da1f2;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">𝕏</div>
-        <div class="tile-label">X Likes (Long)</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec7" style="--accent:#ff4757;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">🥩</div>
-        <div class="tile-label">MeatSenpaii</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec8" style="--accent:#00d2ff;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">⚡</div>
-        <div class="tile-label">X Likes (Short)</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec9" style="--accent:#ff6584;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">📐</div>
-        <div class="tile-label">Tumblr</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec10" style="--accent:#ffe66d;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">✨</div>
-        <div class="tile-label">Show Off</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec11" style="--accent:#a8ff78;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">🟢</div>
-        <div class="tile-label">GIFs</div>
-        <div class="tile-bar"></div>
-      </div>
-      <div class="home-tile" data-sec="sec12" style="--accent:#BF40BF;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">🦹🏾‍♂️</div>
-        <div class="tile-label">Animations</div>
-        <div class="tile-bar"></div>
-      </div> 
-      <div class="home-tile" data-sec="sec13" style="--accent:#FFFFFF;">
-        <div class="tile-glow"></div>
-        <div class="tile-icon">📥</div>
-        <div class="tile-label">Dropbox</div>
-        <div class="tile-bar"></div>
-      </div> 
+
+    <div class="home-grid" id="home-grid"></div>
+
+    <div class="home-empty" id="home-empty">
+      <div class="home-empty-icon">🔍</div>
+      <p>No collections match your search.</p>
     </div>
   </div>
 
-  <!-- ── SECTIONS ── -->
-  
   <script src="vault.js"></script>
 
 </body>
