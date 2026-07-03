@@ -47,26 +47,27 @@ function slugify(text) {
 }
 
 // ── Collection registry ───────────────────────────────────────
-// Single source of truth for every collection: label, icon, accent,
-// media type, and item count. The home grid, count badges, type
-// filter, recently-viewed strip, and favourite tags are all driven
-// from here. To add a collection: add an entry below in display order
-// and create the matching pages/<slug>.html.
+// Single source of truth: label, icon, accent, media type, count.
+// Counts here are compile-time baselines; whenever a collection
+// page is opened, its true count is written to localStorage
+// ('vault-counts') and the home grid prefers that live value.
+// To add a collection: add an entry below (display order) and
+// create pages/<slug>.html.
 var COLLECTION_META = {
-  "bomb-ass-dee":      { label: "Bomb Ass Dee",      icon: "💣",      accent: "#ff2d55", type: "video", count: 636 },
-  "bomb-ass-dee-pt-2": { label: "Bomb Ass Dee Pt.2", icon: "💥",      accent: "#ff6b00", type: "video", count: 1113 },
-  "bluesky-likes":     { label: "BlueSky Likes",     icon: "🦋",      accent: "#0085ff", type: "video", count: 249 },
-  "coomer":            { label: "Coomer",            icon: "🍑",      accent: "#9b59b6", type: "video", count: 48 },
+  "bomb-ass-dee":      { label: "Bomb Ass Dee",      icon: "💣",      accent: "#ff2d55", type: "video", count: 637 },
+  "bomb-ass-dee-pt-2": { label: "Bomb Ass Dee Pt.2", icon: "💥",      accent: "#ff6b00", type: "video", count: 1114 },
+  "bluesky-likes":     { label: "BlueSky Likes",     icon: "🦋",      accent: "#0085ff", type: "video", count: 250 },
+  "coomer":            { label: "Coomer",            icon: "🍑",      accent: "#9b59b6", type: "video", count: 49 },
   "sandf":             { label: "S&F",               icon: "🔥",      accent: "#00ff9f", type: "image", count: 140 },
-  "images":            { label: "Images",            icon: "🖼️",      accent: "#ffcc00", type: "image", count: 234 },
-  "x-likes-long":      { label: "X Likes (Long)",    icon: "𝕏",       accent: "#1da1f2", type: "video", count: 531 },
-  "meatsenpaii":       { label: "MeatSenpaii",       icon: "🥩",      accent: "#ff4757", type: "video", count: 2 },
-  "x-likes-short":     { label: "X Likes (Short)",   icon: "⚡",      accent: "#00d2ff", type: "video", count: 299 },
+  "images":            { label: "Images",            icon: "🖼️",      accent: "#ffcc00", type: "image", count: 235 },
+  "x-likes-long":      { label: "X Likes (Long)",    icon: "𝕏",       accent: "#1da1f2", type: "video", count: 549 },
+  "meatsenpaii":       { label: "MeatSenpaii",       icon: "🥩",      accent: "#ff4757", type: "video", count: 12 },
+  "x-likes-short":     { label: "X Likes (Short)",   icon: "⚡",      accent: "#00d2ff", type: "video", count: 300 },
   "tumblr":            { label: "Tumblr",            icon: "📐",      accent: "#ff6584", type: "image", count: 819 },
-  "show-off":          { label: "Show Off",          icon: "✨",      accent: "#ffe66d", type: "image", count: 221 },
-  "gifs":              { label: "GIFs",              icon: "🟢",      accent: "#a8ff78", type: "image", count: 54 },
-  "animations":        { label: "Animations",        icon: "🦹🏾‍♂️",     accent: "#BF40BF", type: "video", count: 1906 },
-  "dropbox":           { label: "Dropbox",           icon: "📥",      accent: "#FFFFFF", type: "video", count: 461 }
+  "show-off":          { label: "Show Off",          icon: "✨",      accent: "#ffe66d", type: "image", count: 222 },
+  "gifs":              { label: "GIFs",              icon: "🟢",      accent: "#a8ff78", type: "image", count: 462 },
+  "animations":        { label: "Animations",        icon: "🦹🏾‍♂️",     accent: "#BF40BF", type: "video", count: 72 },
+  "dropbox":           { label: "Dropbox",           icon: "📥",      accent: "#FFFFFF", type: "video", count: 1911 }
 };
 
 // ── Favourites store ──────────────────────────────────────────
@@ -201,6 +202,22 @@ var Favourites = (function() {
       bar.appendChild(heart);
       api.setCurrent = function(url) { curUrl = url; if (heart.__refresh) heart.__refresh(); };
     }
+
+    // Self-healing counts: report this collection's true item count
+    // so home-grid badges never drift from reality again.
+    if (COLLECTION_META[slug]) {
+      try {
+        var n = sec.querySelectorAll('[data-fav-url]').length;
+        if (n > 0) {
+          var live = JSON.parse(localStorage.getItem('vault-counts') || '{}');
+          if (live[slug] !== n) {
+            live[slug] = n;
+            localStorage.setItem('vault-counts', JSON.stringify(live));
+          }
+        }
+      } catch (e) {}
+    }
+
     return api;
   }
 
@@ -215,6 +232,15 @@ var Favourites = (function() {
   var grid = document.getElementById('home-grid');
   if (!grid) return;                       // home page only
 
+  // Live counts reported by collection pages (self-healing badges)
+  var liveCounts = {};
+  try { liveCounts = JSON.parse(localStorage.getItem('vault-counts') || '{}'); }
+  catch (e) { liveCounts = {}; }
+  function effCount(slug, base) {
+    return (typeof liveCounts[slug] === 'number' && liveCounts[slug] > 0)
+      ? liveCounts[slug] : base;
+  }
+
   function fmtCount(n) {
     return n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : String(n);
   }
@@ -225,27 +251,25 @@ var Favourites = (function() {
     tile.dataset.slug  = opts.slug;
     tile.dataset.type  = opts.type || '';
     tile.dataset.label = (opts.label || '').toLowerCase();
-    tile.style.setProperty('--accent', opts.accent || '#7c3cff');
+    tile.style.setProperty('--accent', opts.accent || '#8b5cf6');
     tile.tabIndex = 0;
     tile.setAttribute('role', 'link');
     tile.setAttribute('aria-label', opts.label);
 
-    var html =
-      '<div class="tile-glow"></div>' +
+    var meta = '';
+    if (opts.fav) {
+      meta = '<div class="tile-meta"><span class="tile-count">' + fmtCount(opts.count || 0) + '</span></div>';
+    } else {
+      meta = '<div class="tile-meta">' +
+               '<span class="tile-type">' + (opts.type === 'video' ? 'Video' : 'Image') + '</span>' +
+               '<span class="tile-count">' + fmtCount(opts.count || 0) + '</span>' +
+             '</div>';
+    }
+    tile.innerHTML =
       '<div class="tile-icon">' + opts.icon + '</div>' +
       '<div class="tile-label">' + opts.label + '</div>' +
+      meta +
       '<div class="tile-bar"></div>';
-    if (!opts.fav && opts.type) {
-      html += '<div class="tile-type">' + (opts.type === 'video' ? 'Video' : 'Image') + '</div>';
-    }
-    tile.innerHTML = html;
-
-    if (opts.count != null) {
-      var badge = document.createElement('span');
-      badge.className = 'tile-count';
-      badge.textContent = fmtCount(opts.count);
-      tile.appendChild(badge);
-    }
     return tile;
   }
 
@@ -256,16 +280,25 @@ var Favourites = (function() {
   }));
 
   // Collection tiles (object key order == display order)
+  var totalItems = 0;
   Object.keys(COLLECTION_META).forEach(function(slug) {
     var m = COLLECTION_META[slug];
+    var c = effCount(slug, m.count);
+    totalItems += c;
     grid.appendChild(buildTile({
       slug: slug, label: m.label, icon: m.icon, accent: m.accent,
-      type: m.type, count: m.count, fav: false
+      type: m.type, count: c, fav: false
     }));
   });
 
+  // Toolbar stat
+  var stat = document.getElementById('home-stat');
+  if (stat) {
+    stat.textContent = Object.keys(COLLECTION_META).length + ' collections · ' + fmtCount(totalItems) + ' items';
+  }
+
   var tiles = grid.querySelectorAll('.home-tile');
-  tiles.forEach(function(t, i) { t.style.animationDelay = Math.min(i * 0.04, 0.6) + 's'; });
+  tiles.forEach(function(t, i) { t.style.animationDelay = Math.min(i * 0.035, 0.5) + 's'; });
 
   // ── Navigation ──
   function go(slug) { if (slug) window.location.href = 'pages/' + slug + '.html'; }
@@ -398,8 +431,8 @@ function showHome() {
 }
 
 // ── Power management ──────────────────────────────────────────
-// Pause CSS animations whenever the tab is hidden so a backgrounded
-// tab stops consuming GPU/CPU.
+// Pause any looping CSS animation (thumbnail shimmer) whenever the
+// tab is hidden so a backgrounded tab consumes nothing.
 (function() {
   function applyIdle() {
     document.documentElement.classList.toggle('power-idle', document.hidden);

@@ -4,31 +4,27 @@
   <meta charset="UTF-8">
   <meta name="referrer" content="no-referrer">
 
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">              <!-- SVG favicon (modern browsers) -->
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">               <!-- ICO fallback (older browsers) -->
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">    <!-- PNG fallbacks -->
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png">    <!-- PNG fallbacks -->
-  <link rel="apple-touch-icon" href="assets/favicon.png">                       <!-- Apple touch icon -->
-  
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#06000f">
+  <meta name="theme-color" content="#09090c">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Vault</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="bg-liquid"></div>
 
-<!-- ══════════════════════════════════════════════════════════
+<!-- ==================================================================
      AGE GATE SPLASH SCREEN
-     ══════════════════════════════════════════════════════════ -->
+     ================================================================== -->
 <div id="age-gate">
   <div id="age-gate-card">
 
-    <!-- Icon -->
     <div id="age-gate-icon">
       <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="32" cy="32" r="30" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
@@ -62,189 +58,102 @@
 </div>
 
 <style>
-/* ── AGE GATE ─────────────────────────────────────────────── */
+/* ── AGE GATE (obsidian) ─────────────────────────────────────── */
 #age-gate {
-  position: fixed;
-  inset: 0;
-  z-index: 999999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: fixed; inset: 0; z-index: 999999;
+  display: flex; align-items: center; justify-content: center;
   padding: 24px;
-  /* Matches the site's own animated liquid glass background */
   background:
-    radial-gradient(ellipse 60% 50% at 10% 20%, rgba(120,60,255,0.82) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 60% at 90% 80%, rgba(255,40,160,0.75) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 40% at 70% 10%, rgba(0,160,255,0.65) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 55% at 20% 90%, rgba(80,0,220,0.7) 0%, transparent 60%),
-    #06000f;
-  /* Subtle noise grain */
-  background-attachment: fixed;
-}
-
-/* Grain overlay matching the site */
-#age-gate::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
-  pointer-events: none;
-  opacity: 0.55;
+    radial-gradient(ellipse 52% 42% at 18% 8%,  rgba(124,60,255,0.14) 0%, transparent 62%),
+    radial-gradient(ellipse 46% 40% at 85% 16%, rgba(26,140,255,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 78% 92%, rgba(255,46,140,0.10) 0%, transparent 62%),
+    #09090c;
 }
 
 #age-gate-card {
-  position: relative;
-  max-width: 440px;
-  width: 100%;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 28px;
-  padding: 48px 40px 40px;
+  position: relative; max-width: 430px; width: 100%;
+  background: linear-gradient(180deg, #14141b 0%, #0e0e13 100%);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 24px;
+  padding: 46px 38px 38px;
   text-align: center;
-  backdrop-filter: blur(40px) saturate(200%) brightness(1.08);
-  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.08);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.32),
-    inset 0 -1px 0 rgba(0,0,0,0.15),
-    0 32px 80px rgba(0,0,0,0.45),
-    0 0 0 1px rgba(255,255,255,0.06);
-  animation: cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    0 8px 20px rgba(0,0,0,0.5),
+    0 32px 80px rgba(0,0,0,0.55);
+  animation: cardIn 0.45s cubic-bezier(0.32,1.4,0.55,1) both;
 }
-
-/* Specular highlight */
-#age-gate-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 40%, transparent 100%);
-  border-radius: inherit;
-  pointer-events: none;
-}
-
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 #age-gate-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 20px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.2);
+  width: 62px; height: 62px; margin: 0 auto 18px;
+  background: #1b1b24;
+  border: 1px solid rgba(255,255,255,0.13);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
 }
-#age-gate-icon svg { width: 36px; height: 36px; }
+#age-gate-icon svg { width: 34px; height: 34px; }
 
 #age-gate-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.45);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(255,255,255,0.42);
   margin-bottom: 10px;
 }
-
 #age-gate-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  color: rgba(255,255,255,0.95);
-  margin: 0 0 20px;
-  background: linear-gradient(160deg, #fff 30%, rgba(200,180,255,0.9) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-size: clamp(1.9rem, 6vw, 2.7rem); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1;
+  color: rgba(255,255,255,0.96);
+  margin: 0 0 18px;
 }
-
 #age-gate-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.6);
-  margin: 0 0 32px;
-  -webkit-text-fill-color: rgba(255,255,255,0.6);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 14px; line-height: 1.6;
+  color: rgba(255,255,255,0.62);
+  margin: 0 0 30px;
 }
-#age-gate-body strong {
-  color: rgba(255,255,255,0.88);
-  font-weight: 600;
-  -webkit-text-fill-color: rgba(255,255,255,0.88);
-}
+#age-gate-body strong { color: rgba(255,255,255,0.92); font-weight: 650; }
 
-#age-gate-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 24px;
-}
+#age-gate-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
 
-/* Primary — Enter */
 #age-gate-yes {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: #06000f;
-  background: rgba(255,255,255,0.95);
-  border: none;
-  border-radius: 50px;
-  padding: 14px 24px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,1);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 15px; font-weight: 650; letter-spacing: -0.01em;
+  color: #09090c;
+  background: rgba(255,255,255,0.96);
+  border: none; border-radius: 12px;
+  padding: 14px 24px; cursor: pointer;
+  transition: background 0.15s, transform 0.13s, box-shadow 0.15s;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
 }
-#age-gate-yes:hover {
-  background: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-}
+#age-gate-yes:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 8px 26px rgba(0,0,0,0.45); }
 #age-gate-yes:active { transform: scale(0.98); }
 
-/* Secondary — Leave */
 #age-gate-no {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 13.5px; font-weight: 500;
   color: rgba(255,255,255,0.55);
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 50px;
-  padding: 13px 24px;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 12px;
+  padding: 12px 24px; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
-#age-gate-no:hover {
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(255,255,255,0.32);
-  color: rgba(255,255,255,0.75);
-}
+#age-gate-no:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.24); color: rgba(255,255,255,0.78); }
 #age-gate-no:active { transform: scale(0.98); }
 
 #age-gate-footer {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-  font-size: 11px;
-  color: rgba(255,255,255,0.28);
-  line-height: 1.5;
-  margin: 0;
-  -webkit-text-fill-color: rgba(255,255,255,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 11px; color: rgba(255,255,255,0.26); line-height: 1.5; margin: 0;
 }
 
-/* Fade-out animation when entering */
-#age-gate.dismissing {
-  animation: gateFade 0.4s ease forwards;
-}
-@keyframes gateFade {
-  to { opacity: 0; pointer-events: none; }
-}
+#age-gate.dismissing { animation: gateFade 0.35s ease forwards; }
+@keyframes gateFade { to { opacity: 0; pointer-events: none; } }
 </style>
 
 <script>
@@ -272,7 +181,6 @@ function ageGateExit() {
 </script>
 
 
-
   <!-- ==================================================================
        THE VAULT - home shell
        The collection grid is rendered from the COLLECTION_META registry
@@ -282,7 +190,8 @@ function ageGateExit() {
 
   <div id="home">
     <div class="home-topbar">
-      <div class="home-brand">THE VAULT</div>
+      <div class="home-brand">THE<em>VAULT</em></div>
+      <span class="home-stat" id="home-stat"></span>
 
       <div class="home-search" id="home-search">
         <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
