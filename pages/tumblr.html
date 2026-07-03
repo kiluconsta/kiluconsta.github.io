@@ -14,9 +14,6 @@
   <meta name="theme-color" content="#06000f">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Vault</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="../styles.css">
 
   <!-- ── Thumbnail cache (IndexedDB) ── -->
@@ -1737,6 +1734,9 @@
 ];
         
 (function(sec, IMGS) {
+  // Drop null placeholders (image engine has no divider support)
+  IMGS = IMGS.filter(Boolean);
+
 
   const body     = sec.querySelector('.is-body');
   const lightbox = sec.querySelector('.is-lightbox');
