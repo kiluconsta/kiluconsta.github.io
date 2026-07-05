@@ -36,84 +36,98 @@ function showHome() { window.location.href = '/'; }
 var COLLECTION_META = {
   "bomb-ass-dee": {
     "label": "Bomb Ass Dee",
+    "icon": "💣",
     "accent": "#ff2d55",
     "type": "video",
     "count": 636
   },
   "bomb-ass-dee-pt-2": {
     "label": "Bomb Ass Dee Pt.2",
+    "icon": "💥",
     "accent": "#ff6b00",
     "type": "video",
     "count": 1113
   },
   "bluesky-likes": {
     "label": "BlueSky Likes",
+    "icon": "🦋",
     "accent": "#0085ff",
     "type": "video",
     "count": 249
   },
   "coomer": {
     "label": "Coomer",
+    "icon": "🍑",
     "accent": "#9b59b6",
     "type": "video",
     "count": 48
   },
   "sandf": {
     "label": "S&F",
+    "icon": "🔥",
     "accent": "#00c97f",
     "type": "image",
     "count": 140
   },
   "images": {
     "label": "Images",
+    "icon": "🖼️",
     "accent": "#e0b84a",
     "type": "image",
     "count": 234
   },
   "x-likes-long": {
     "label": "X Likes (Long)",
+    "icon": "𝕏",
     "accent": "#3d9be0",
     "type": "video",
     "count": 548
   },
   "meatsenpaii": {
     "label": "MeatSenpaii",
+    "icon": "🥩",
     "accent": "#ff4757",
     "type": "video",
     "count": 12
   },
   "x-likes-short": {
     "label": "X Likes (Short)",
+    "icon": "⚡",
     "accent": "#22c9d6",
     "type": "video",
     "count": 299
   },
   "tumblr": {
     "label": "Tumblr",
+    "icon": "📐",
     "accent": "#e0708a",
     "type": "image",
     "count": 819
   },
   "show-off": {
     "label": "Show Off",
+    "icon": "✨",
     "accent": "#d8a53c",
     "type": "image",
     "count": 221
   },
   "gifs": {
     "label": "GIFs",
+    "icon": "🟢",
     "accent": "#7bc26f",
     "type": "image",
     "count": 461
   },
   "animations": {
     "label": "Animations",
+    "icon": "🦹🏾‍♂️",
     "accent": "#a94ee0",
     "type": "video",
     "count": 71
   },
   "dropbox": {
     "label": "Dropbox",
+    "icon": "📥",
     "accent": "#9096a0",
     "type": "video",
     "count": 1910

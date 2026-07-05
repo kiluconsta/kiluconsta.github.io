@@ -16,6 +16,9 @@
   var lbNext = mount.querySelector('.vs-lb-next');
   var counter = mount.querySelector('.vs-lb-counter');
   var platter = mount.querySelector('.vs-lb-platter');
+  var btnShuffle = mount.querySelector('.vs-btn-shuffle');
+  var btnLoop = mount.querySelector('.vs-btn-loop');
+  var btnAuto = mount.querySelector('.vs-btn-auto');
   var btnFullscreen = mount.querySelector('.vs-btn-fullscreen');
 
   function attachVideoSrc(videoEl, url) {
@@ -39,7 +42,9 @@
     }
   }
 
-  // ── Build tiles + dividers ─────────────────────────────────
+  // ── Poster capture at the 1.3s mark (trim-aware) ───────────
+  function posterTime(it) { return (it.start || 0) + 1.3; }
+
   var divByIndex = {};
   dividers.forEach(function (d) { divByIndex[d.atIndex] = d.label; });
 
@@ -65,11 +70,12 @@
           img.style.display = 'block';
           tile.classList.remove('loading');
         } catch (e) { tile.classList.remove('loading'); }
-        v.src = ''; v.remove();
+        if (v.__hls) { try { v.__hls.destroy(); } catch (e2) {} }
+        v.removeAttribute('src'); v.load(); v.remove();
       });
       v.addEventListener('error', function () { tile.classList.remove('loading'); v.remove(); });
       document.body.appendChild(v);
-      v.currentTime = it.start ? it.start + 0.1 : 0.1;
+      v.currentTime = posterTime(it);
     });
   }, { rootMargin: '600px' });
 
@@ -102,6 +108,11 @@
   // ── Lightbox ─────────────────────────────────────────────
   var favApi = window.Favourites ? window.Favourites.initSection(mount, { type: 'video', platterEl: platter }) : null;
   var current = -1;
+  var loopMode = false;
+  var autoMode = false;
+  var shuffleMode = false;
+
+  function setToggle(btn, on) { if (btn) btn.classList.toggle('vs-toggled', on); }
 
   function openLightbox(idx) {
     current = idx;
@@ -119,23 +130,56 @@
     if (lbVideo.__hls) { try { lbVideo.__hls.destroy(); } catch (e) {} }
     lbVideo.removeAttribute('src'); lbVideo.load();
   }
+  function nextIndex(delta) {
+    if (shuffleMode && items.length > 1) {
+      var n;
+      do { n = Math.floor(Math.random() * items.length); } while (n === current);
+      return n;
+    }
+    return (current + delta + items.length) % items.length;
+  }
   function step(delta) {
     if (current < 0) return;
-    var next = (current + delta + items.length) % items.length;
-    openLightbox(next);
+    openLightbox(nextIndex(delta));
+  }
+  function restartCurrent() {
+    var it = items[current];
+    lbVideo.currentTime = it.start || 0;
+    lbVideo.play().catch(function () {});
+  }
+  function onClipEnd() {
+    if (loopMode) restartCurrent();
+    else if (autoMode) step(1);
+    // else: stop on the last frame, user decides
   }
 
-  // Respect per-item end trim
+  // Trim end: treat as clip end
   lbVideo.addEventListener('timeupdate', function () {
     if (current < 0) return;
     var it = items[current];
-    if (it.end && lbVideo.currentTime >= it.end) step(1);
+    if (it.end && lbVideo.currentTime >= it.end) onClipEnd();
+  });
+  // Natural end of file
+  lbVideo.addEventListener('ended', function () {
+    if (current < 0) return;
+    onClipEnd();
   });
 
   lbClose.addEventListener('click', closeLightbox);
   backdrop && backdrop.addEventListener('click', closeLightbox);
   lbPrev.addEventListener('click', function () { step(-1); });
   lbNext.addEventListener('click', function () { step(1); });
+  if (btnShuffle) btnShuffle.addEventListener('click', function () { shuffleMode = !shuffleMode; setToggle(btnShuffle, shuffleMode); });
+  if (btnLoop) btnLoop.addEventListener('click', function () {
+    loopMode = !loopMode;
+    if (loopMode) { autoMode = false; setToggle(btnAuto, false); }
+    setToggle(btnLoop, loopMode);
+  });
+  if (btnAuto) btnAuto.addEventListener('click', function () {
+    autoMode = !autoMode;
+    if (autoMode) { loopMode = false; setToggle(btnLoop, false); }
+    setToggle(btnAuto, autoMode);
+  });
   if (btnFullscreen) btnFullscreen.addEventListener('click', function () { lbVideo.requestFullscreen && lbVideo.requestFullscreen(); });
 
   document.addEventListener('keydown', function (e) {
@@ -143,9 +187,12 @@
     if (e.key === 'Escape') closeLightbox();
     else if (e.key === 'ArrowLeft') step(-1);
     else if (e.key === 'ArrowRight') step(1);
+    else if (e.key === 'l' || e.key === 'L') { btnLoop && btnLoop.click(); }
+    else if (e.key === 'a' || e.key === 'A') { btnAuto && btnAuto.click(); }
+    else if (e.key === 's' || e.key === 'S') { btnShuffle && btnShuffle.click(); }
+    else if (e.key === 'f' || e.key === 'F') { btnFullscreen && btnFullscreen.click(); }
   });
 
-  // Self-healing count (defense in depth; build-time count is already accurate)
   try {
     var live = JSON.parse(localStorage.getItem('vault-counts') || '{}');
     if (live[slug] !== items.length) { live[slug] = items.length; localStorage.setItem('vault-counts', JSON.stringify(live)); }

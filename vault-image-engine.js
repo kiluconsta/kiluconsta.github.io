@@ -36,6 +36,25 @@
 
   var favApi = window.Favourites ? window.Favourites.initSection(mount, { type: 'image', platterEl: controls }) : null;
   var current = -1;
+  var ssBtn = mount.querySelector('.is-btn-slideshow');
+  var ssStatus = mount.querySelector('.is-ss-status');
+  var ssTimer = null;
+
+  function stopSlideshow() {
+    if (ssTimer) { clearInterval(ssTimer); ssTimer = null; }
+    if (ssBtn) ssBtn.classList.remove('vs-toggled');
+    if (ssStatus) ssStatus.textContent = '';
+  }
+  function startSlideshow() {
+    stopSlideshow();
+    ssTimer = setInterval(function () { step(1); }, 3500);
+    if (ssBtn) ssBtn.classList.add('vs-toggled');
+    if (ssStatus) ssStatus.textContent = 'Slideshow';
+  }
+  if (ssBtn) ssBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (ssTimer) stopSlideshow(); else startSlideshow();
+  });
 
   function openLightbox(idx) {
     current = idx;
@@ -44,7 +63,7 @@
     lightbox.style.display = 'flex';
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'image' });
   }
-  function closeLightbox() { lightbox.style.display = 'none'; lbImg.removeAttribute('src'); }
+  function closeLightbox() { stopSlideshow(); lightbox.style.display = 'none'; lbImg.removeAttribute('src'); }
   function step(delta) {
     if (current < 0) return;
     openLightbox((current + delta + items.length) % items.length);

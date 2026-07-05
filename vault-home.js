@@ -35,7 +35,7 @@
     tile.setAttribute('role', 'link');
     tile.setAttribute('aria-label', m.label);
     tile.innerHTML =
-      '<div class="tile-art"></div>' +
+      '<div class="tile-art"><span class="tile-icon">' + (m.icon || '') + '</span></div>' +
       '<div class="tile-label">' + m.label + '</div>' +
       '<div class="tile-meta">' +
         (m.type ? '<span class="tile-type">' + (m.type === 'video' ? 'Video' : 'Image') + '</span>' : '') +
