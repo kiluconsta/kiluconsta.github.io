@@ -73,6 +73,8 @@
   }
 
   lbClose.addEventListener('click', closeLightbox);
+  var isBackdrop = mount.querySelector('.is-backdrop');
+  isBackdrop && isBackdrop.addEventListener('click', closeLightbox);
   lbPrev.addEventListener('click', function () { step(-1); });
   lbNext.addEventListener('click', function () { step(1); });
   document.addEventListener('keydown', function (e) {

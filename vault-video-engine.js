@@ -32,6 +32,7 @@
   var btnShuffle = mount.querySelector('.vs-btn-shuffle');
   var btnLoop = mount.querySelector('.vs-btn-loop');
   var btnAuto = mount.querySelector('.vs-btn-auto');
+  var btnTimer = mount.querySelector('.vs-btn-timer');
   var btnFullscreen = mount.querySelector('.vs-btn-fullscreen');
 
   function attachVideoSrc(videoEl, url) {
@@ -124,6 +125,14 @@
   var loopMode = false;
   var autoMode = false;
   var shuffleMode = false;
+  var timerMode = false;
+  var TIMER_SECS = 12;
+  var advTimer = null;
+
+  function armTimer() {
+    if (advTimer) { clearTimeout(advTimer); advTimer = null; }
+    if (timerMode && current >= 0) advTimer = setTimeout(function () { step(1); }, TIMER_SECS * 1000);
+  }
 
   function setToggle(btn, on) { if (btn) btn.classList.toggle('vs-toggled', on); }
 
@@ -136,9 +145,11 @@
     lightbox.style.display = 'flex';
     counter.textContent = (idx + 1) + ' / ' + items.length;
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'video', start: it.start, end: it.end });
+    armTimer();
   }
   function closeLightbox() {
     lightbox.style.display = 'none';
+    if (advTimer) { clearTimeout(advTimer); advTimer = null; }
     lbVideo.pause();
     if (lbVideo.__hls) { try { lbVideo.__hls.destroy(); } catch (e) {} }
     lbVideo.removeAttribute('src'); lbVideo.load();
@@ -188,9 +199,18 @@
     if (loopMode) { autoMode = false; setToggle(btnAuto, false); }
     setToggle(btnLoop, loopMode);
   });
+  if (btnTimer) btnTimer.addEventListener('click', function () {
+    timerMode = !timerMode;
+    if (timerMode) { autoMode = false; setToggle(btnAuto, false); }
+    setToggle(btnTimer, timerMode);
+    armTimer();
+  });
   if (btnAuto) btnAuto.addEventListener('click', function () {
     autoMode = !autoMode;
-    if (autoMode) { loopMode = false; setToggle(btnLoop, false); }
+    if (autoMode) {
+      loopMode = false; setToggle(btnLoop, false);
+      timerMode = false; setToggle(btnTimer, false); armTimer();
+    }
     setToggle(btnAuto, autoMode);
   });
   if (btnFullscreen) btnFullscreen.addEventListener('click', function () { lbVideo.requestFullscreen && lbVideo.requestFullscreen(); });
@@ -202,6 +222,7 @@
     else if (e.key === 'ArrowRight') step(1);
     else if (e.key === 'l' || e.key === 'L') { btnLoop && btnLoop.click(); }
     else if (e.key === 'a' || e.key === 'A') { btnAuto && btnAuto.click(); }
+    else if (e.key === 't' || e.key === 'T') { btnTimer && btnTimer.click(); }
     else if (e.key === 's' || e.key === 'S') { btnShuffle && btnShuffle.click(); }
     else if (e.key === 'f' || e.key === 'F') { btnFullscreen && btnFullscreen.click(); }
   });
