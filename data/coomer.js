@@ -1,0 +1,63 @@
+// ═══════════════════════════════════════════════════════════════
+// Coomer — media list (video)
+//
+// HOW TO EDIT (no build step needed — just edit, commit, done):
+//   • Add a video:    "https://…",
+//   • Trimmed clip:   { url: "https://…", start: 120, end: 155 },   (seconds)
+//   • Section break:  null,          (label comes from DIV_LABELS, in order)
+//   • Remove a video: delete its line.
+//   Keep the trailing comma on every line. Order here = order on the page.
+// ═══════════════════════════════════════════════════════════════
+var DIV_LABELS = ["① Coomer Tings"];
+
+var SOURCES = [
+  null,
+  "https://n4.coomer.st/data/b3/7f/b37f86e09928e199b9a69a2c14b1147cc419ed20bbf933e2f3a0c2a0908356c4.mp4?f=0gr6nxyj4pafa4776n97e_source.mp4",
+  "https://n2.coomer.st/data/7a/4b/7a4be0acf265e42fde5a9be0ac2a942088836c95bf123c468d0272cf4b295c3d.mp4?f=0grior3h0x3o2av4m4s7a_source.mp4",
+  "https://n1.coomer.st/data/3d/4f/3d4fc64fab870c58f9befc863dc2d2b7fab7611c05b6d6443615ee8f858fe9b0.mp4?f=0i0sfuvwd635gl4yzdrn7_source.mp4",
+  "https://n1.coomer.st/data/a7/b1/a7b190794807e0d71333f00e3476c07b2e89dc54b4f642a827938714e8bf6e1d.mp4?f=0hlnw6j3fp3udafaxzfki_source.mp4",
+  "https://n4.coomer.st/data/98/01/980178322607eb47a3b40b174f7a8cc53cfd7ed60da986f734ff9e5cbc5f8673.mp4?f=0i14xoh6n0zjag5xu93or_source.mp4",
+  "https://n4.coomer.st/data/43/7f/437f26da2a9b056ae725e575f2c3dcc76ea6cf8f77937f8c91e55c9f683a2f72.mp4?f=0i2sg659nbsoryu4qmz28_source.mp4",
+  "https://n3.coomer.st/data/57/d1/57d113eb04217d7ab86274a6f78cd5fa41df07847a82ab81544ff5ddeeb1c665.mp4?f=0i2hmkmungp5n5n18h3xt_source.mp4",
+  "https://n4.coomer.st/data/a4/21/a4214ac719d154d0aacc58a2f1a2a87407ad28cdf046a1a4ba8f14ffb6f0bb8c.mp4?f=0i25jv2fvuuh4wrxsdqnz_source.mp4",
+  "https://n3.coomer.st/data/8c/f7/8cf7f2dbdb45b88377908b6dbf17eedac30964bb889d9acc585ff8f6a810cb1c.mp4?f=0i3l1a6sjeu8azlneqa5p_source.mp4",
+  "https://n4.coomer.st/data/43/7f/437f26da2a9b056ae725e575f2c3dcc76ea6cf8f77937f8c91e55c9f683a2f72.mp4?f=0i2sg659nbsoryu4qmz28_source.mp4",
+  "https://n1.coomer.st/data/04/64/0464d7aa8390a681b64b83a12acd26d4b1599429d5a440041d57cc4888f24124.mp4?f=0i1r2rp0cka3uyv36t52w_source.mp4",
+  "https://n2.coomer.st/data/88/de/88de2cca6370f8838c08e8d8e2a0709dce87cdbc243339923cf0ac673c92c4db.mp4?f=0hwyz08uy7zdx8hb7bzv2_source.mp4",
+  "https://n2.coomer.st/data/10/b3/10b37392c3451c4073f279f9cc3c5ad2294663eeefcc5104bc2589b6c611745e.mp4?f=0hp0y46ghzpeu2372yabq_source.mp4",
+  "https://n1.coomer.st/data/09/e1/09e1d9e9eb34e352b11adfc6a3005d533d03349807bad7764d314f080f29cd4e.mp4?f=0hjzb9c60qzkmbaxio5jb_source.mp4",
+  "https://n3.coomer.st/data/52/34/5234b40c7cded09d190adddeb756236403fcd5acfe7487b993f7f8f713961150.m4v?f=c4bd4f5f-17eb-46a2-a4c0-7218f9438a89.m4v",
+  "https://n4.coomer.st/data/c1/5e/c15e3cbb8e214ec7152219c4417bac119625033cb02ca7dc42e371fee248f655.m4v?f=f3360ca1-791c-454b-a8c3-345787a45c88.m4v",
+  "https://n3.coomer.st/data/c5/aa/c5aa7cf94486d04bfe0a119dac21704143920ac3925babb75cd556e6ec50edba.mp4?f=0hc4istwfeja7k9q2lf6i_source.mp4",
+  "https://n2.coomer.st/data/cd/d5/cdd5cbf66d44e000d56dc62112a599e610c7c11c291b6de75c97ee1a8dab1d98.mp4?f=0h6cs4ir7xmmkmn3j6gpt_source.mp4",
+  "https://n2.coomer.st/data/9b/ff/9bff7e7fe54abb61cfe50493eef33c60d8a65b56bd2f356a27030f9c9e50e675.mp4?f=0h4s5iubelrpznoq04d32_source.mp4",
+  "https://n1.coomer.st/data/00/3a/003ada5e8a094ef5ec69fd7e4f306fc6fa63723fd21e16994edc79dbdbd10680.mp4?f=0i4n33jkrhx0na4x42prs_source.mp4",
+  "https://n3.coomer.st/data/db/fc/dbfc6dca86badf699e9bd47cf79eda4ce6889654bd07d894d1589cf1f7cc2831.mp4?f=0himk77nrdnl4kixbax63_source.mp4",
+  "https://n3.coomer.st/data/73/2c/732c17dc5533c056b0158b3ca300a79370eca0c41921523c954208fbe2a190c0.mp4?f=0i4tax8z9pmaikot0ljnb_source.mp4",
+  "https://n4.coomer.st/data/f8/ae/f8ae08983fc126de6fcd7cfb69b91e40553c36aa323d6c2bcdd527ce069ce84b.mp4?f=0hzx9rvl8cf8s9b7k5a91_source.mp4",
+  "https://n4.coomer.st/data/8d/db/8ddb6168553b03c5ba816d4515d080cae7b5b2f0c1a737558d487b1cf9946504.mp4?f=0i1w8se9cank41f4qx7qr_source.mp4",
+  "https://n4.coomer.st/data/82/24/8224225ba3fc25b5052a40c45575d536711d96a73bea019a7ba1b9b7663ab179.mp4?f=0i1w7sitlxtruzzeeehkw_source.mp4",
+  "https://n3.coomer.st/data/95/8c/958cd4d3f50d38e692b5a8afadc296dfa6ea7c0fcd6b19d4bbab7362828fbfc1.mp4?f=0i4psvpxlyt4fki0loccx_source.mp4",
+  "https://n2.coomer.st/data/ca/3f/ca3f2d120d58be2d2098ad41de040fbb4197d1b20201e4d0442d41225bd332f4.mp4?f=0i1dya65bka81zf8pc5sv_source.mp4",
+  "https://n3.coomer.st/data/7d/a0/7da09d2de7e09d32f03ada2c175d2c8dbcbdf4fc1014c0377665075c1f086b4c.mp4?f=0hz9bliegi1mja9o7m8cy_source.mp4",
+  "https://n2.coomer.st/data/ca/3a/ca3a78b3f80e8a937c1f03597ea547d14fdddb9b88335de3f92404a68caf3539.mp4?f=0i0zhm7804qkoehi9b707_source.mp4",
+  "https://n4.coomer.st/data/38/24/382424625b35b054a6b8d2ada33f8ff5eafc5b18f16b03a106daddb8c14e6e45.mp4?f=0i2kb0xqmw3sjkefcqbss_source.mp4",
+  "https://n1.coomer.st/data/07/fb/07fb9b6974bcd8d7f4ff91d221bf3f9e539d157c7ef03684969d3ad50b5331ec.mp4?f=0hln8anierp89qd8z28wg_source.mp4",
+  "https://n3.coomer.st/data/81/3b/813b1d15793dc05f41707f00884c9002e9222817546453611d5ba0a245bf4ed1.mp4?f=0hkw04fmjmtug4zs4l6pn_source.mp4",
+  "https://n4.coomer.st/data/2d/ef/2def2adb3bb25c4c4f7de15ea9569679d96e0674eb6c4ec228f23f5062292290.mp4?f=0hlgei8txr4uneuhz4fso_source.mp4",
+  "https://n3.coomer.st/data/25/63/2563d28a6c0fcf8aed39a8547d6c4d2dfc6be049505d51cfcc775b0179930245.mp4?f=0hmo0dafs5brwni54fkv6_source.mp4",
+  "https://n1.coomer.st/data/86/86/8686469a02f7252ba3eabca4656049d72cf4d47075422e944bc777d1e9351ea2.mp4?f=0hl86j0zedd6twjum0peq_source.mp4",
+  "https://n3.coomer.st/data/9b/3d/9b3db6eb2a1773f21409635adc5fb2c4d774e8649d086622528511b818e4d541.mp4?f=0hfn1r0zmjejdg616xrji_source.mp4",
+  "https://n2.coomer.st/data/02/af/02afb6bb2210a23e75ce0ee03992173148b50619037629c6d7d6bff7ae48e5b7.mp4?f=0hfn1r2t9px2rlophfotv_source.mp4",
+  "https://n2.coomer.st/data/1a/10/1a10b34ff5828947b3162706daa61f61af4a3b40df35921a3b7c6788fefd7431.mp4?f=0hmtht179oq8rslbb5lds_source.mp4",
+  "https://n2.coomer.st/data/39/8a/398a52070e046fcc62fce29a6b81164592ad56984628a7d31530b3edafcbd6e1.mp4?f=0heytkhv65xjyhg6tgfre_source.mp4",
+  "https://n1.coomer.st/data/07/fb/07fb9b6974bcd8d7f4ff91d221bf3f9e539d157c7ef03684969d3ad50b5331ec.mp4?f=0hln8anierp89qd8z28wg_source.mp4",
+  "https://n1.coomer.st/data/07/fb/07fb9b6974bcd8d7f4ff91d221bf3f9e539d157c7ef03684969d3ad50b5331ec.mp4?f=0hln8anierp89qd8z28wg_source.mp4",
+  "https://n2.coomer.st/data/85/32/85320e27799525782c09fa3f84d2032869d46bb9fd64a7ea7d06981dd3400978.mp4?f=0hm9cu9t43aeggdmntz1b_source.mp4",
+  "https://n4.coomer.st/data/24/d9/24d9777a7ce02c66e9196400037cbab348f3c6378ecc4d7587ce325188402584.mp4?f=0hj8hbh5eqoo8zdd3uzwa_source.mp4",
+  "https://n3.coomer.st/data/2f/7e/2f7e74c431e1b431e611e80f6dace108007eebf6709140d72382ea6c8aa54f1d.mp4?f=0hzysjymoh53f7yg4n26r_source.mp4",
+  "https://n3.coomer.st/data/44/50/445035e7e69301ad9df1d98811b63173ba32d74565034ae14388aa00bd6e062a.mp4?f=0hhmr6q7ishvcgtm44dfa_source.mp4",
+  "https://n2.coomer.st/data/ca/84/ca84950d6c58d86c90f491fe7b8fe38dd7a3dbc4bb3a294580c5dfb970d0a541.mp4?f=0i5ekr97qcbaj55ygml7k_source.mp4",
+  "https://n2.coomer.st/data/02/18/0218e8b28190c31ba625811f24a985c980bbe420bd7390efd9d9c0e5a7348827.mp4?f=0i47dw31tu9u2ssitebcy_source.mp4",
+  "https://n4.coomer.st/data/86/4f/864fbcc1b5e0c14d36535ac13e8178a2e6681bbe358972de712e86771edc7a86.m4v?f=12d32326-7cf5-4b31-a2ce-0880f035fa16.m4v",
+];

@@ -2,9 +2,12 @@
   var mount = document.querySelector('[data-vault-image]');
   if (!mount) return;
   var slug = mount.getAttribute('data-vault-image');
-  var dataEl = document.getElementById('vault-data');
-  var payload = JSON.parse(dataEl.textContent);
-  var items = payload.items; // [{ url }]
+
+  // IMGS comes from /data/<slug>.js — plain URL strings; nulls are ignored.
+  var RAW = (typeof IMGS !== 'undefined') ? IMGS : [];
+  var items = RAW.filter(Boolean).map(function (u) {
+    return typeof u === 'string' ? { url: u } : { url: u.url };
+  });
 
   var body = mount.querySelector('.is-body');
   var lightbox = mount.querySelector('.is-lightbox');

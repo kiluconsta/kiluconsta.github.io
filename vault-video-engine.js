@@ -2,10 +2,23 @@
   var mount = document.querySelector('[data-vault-video]');
   if (!mount) return;
   var slug = mount.getAttribute('data-vault-video');
-  var dataEl = document.getElementById('vault-data');
-  var payload = JSON.parse(dataEl.textContent);
-  var items = payload.items;          // [{ url, start, end }]
-  var dividers = payload.dividers;    // [{ atIndex, label }]
+
+  // Parse the v3-format globals from /data/<slug>.js:
+  // SOURCES entries are URL strings, {url,start,end} objects, or null (section break).
+  var RAW = (typeof SOURCES !== 'undefined') ? SOURCES : [];
+  var LABELS = (typeof DIV_LABELS !== 'undefined') ? DIV_LABELS : [];
+  var items = [];
+  var dividers = [];
+  var divCount = 0;
+  RAW.forEach(function (s) {
+    if (s === null) {
+      dividers.push({ atIndex: items.length, label: LABELS[divCount] || ('Part ' + (divCount + 1)) });
+      divCount++;
+      return;
+    }
+    if (typeof s === 'string') items.push({ url: s });
+    else items.push({ url: s.url, start: s.start != null ? s.start : null, end: s.end != null ? s.end : null });
+  });
 
   var body = mount.querySelector('.vs-body');
   var lightbox = mount.querySelector('.vs-lightbox');
