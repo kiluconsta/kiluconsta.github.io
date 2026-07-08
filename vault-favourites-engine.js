@@ -18,24 +18,10 @@
   function posterTime(entry) { return (Number(entry.start) || 0) + 1.3; }
 
   function capturePoster(entry, img, card) {
-    var v = document.createElement('video');
-    v.muted = true; v.playsInline = true; v.preload = 'metadata'; v.crossOrigin = 'anonymous';
-    v.style.display = 'none';
-    v.src = proxyUrl(entry.url);
-    v.addEventListener('loadeddata', function () {
-      try {
-        var c = document.createElement('canvas');
-        c.width = 240; c.height = Math.round(240 * (v.videoHeight / v.videoWidth || 1.33));
-        c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
-        img.src = c.toDataURL('image/jpeg', 0.72);
-        img.style.display = 'block';
-        card.classList.remove('loading');
-      } catch (e) { card.classList.remove('loading'); }
-      v.removeAttribute('src'); v.load(); v.remove();
+    VaultPosters.load(entry.url, posterTime(entry), function (dataUrl) {
+      if (dataUrl) { img.src = dataUrl; img.style.display = 'block'; }
+      card.classList.remove('loading');
     });
-    v.addEventListener('error', function () { card.classList.remove('loading'); v.remove(); });
-    document.body.appendChild(v);
-    v.currentTime = posterTime(entry);
   }
 
   function openLightbox(idx) {

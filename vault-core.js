@@ -81,7 +81,7 @@ var COLLECTION_META = {
     "icon": "𝕏",
     "accent": "#3d9be0",
     "type": "video",
-    "count": 548
+    "count": 582
   },
   "meatsenpaii": {
     "label": "MeatSenpaii",
@@ -235,6 +235,133 @@ var Favourites = (function() {
   }
 
   return { has: has, list: list, count: count, toggle: toggle, makeHeart: makeHeart, initSection: initSection, META: COLLECTION_META };
+})();
+
+// ── Poster capture: IndexedDB cache + bounded capture queue ──
+// Cache reads run in parallel (cheap); only cache MISSES enter the capture
+// queue, which decodes at most CONCURRENCY videos at a time. Without this,
+// scrolling a large page spawns dozens of simultaneous video decoders.
+var VaultPosters = (function () {
+  var DB_NAME = 'vault-posters', STORE = 'posters';
+  var _db = null, _dbFail = false;
+  var CONCURRENCY = 2, TIMEOUT_MS = 15000;
+
+  function db() {
+    return new Promise(function (res) {
+      if (_db) return res(_db);
+      if (_dbFail || !window.indexedDB) return res(null);
+      var req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore(STORE); };
+      req.onsuccess = function () { _db = req.result; res(_db); };
+      req.onerror = function () { _dbFail = true; res(null); };
+    });
+  }
+  function idbGet(key) {
+    return db().then(function (d) {
+      if (!d) return null;
+      return new Promise(function (res) {
+        try {
+          var rq = d.transaction(STORE, 'readonly').objectStore(STORE).get(key);
+          rq.onsuccess = function () { res(rq.result || null); };
+          rq.onerror = function () { res(null); };
+        } catch (e) { res(null); }
+      });
+    });
+  }
+  function idbSet(key, val) {
+    db().then(function (d) {
+      if (!d) return;
+      try { d.transaction(STORE, 'readwrite').objectStore(STORE).put(val, key); } catch (e) {}
+    });
+  }
+
+  var queue = [], active = 0;
+  function pump() {
+    while (active < CONCURRENCY && queue.length) { active++; runCapture(queue.shift()); }
+  }
+  function runCapture(job) {
+    var v = document.createElement('video');
+    v.muted = true; v.playsInline = true; v.preload = 'metadata'; v.crossOrigin = 'anonymous';
+    v.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none';
+    var done = false, timer = null;
+    function finish(dataUrl) {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      if (v.__hls) { try { v.__hls.destroy(); } catch (e) {} v.__hls = null; }
+      v.removeAttribute('src'); try { v.load(); } catch (e) {} v.remove();
+      active--; pump();
+      if (dataUrl) idbSet(job.key, dataUrl);
+      job.cb(dataUrl || null);
+    }
+    timer = setTimeout(function () { finish(null); }, TIMEOUT_MS);
+    v.addEventListener('loadedmetadata', function () {
+      var t = job.time;
+      if (v.duration && isFinite(v.duration)) t = Math.min(t, Math.max(0, v.duration - 0.1));
+      try { v.currentTime = t; } catch (e) {}
+    });
+    function snap() {
+      try {
+        var c = document.createElement('canvas');
+        c.width = 240;
+        c.height = Math.round(240 * (v.videoHeight / v.videoWidth || 1.33));
+        c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+        finish(c.toDataURL('image/jpeg', 0.72));
+      } catch (e) { finish(null); }
+    }
+    v.addEventListener('seeked', snap);
+    v.addEventListener('error', function () { finish(null); });
+    document.body.appendChild(v);
+    var url = job.src;
+    var isHls = /\.m3u8(\?|$)/i.test(url);
+    if (isHls && !v.canPlayType('application/vnd.apple.mpegurl') && window.Hls && window.Hls.isSupported()) {
+      var h = new window.Hls({ maxBufferLength: 5 });
+      h.on(window.Hls.Events.ERROR, function (ev, d) { if (d.fatal) finish(null); });
+      h.loadSource(url); h.attachMedia(v); v.__hls = h;
+    } else {
+      v.src = url;
+    }
+  }
+
+  // Pre-generated thumbs: /thumbs/<sha1-16 of url@time>.jpg, produced by the
+  // GitHub Action (tools/generate-thumbs.mjs). Hash MUST match that script.
+  function thumbHash(url, time) {
+    if (!window.crypto || !crypto.subtle || !window.TextEncoder) return Promise.resolve(null);
+    var bytes = new TextEncoder().encode(url + '@' + time);
+    return crypto.subtle.digest('SHA-1', bytes).then(function (buf) {
+      var hex = '';
+      var arr = new Uint8Array(buf);
+      for (var i = 0; i < 8; i++) hex += (arr[i] < 16 ? '0' : '') + arr[i].toString(16);
+      return hex;
+    }).catch(function () { return null; });
+  }
+  function tryStaticThumb(url, time) {
+    return thumbHash(url, time).then(function (hash) {
+      if (!hash) return null;
+      return new Promise(function (res) {
+        var src = '/thumbs/' + hash + '.jpg';
+        var im = new Image();
+        im.onload = function () { res(src); };
+        im.onerror = function () { res(null); };
+        im.src = src;
+      });
+    });
+  }
+
+  // load(rawUrl, timeSecs, cb): cb(srcString|null).
+  // Order: pre-generated file (free) → IDB cache → live capture queue.
+  function load(rawUrl, time, cb) {
+    tryStaticThumb(rawUrl, time).then(function (staticSrc) {
+      if (staticSrc) { cb(staticSrc); return; }
+      var key = rawUrl + '@' + time;
+      idbGet(key).then(function (hit) {
+        if (hit) { cb(hit); return; }
+        queue.push({ key: key, src: proxyUrl(rawUrl), time: time, cb: cb });
+        pump();
+      });
+    });
+  }
+  return { load: load };
 })();
 
 (function() {

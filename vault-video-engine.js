@@ -71,25 +71,10 @@
       var idx = Number(tile.dataset.vi);
       var it = items[idx];
       var img = tile.querySelector('img');
-      var v = document.createElement('video');
-      v.muted = true; v.playsInline = true; v.preload = 'metadata'; v.crossOrigin = 'anonymous';
-      v.style.display = 'none';
-      attachVideoSrc(v, proxyUrl(it.url));
-      v.addEventListener('loadeddata', function () {
-        try {
-          var c = document.createElement('canvas');
-          c.width = 240; c.height = Math.round(240 * (v.videoHeight / v.videoWidth || 1.33));
-          c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
-          img.src = c.toDataURL('image/jpeg', 0.72);
-          img.style.display = 'block';
-          tile.classList.remove('loading');
-        } catch (e) { tile.classList.remove('loading'); }
-        if (v.__hls) { try { v.__hls.destroy(); } catch (e2) {} }
-        v.removeAttribute('src'); v.load(); v.remove();
+      VaultPosters.load(it.url, posterTime(it), function (dataUrl) {
+        if (dataUrl) { img.src = dataUrl; img.style.display = 'block'; }
+        tile.classList.remove('loading');
       });
-      v.addEventListener('error', function () { tile.classList.remove('loading'); v.remove(); });
-      document.body.appendChild(v);
-      v.currentTime = posterTime(it);
     });
   }, { rootMargin: '600px' });
 
