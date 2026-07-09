@@ -1,0 +1,38 @@
+name: Generate thumbnails
+
+on:
+  push:
+    paths:
+      - 'data/*.js'
+      - 'tools/generate-thumbs.mjs'
+  workflow_dispatch: {}   # manual "Run workflow" button, for the first run
+
+permissions:
+  contents: write
+
+concurrency:
+  group: thumbnails
+  cancel-in-progress: false
+
+jobs:
+  thumbs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Generate missing thumbnails
+        run: node tools/generate-thumbs.mjs
+
+      - name: Commit thumbnails
+        run: |
+          git config user.name "vault-thumbs[bot]"
+          git config user.email "actions@github.com"
+          git add -A thumbs/
+          if git diff --cached --quiet; then
+            echo "No thumbnail changes."
+          else
+            git commit -m "thumbs: auto-generate for data changes"
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push
+          fi
