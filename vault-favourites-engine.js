@@ -126,4 +126,55 @@
     render();
   });
   render();
+
+  // ── Sync card ─────────────────────────────────────────────
+  (function () {
+    var card = document.getElementById('sync-card');
+    if (!card || !window.VaultSync) return;
+    var dot = document.getElementById('sync-dot');
+    var label = document.getElementById('sync-label');
+    var toggleBtn = document.getElementById('sync-toggle');
+    var setup = document.getElementById('sync-setup');
+    var tokenInput = document.getElementById('sync-token');
+    var saveBtn = document.getElementById('sync-save');
+    var errEl = document.getElementById('sync-error');
+
+    var LABELS = {
+      off: 'Device-only (not synced)',
+      pending: 'Change pending\u2026',
+      syncing: 'Syncing\u2026',
+      synced: 'Synced with GitHub',
+      error: 'Sync error'
+    };
+    function paint(status, detail) {
+      dot.className = 'sync-dot ' + status;
+      label.textContent = LABELS[status] || status;
+      toggleBtn.textContent = status === 'off' ? 'Enable GitHub sync' : 'Disable';
+      if (status === 'error' && detail) { errEl.textContent = detail; errEl.hidden = false; }
+      else if (status === 'synced') { errEl.hidden = true; }
+    }
+    document.addEventListener('vault-sync-status', function (e) { paint(e.detail.status, e.detail.detail); });
+    paint(VaultSync.enabled() ? VaultSync.getStatus() : 'off');
+
+    toggleBtn.addEventListener('click', function () {
+      if (VaultSync.enabled()) {
+        VaultSync.disable();
+        setup.hidden = true;
+        paint('off');
+      } else {
+        setup.hidden = !setup.hidden;
+        if (!setup.hidden) tokenInput.focus();
+      }
+    });
+    saveBtn.addEventListener('click', function () {
+      var tok = tokenInput.value.trim();
+      if (!tok) { tokenInput.focus(); return; }
+      errEl.hidden = true;
+      saveBtn.disabled = true; saveBtn.textContent = 'Connecting\u2026';
+      VaultSync.enable(tok).then(function (ok) {
+        saveBtn.disabled = false; saveBtn.textContent = 'Connect';
+        if (ok) { setup.hidden = true; tokenInput.value = ''; }
+      });
+    });
+  })();
 })();

@@ -165,6 +165,13 @@ var Favourites = (function() {
     return state;
   }
 
+  // Wholesale replacement from sync — silent so it never re-triggers a push
+  function _replaceAll(newList) {
+    _list = Array.isArray(newList) ? newList.slice() : [];
+    save();
+    document.dispatchEvent(new CustomEvent('vault-fav-change', { detail: { url: null, state: null, silent: true } }));
+  }
+
   window.addEventListener('storage', function(e) {
     if (e.key !== KEY) return;
     _list = null; _set = null;
@@ -234,7 +241,7 @@ var Favourites = (function() {
     return api;
   }
 
-  return { has: has, list: list, count: count, toggle: toggle, makeHeart: makeHeart, initSection: initSection, META: COLLECTION_META };
+  return { has: has, list: list, count: count, toggle: toggle, makeHeart: makeHeart, initSection: initSection, META: COLLECTION_META, _replaceAll: _replaceAll };
 })();
 
 // ── Poster capture: IndexedDB cache + bounded capture queue ──
@@ -370,6 +377,125 @@ var VaultPosters = (function () {
     });
   }
   return { load: load };
+})();
+
+// ── Favourites sync via private GitHub Gist ────────────────
+// Token (classic PAT, "gist" scope ONLY) lives in localStorage. The gist is
+// found by filename or created on first enable. Pull-on-boot: newer side wins
+// wholesale. Pushes are debounced so rapid toggles = one API call.
+var VaultSync = (function () {
+  var API = 'https://api.github.com';
+  var FILENAME = 'vault-favourites.json';
+  var T_KEY = 'vault-sync-token', G_KEY = 'vault-sync-gist', U_KEY = 'vault-favourites-updated';
+  var pushTimer = null, status = 'off';
+
+  function token() { try { return localStorage.getItem(T_KEY) || ''; } catch (e) { return ''; } }
+  function gistId() { try { return localStorage.getItem(G_KEY) || ''; } catch (e) { return ''; } }
+  function localUpdated() { try { return Number(localStorage.getItem(U_KEY)) || 0; } catch (e) { return 0; } }
+  function markUpdated(t) { try { localStorage.setItem(U_KEY, String(t)); } catch (e) {} }
+  function enabled() { return !!token(); }
+
+  function setStatus(s, detail) {
+    status = s;
+    document.dispatchEvent(new CustomEvent('vault-sync-status', { detail: { status: s, detail: detail || '' } }));
+  }
+  function gh(path, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({
+      'Authorization': 'Bearer ' + token(),
+      'Accept': 'application/vnd.github+json'
+    }, opts.headers || {});
+    return fetch(API + path, opts);
+  }
+
+  function findOrCreateGist() {
+    if (gistId()) return Promise.resolve(gistId());
+    return gh('/gists?per_page=100').then(function (r) {
+      if (!r.ok) throw new Error('token rejected (' + r.status + ')');
+      return r.json();
+    }).then(function (gists) {
+      var hit = gists.find(function (g) { return g.files && g.files[FILENAME]; });
+      if (hit) { localStorage.setItem(G_KEY, hit.id); return hit.id; }
+      var files = {};
+      files[FILENAME] = { content: JSON.stringify({ updated: 0, list: [] }) };
+      return gh('/gists', {
+        method: 'POST',
+        body: JSON.stringify({ description: 'The Vault — favourites sync', public: false, files: files })
+      }).then(function (r) {
+        if (!r.ok) throw new Error('gist create failed (' + r.status + ')');
+        return r.json();
+      }).then(function (g) { localStorage.setItem(G_KEY, g.id); return g.id; });
+    });
+  }
+
+  function pull() {
+    if (!enabled()) return Promise.resolve(false);
+    setStatus('syncing');
+    return findOrCreateGist().then(function (id) {
+      return gh('/gists/' + id).then(function (r) {
+        if (!r.ok) throw new Error('gist fetch failed (' + r.status + ')');
+        return r.json();
+      });
+    }).then(function (g) {
+      var file = g.files && g.files[FILENAME];
+      var doc = { updated: 0, list: [] };
+      try { doc = JSON.parse(file.content); } catch (e) {}
+      if ((doc.updated || 0) > localUpdated() && Array.isArray(doc.list)) {
+        Favourites._replaceAll(doc.list);
+        markUpdated(doc.updated);
+        setStatus('synced');
+        return true;
+      }
+      setStatus('synced');
+      return false;
+    }).catch(function (e) { setStatus('error', String(e.message || e)); return false; });
+  }
+
+  function pushSoon() {
+    if (!enabled()) return;
+    if (pushTimer) clearTimeout(pushTimer);
+    setStatus('pending');
+    pushTimer = setTimeout(pushNow, 2500);
+  }
+  function pushNow() {
+    if (!enabled()) return Promise.resolve();
+    var now = Date.now();
+    markUpdated(now);
+    setStatus('syncing');
+    return findOrCreateGist().then(function (id) {
+      var files = {};
+      files[FILENAME] = { content: JSON.stringify({ updated: now, list: Favourites.list() }) };
+      return gh('/gists/' + id, { method: 'PATCH', body: JSON.stringify({ files: files }) });
+    }).then(function (r) {
+      if (!r.ok) throw new Error('push failed (' + r.status + ')');
+      setStatus('synced');
+    }).catch(function (e) { setStatus('error', String(e.message || e)); });
+  }
+
+  function enable(tok) {
+    try { localStorage.setItem(T_KEY, tok.trim()); } catch (e) {}
+    return pull().then(function () { if (status !== 'error') pushNow(); return status !== 'error'; });
+  }
+  function disable() {
+    try { localStorage.removeItem(T_KEY); localStorage.removeItem(G_KEY); } catch (e) {}
+    if (pushTimer) clearTimeout(pushTimer);
+    setStatus('off');
+  }
+
+  // Local favourite changes → schedule a push (remote-applied changes carry silent=true)
+  document.addEventListener('vault-fav-change', function (ev) {
+    if (ev.detail && ev.detail.silent) return;
+    if (ev.detail && ev.detail.url === null) return; // cross-tab storage echo
+    pushSoon();
+  });
+  // Flush pending push if the tab closes quickly after a toggle
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden && status === 'pending') pushNow();
+  });
+  if (enabled()) setTimeout(pull, 0);
+
+  return { enabled: enabled, enable: enable, disable: disable, pull: pull,
+           getStatus: function () { return status; } };
 })();
 
 // ── Shared lightbox / page UX helpers ─────────────────────
