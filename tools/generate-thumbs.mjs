@@ -132,6 +132,15 @@ if (failures.length) {
 } else {
   try { fs.unlinkSync(path.join(THUMBS_DIR, '_failures.log')); } catch {}
 }
+
+// Manifest: the site fetches this once and only requests thumbs that exist,
+// so missing thumbs never produce 404s.
+const finalHashes = fs.readdirSync(THUMBS_DIR)
+  .filter((f) => f.endsWith('.jpg'))
+  .map((f) => f.replace(/\.jpg$/, ''))
+  .sort();
+fs.writeFileSync(path.join(THUMBS_DIR, 'index.json'), JSON.stringify(finalHashes));
+console.log(`manifest: thumbs/index.json (${finalHashes.length} entries)`);
 console.log(`\ndone: ${ok}/${toMake.length} generated, ${toPrune.length} pruned`);
 // Always exit 0 — dead links must not fail the workflow.
 process.exit(0);

@@ -325,6 +325,18 @@ var VaultPosters = (function () {
 
   // Pre-generated thumbs: /thumbs/<sha1-16 of url@time>.jpg, produced by the
   // GitHub Action (tools/generate-thumbs.mjs). Hash MUST match that script.
+  // A manifest (thumbs/index.json) is fetched ONCE and consulted locally, so
+  // we never request a thumb that doesn't exist — no 404 noise.
+  var _manifest = null; // Promise<Set|null>
+  function manifest() {
+    if (_manifest) return _manifest;
+    if (typeof window.fetch !== 'function') { _manifest = Promise.resolve(null); return _manifest; }
+    _manifest = fetch('/thumbs/index.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json().then(function (arr) { return new Set(arr); });
+    }).catch(function () { return null; });
+    return _manifest;
+  }
   function thumbHash(url, time) {
     if (!window.crypto || !crypto.subtle || !window.TextEncoder) return Promise.resolve(null);
     var bytes = new TextEncoder().encode(url + '@' + time);
@@ -336,14 +348,10 @@ var VaultPosters = (function () {
     }).catch(function () { return null; });
   }
   function tryStaticThumb(url, time) {
-    return thumbHash(url, time).then(function (hash) {
-      if (!hash) return null;
-      return new Promise(function (res) {
-        var src = '/thumbs/' + hash + '.jpg';
-        var im = new Image();
-        im.onload = function () { res(src); };
-        im.onerror = function () { res(null); };
-        im.src = src;
+    return manifest().then(function (set) {
+      if (!set || !set.size) return null;
+      return thumbHash(url, time).then(function (hash) {
+        return (hash && set.has(hash)) ? ('/thumbs/' + hash + '.jpg') : null;
       });
     });
   }
