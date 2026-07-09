@@ -112,19 +112,29 @@
   VaultLB.swipe(lightbox, function () { step(-1); }, function () { step(1); });
   VaultLB.initScrollTop();
   VaultLB.initJumpNav([].slice.call(body.querySelectorAll('.vs-divider')));
-  lbVideo.addEventListener('playing', function () { VaultLB.loading(videoWrap, false); });
-  lbVideo.addEventListener('waiting', function () { VaultLB.loading(videoWrap, true); });
+  lbVideo.addEventListener('playing', function () { VaultLB.loading(videoWrap, false); startAdv(); });
+  lbVideo.addEventListener('waiting', function () { VaultLB.loading(videoWrap, true); pauseAdv(); });
+  lbVideo.addEventListener('pause', function () { pauseAdv(); });
   var current = -1;
   var loopMode = VaultLB.getMode('loop');
   var autoMode = VaultLB.getMode('auto');
   var shuffleMode = VaultLB.getMode('shuffle');
   var timerMode = VaultLB.getMode('timer');
   var TIMER_SECS = 12;
-  var advTimer = null;
+  var advTimer = null, advRemaining = 0, advStartedAt = 0;
 
-  function armTimer() {
-    if (advTimer) { clearTimeout(advTimer); advTimer = null; }
-    if (timerMode && current >= 0) advTimer = setTimeout(function () { step(1); }, TIMER_SECS * 1000);
+  function clearAdv() { if (advTimer) { clearTimeout(advTimer); advTimer = null; } }
+  // Reset the 12s budget for a new clip; it starts counting on 'playing'.
+  function resetAdv() { clearAdv(); advRemaining = TIMER_SECS * 1000; advStartedAt = 0; }
+  function startAdv() {
+    if (!timerMode || advTimer || current < 0 || advRemaining <= 0) return;
+    advStartedAt = Date.now();
+    advTimer = setTimeout(function () { advTimer = null; step(1); }, advRemaining);
+  }
+  function pauseAdv() {
+    if (!advTimer) return;
+    advRemaining -= Date.now() - advStartedAt;
+    clearAdv();
   }
 
   function setToggle(btn, on) { if (btn) btn.classList.toggle('vs-toggled', on); }
@@ -140,12 +150,12 @@
     VaultLB.lock(true);
     counter.textContent = (idx + 1) + ' / ' + items.length;
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'video', start: it.start, end: it.end });
-    armTimer();
+    resetAdv(); // 12s budget starts counting once the video is actually playing
   }
   function closeLightbox() {
     lightbox.style.display = 'none';
     VaultLB.lock(false);
-    if (advTimer) { clearTimeout(advTimer); advTimer = null; }
+    clearAdv();
     lbVideo.pause();
     if (lbVideo.__hls) { try { lbVideo.__hls.destroy(); } catch (e) {} }
     lbVideo.removeAttribute('src'); lbVideo.load();
@@ -201,13 +211,14 @@
     if (timerMode) { autoMode = false; setToggle(btnAuto, false); VaultLB.setMode('auto', false); }
     setToggle(btnTimer, timerMode);
     VaultLB.setMode('timer', timerMode);
-    armTimer();
+    if (timerMode) { resetAdv(); if (!lbVideo.paused && lightbox.style.display === 'flex') startAdv(); }
+    else clearAdv();
   });
   if (btnAuto) btnAuto.addEventListener('click', function () {
     autoMode = !autoMode;
     if (autoMode) {
       loopMode = false; setToggle(btnLoop, false); VaultLB.setMode('loop', false);
-      timerMode = false; setToggle(btnTimer, false); VaultLB.setMode('timer', false); armTimer();
+      timerMode = false; setToggle(btnTimer, false); VaultLB.setMode('timer', false); clearAdv();
     }
     setToggle(btnAuto, autoMode);
     VaultLB.setMode('auto', autoMode);

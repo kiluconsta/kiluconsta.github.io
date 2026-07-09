@@ -27,15 +27,23 @@
   var shuffleMode = VaultLB.getMode('shuffle');
   var timerMode = VaultLB.getMode('timer');
   var TIMER_SECS = 12;
-  var advTimer = null;
+  var advTimer = null, advRemaining = 0, advStartedAt = 0;
 
   function setToggle(btn, on) { if (btn) btn.classList.toggle('vs-toggled', on); }
   setToggle(btnLoop, loopMode); setToggle(btnAuto, autoMode);
   setToggle(btnShuffle, shuffleMode); setToggle(btnTimer, timerMode);
 
-  function armTimer() {
-    if (advTimer) { clearTimeout(advTimer); advTimer = null; }
-    if (timerMode && current >= 0) advTimer = setTimeout(function () { step(1); }, TIMER_SECS * 1000);
+  function clearAdv() { if (advTimer) { clearTimeout(advTimer); advTimer = null; } }
+  function resetAdv() { clearAdv(); advRemaining = TIMER_SECS * 1000; advStartedAt = 0; }
+  function startAdv() {
+    if (!timerMode || advTimer || current < 0 || advRemaining <= 0) return;
+    advStartedAt = Date.now();
+    advTimer = setTimeout(function () { advTimer = null; step(1); }, advRemaining);
+  }
+  function pauseAdv() {
+    if (!advTimer) return;
+    advRemaining -= Date.now() - advStartedAt;
+    clearAdv();
   }
   function nextIndex(delta) {
     if (shuffleMode && list.length > 1) {
@@ -64,7 +72,7 @@
       start: entry.start != null ? Number(entry.start) : null,
       end: entry.end != null ? Number(entry.end) : null });
     VaultLB.loading(lbWrap, true);
-    armTimer();
+    resetAdv(); // counts from when the media is actually up
     if (entry.type === 'video') {
       lbImg.style.display = 'none'; lbImg.removeAttribute('src');
       lbVideo.style.display = 'block';
@@ -83,7 +91,7 @@
   function closeLightbox() {
     lightbox.style.display = 'none';
     VaultLB.lock(false);
-    if (advTimer) { clearTimeout(advTimer); advTimer = null; }
+    clearAdv();
     lbVideo.pause(); lbVideo.removeAttribute('src'); lbVideo.load();
     lbImg.removeAttribute('src');
   }
@@ -113,9 +121,10 @@
     }
   });
   lbVideo.addEventListener('ended', function () { if (current >= 0) onClipEnd(); });
-  lbVideo.addEventListener('playing', function () { VaultLB.loading(lbWrap, false); });
-  lbVideo.addEventListener('waiting', function () { VaultLB.loading(lbWrap, true); });
-  lbImg.addEventListener('load', function () { VaultLB.loading(lbWrap, false); });
+  lbVideo.addEventListener('playing', function () { VaultLB.loading(lbWrap, false); startAdv(); });
+  lbVideo.addEventListener('waiting', function () { VaultLB.loading(lbWrap, true); pauseAdv(); });
+  lbVideo.addEventListener('pause', function () { pauseAdv(); });
+  lbImg.addEventListener('load', function () { VaultLB.loading(lbWrap, false); startAdv(); });
 
   if (btnShuffle) btnShuffle.addEventListener('click', function () {
     shuffleMode = !shuffleMode; setToggle(btnShuffle, shuffleMode); VaultLB.setMode('shuffle', shuffleMode);
@@ -129,7 +138,7 @@
     autoMode = !autoMode;
     if (autoMode) {
       loopMode = false; setToggle(btnLoop, false); VaultLB.setMode('loop', false);
-      timerMode = false; setToggle(btnTimer, false); VaultLB.setMode('timer', false); armTimer();
+      timerMode = false; setToggle(btnTimer, false); VaultLB.setMode('timer', false); clearAdv();
     }
     setToggle(btnAuto, autoMode); VaultLB.setMode('auto', autoMode);
   });
@@ -137,7 +146,11 @@
     timerMode = !timerMode;
     if (timerMode) { autoMode = false; setToggle(btnAuto, false); VaultLB.setMode('auto', false); }
     setToggle(btnTimer, timerMode); VaultLB.setMode('timer', timerMode);
-    armTimer();
+    if (timerMode) {
+      resetAdv();
+      var e = current >= 0 ? list[current] : null;
+      if (e && (e.type === 'image' || !lbVideo.paused) && lightbox.style.display === 'flex') startAdv();
+    } else clearAdv();
   });
   if (btnFullscreen) btnFullscreen.addEventListener('click', function () {
     if (current < 0 || list[current].type !== 'video') return;
