@@ -40,9 +40,11 @@
       lbImg.src = proxyUrl(entry.url);
     }
     lightbox.style.display = 'flex';
+    VaultLB.lock(true);
   }
   function closeLightbox() {
     lightbox.style.display = 'none';
+    VaultLB.lock(false);
     lbVideo.pause(); lbVideo.removeAttribute('src'); lbVideo.load();
     lbImg.removeAttribute('src');
   }
@@ -62,6 +64,7 @@
     }
   });
 
+  VaultLB.swipe(lightbox, function () { step(-1); }, function () { step(1); });
   lbClose.addEventListener('click', closeLightbox);
   backdrop && backdrop.addEventListener('click', closeLightbox);
   lbPrev.addEventListener('click', function () { step(-1); });

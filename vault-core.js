@@ -81,7 +81,7 @@ var COLLECTION_META = {
     "icon": "𝕏",
     "accent": "#3d9be0",
     "type": "video",
-    "count": 582
+    "count": 584
   },
   "meatsenpaii": {
     "label": "MeatSenpaii",
@@ -371,6 +371,81 @@ var VaultPosters = (function () {
   }
   return { load: load };
 })();
+
+// ── Shared lightbox / page UX helpers ─────────────────────
+var VaultLB = {
+  // Scroll lock while a lightbox is open
+  lock: function (on) { document.body.classList.toggle('lb-open', !!on); },
+  // Spinner state on a wrap element (adds/removes .lb-loading)
+  loading: function (el, on) { if (el) el.classList.toggle('lb-loading', !!on); },
+  // Horizontal swipe → onPrev/onNext. Vertical scrolling untouched.
+  swipe: function (el, onPrev, onNext) {
+    var x0 = null, y0 = null;
+    el.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { x0 = null; return; }
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    }, { passive: true });
+    el.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      var dy = e.changedTouches[0].clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      if (dx > 0) onPrev(); else onNext();
+    }, { passive: true });
+  },
+  // Persist lightbox mode toggles (shuffle/loop/auto/timer) across pages
+  getMode: function (name) {
+    try { return sessionStorage.getItem('vault-lb-' + name) === '1'; } catch (e) { return false; }
+  },
+  setMode: function (name, on) {
+    try {
+      if (on) sessionStorage.setItem('vault-lb-' + name, '1');
+      else sessionStorage.removeItem('vault-lb-' + name);
+    } catch (e) {}
+  },
+  // Scroll-to-top pill: shows after a screen of scrolling
+  initScrollTop: function () {
+    var btn = document.querySelector('.scroll-top');
+    if (!btn) return;
+    var ticking = false;
+    function update() {
+      btn.classList.toggle('show', window.scrollY > window.innerHeight);
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    update();
+  },
+  // Jump-nav dots for pages with section dividers (desktop)
+  initJumpNav: function (dividerEls) {
+    var nav = document.querySelector('.vs-jump-nav');
+    if (!nav || !dividerEls || dividerEls.length < 2) return;
+    dividerEls.forEach(function (d) {
+      var pill = document.createElement('button');
+      pill.className = 'vs-jump-pill';
+      pill.type = 'button';
+      pill.title = d.textContent;
+      pill.setAttribute('aria-label', 'Jump to ' + d.textContent);
+      pill.addEventListener('click', function () {
+        d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      nav.appendChild(pill);
+    });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var idx = dividerEls.indexOf(en.target);
+        nav.querySelectorAll('.vs-jump-pill').forEach(function (p, i) {
+          p.classList.toggle('active', i === idx);
+        });
+      });
+    }, { rootMargin: '-10% 0px -70% 0px' });
+    dividerEls.forEach(function (d) { obs.observe(d); });
+  }
+};
 
 (function() {
   function applyIdle() { document.documentElement.classList.toggle('power-idle', document.hidden); }

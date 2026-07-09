@@ -106,11 +106,19 @@
 
   // ── Lightbox ─────────────────────────────────────────────
   var favApi = window.Favourites ? window.Favourites.initSection(mount, { type: 'video', platterEl: platter }) : null;
+  var videoWrap = mount.querySelector('.vs-lb-video-wrap');
+  setToggle(btnLoop, loopMode); setToggle(btnAuto, autoMode);
+  setToggle(btnShuffle, shuffleMode); setToggle(btnTimer, timerMode);
+  VaultLB.swipe(lightbox, function () { step(-1); }, function () { step(1); });
+  VaultLB.initScrollTop();
+  VaultLB.initJumpNav([].slice.call(body.querySelectorAll('.vs-divider')));
+  lbVideo.addEventListener('playing', function () { VaultLB.loading(videoWrap, false); });
+  lbVideo.addEventListener('waiting', function () { VaultLB.loading(videoWrap, true); });
   var current = -1;
-  var loopMode = false;
-  var autoMode = false;
-  var shuffleMode = false;
-  var timerMode = false;
+  var loopMode = VaultLB.getMode('loop');
+  var autoMode = VaultLB.getMode('auto');
+  var shuffleMode = VaultLB.getMode('shuffle');
+  var timerMode = VaultLB.getMode('timer');
   var TIMER_SECS = 12;
   var advTimer = null;
 
@@ -124,16 +132,19 @@
   function openLightbox(idx) {
     current = idx;
     var it = items[idx];
+    VaultLB.loading(videoWrap, true);
     attachVideoSrc(lbVideo, proxyUrl(it.url));
     lbVideo.currentTime = it.start || 0;
     lbVideo.play().catch(function () {});
     lightbox.style.display = 'flex';
+    VaultLB.lock(true);
     counter.textContent = (idx + 1) + ' / ' + items.length;
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'video', start: it.start, end: it.end });
     armTimer();
   }
   function closeLightbox() {
     lightbox.style.display = 'none';
+    VaultLB.lock(false);
     if (advTimer) { clearTimeout(advTimer); advTimer = null; }
     lbVideo.pause();
     if (lbVideo.__hls) { try { lbVideo.__hls.destroy(); } catch (e) {} }
@@ -178,25 +189,28 @@
   backdrop && backdrop.addEventListener('click', closeLightbox);
   lbPrev.addEventListener('click', function () { step(-1); });
   lbNext.addEventListener('click', function () { step(1); });
-  if (btnShuffle) btnShuffle.addEventListener('click', function () { shuffleMode = !shuffleMode; setToggle(btnShuffle, shuffleMode); });
+  if (btnShuffle) btnShuffle.addEventListener('click', function () { shuffleMode = !shuffleMode; setToggle(btnShuffle, shuffleMode); VaultLB.setMode('shuffle', shuffleMode); });
   if (btnLoop) btnLoop.addEventListener('click', function () {
     loopMode = !loopMode;
-    if (loopMode) { autoMode = false; setToggle(btnAuto, false); }
+    if (loopMode) { autoMode = false; setToggle(btnAuto, false); VaultLB.setMode('auto', false); }
     setToggle(btnLoop, loopMode);
+    VaultLB.setMode('loop', loopMode);
   });
   if (btnTimer) btnTimer.addEventListener('click', function () {
     timerMode = !timerMode;
-    if (timerMode) { autoMode = false; setToggle(btnAuto, false); }
+    if (timerMode) { autoMode = false; setToggle(btnAuto, false); VaultLB.setMode('auto', false); }
     setToggle(btnTimer, timerMode);
+    VaultLB.setMode('timer', timerMode);
     armTimer();
   });
   if (btnAuto) btnAuto.addEventListener('click', function () {
     autoMode = !autoMode;
     if (autoMode) {
-      loopMode = false; setToggle(btnLoop, false);
-      timerMode = false; setToggle(btnTimer, false); armTimer();
+      loopMode = false; setToggle(btnLoop, false); VaultLB.setMode('loop', false);
+      timerMode = false; setToggle(btnTimer, false); VaultLB.setMode('timer', false); armTimer();
     }
     setToggle(btnAuto, autoMode);
+    VaultLB.setMode('auto', autoMode);
   });
   if (btnFullscreen) btnFullscreen.addEventListener('click', function () { lbVideo.requestFullscreen && lbVideo.requestFullscreen(); });
 

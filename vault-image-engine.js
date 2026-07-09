@@ -38,6 +38,10 @@
   body.insertBefore(frag, lightbox);
 
   var favApi = window.Favourites ? window.Favourites.initSection(mount, { type: 'image', platterEl: controls }) : null;
+  var imgWrap = mount.querySelector('.is-lb-img-wrap');
+  VaultLB.swipe(lightbox, function () { step(-1); }, function () { step(1); });
+  VaultLB.initScrollTop();
+  lbImg.addEventListener('load', function () { VaultLB.loading(imgWrap, false); });
   var current = -1;
   var ssBtn = mount.querySelector('.is-btn-slideshow');
   var ssStatus = mount.querySelector('.is-ss-status');
@@ -62,11 +66,18 @@
   function openLightbox(idx) {
     current = idx;
     var it = items[idx];
+    VaultLB.loading(imgWrap, true);
     lbImg.src = proxyUrl(it.url);
     lightbox.style.display = 'flex';
+    VaultLB.lock(true);
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'image' });
+    // Preload the next image so advancing feels instant
+    if (items.length > 1) {
+      var nx = new Image();
+      nx.src = proxyUrl(items[(idx + 1) % items.length].url);
+    }
   }
-  function closeLightbox() { stopSlideshow(); lightbox.style.display = 'none'; lbImg.removeAttribute('src'); }
+  function closeLightbox() { stopSlideshow(); lightbox.style.display = 'none'; VaultLB.lock(false); lbImg.removeAttribute('src'); }
   function step(delta) {
     if (current < 0) return;
     openLightbox((current + delta + items.length) % items.length);
