@@ -39,5 +39,19 @@ into the `thumbs/` folder whenever you push a change to `data/*.js`:
   falls back to generating those thumbnails in the browser.
 - Never edit `thumbs/` by hand — it's fully machine-managed.
 
+## Dead links (automatic)
+
+A weekly check (`.github/workflows/link-health.yml`, Mondays) probes every
+link through the same proxy the site uses:
+
+- A link is removed only after failing **3 consecutive weekly runs** with a
+  definitive error (404/410/403/dead domain). Timeouts and server hiccups
+  never remove anything.
+- Every removal is logged to `health/removed-links.log` (date, file, reason,
+  URL) — restore any line by pasting the URL back into its data file.
+- Strike state lives in `health/link-strikes.json` (machine-managed).
+- Thumbnails for removed links are pruned in the same run.
+- Run it on demand: Actions → "Link health" → Run workflow.
+
 **What still needs a rebuild (send the source zip to Claude):**
 adding a whole new collection, renaming one, or any design/layout change.
