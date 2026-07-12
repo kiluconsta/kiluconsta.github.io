@@ -1,0 +1,42 @@
+name: Link health
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Mondays 06:00 UTC
+  workflow_dispatch: {}    # manual run any time
+
+permissions:
+  contents: write
+
+concurrency:
+  group: link-health
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install ffmpeg (for thumbnail pruning after removals)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Check links (3-strike removal)
+        run: node tools/check-links.mjs
+
+      - name: Prune thumbnails for removed links
+        run: node tools/generate-thumbs.mjs
+
+      - name: Commit results
+        run: |
+          git config user.name "vault-health[bot]"
+          git config user.email "actions@github.com"
+          git add -A data/ health/ thumbs/
+          if git diff --cached --quiet; then
+            echo "All links healthy — nothing to commit."
+          else
+            git commit -m "health: link check $(date -u +%F)"
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push
+          fi
