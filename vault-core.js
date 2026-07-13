@@ -81,7 +81,7 @@ var COLLECTION_META = {
     "icon": "𝕏",
     "accent": "#3d9be0",
     "type": "video",
-    "count": 584
+    "count": 611
   },
   "meatsenpaii": {
     "label": "MeatSenpaii",
@@ -376,7 +376,8 @@ var VaultPosters = (function () {
       });
     });
   }
-  return { load: load };
+  // thumbFor(url, time): Promise<'/thumbs/<hash>.jpg'|null> — manifest lookup only
+  return { load: load, thumbFor: tryStaticThumb };
 })();
 
 // ── Favourites sync via private GitHub Gist ────────────────

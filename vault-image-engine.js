@@ -17,9 +17,33 @@
   var lbNext = mount.querySelector('.is-lb-next');
   var controls = mount.querySelector('.is-lb-controls');
 
+  function isGif(url) { return /\.gif(\?|$)/i.test(url); }
+  function tumblrResize(url, size) {
+    return url.replace(/\/s\d+x\d+(?:_c\d+)?\//, '/s' + size + 'x' + size + '/');
+  }
   function thumbURL(url) {
     if (/googleusercontent\.com/.test(url)) return url.replace(/=[^/]+$/, '=w280-h280-c');
+    // Tumblr's /sWxH/ path segment is dynamic resizing — safe to rewrite.
+    if (/media\.tumblr\.com/.test(url) && /\/s\d+x\d+/.test(url)) {
+      return tumblrResize(url, isGif(url) ? 100 : 250);
+    }
     return url;
+  }
+  // Tile source priority for GIFs: pre-generated static 100px first-frame
+  // (kills animation decode in the grid) → small animated rewrite → original.
+  function setTileSrc(img, url) {
+    var fallback = proxyUrl(thumbURL(url));
+    img.onerror = function () {
+      img.onerror = null; // one-time swap, no loop
+      img.src = proxyUrl(url);
+    };
+    if (isGif(url) && window.VaultPosters && VaultPosters.thumbFor) {
+      VaultPosters.thumbFor(url, 0).then(function (staticThumb) {
+        img.src = staticThumb || fallback;
+      });
+    } else {
+      img.src = fallback;
+    }
   }
 
   var frag = document.createDocumentFragment();
@@ -30,7 +54,7 @@
     var img = document.createElement('img');
     img.loading = 'lazy';
     img.alt = '';
-    img.src = proxyUrl(thumbURL(it.url));
+    setTileSrc(img, it.url);
     tile.appendChild(img);
     tile.addEventListener('click', function () { openLightbox(idx); });
     frag.appendChild(tile);

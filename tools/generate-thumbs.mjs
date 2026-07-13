@@ -54,20 +54,30 @@ function thumbKey(url, time) {
 }
 
 // ── Collect every video item across all data files ──────────
-const wanted = new Map(); // hash -> { url, time }
+const wanted = new Map(); // hash -> { url, time, width }
 for (const file of fs.readdirSync(DATA_DIR).filter((f) => f.endsWith('.js'))) {
   const ctx = {};
   vm.createContext(ctx);
   try { vm.runInContext(fs.readFileSync(path.join(DATA_DIR, file), 'utf8'), ctx); }
   catch (e) { console.error(`SKIP ${file}: does not parse (${e.message})`); continue; }
   const sources = ctx.SOURCES;
-  if (!Array.isArray(sources)) continue; // image collections need no thumbs
-  for (const s of sources) {
-    if (s === null || s === undefined) continue;
-    const item = typeof s === 'string' ? { url: s } : { url: s.url, start: s.start };
-    if (!item.url) continue;
-    const time = posterTime(item);
-    wanted.set(thumbKey(item.url, time), { url: item.url, time });
+  if (Array.isArray(sources)) {
+    for (const s of sources) {
+      if (s === null || s === undefined) continue;
+      const item = typeof s === 'string' ? { url: s } : { url: s.url, start: s.start };
+      if (!item.url) continue;
+      const time = posterTime(item);
+      wanted.set(thumbKey(item.url, time), { url: item.url, time, width: 240 });
+    }
+  }
+  // Image collections: static 100px first-frame thumbs for animated GIFs,
+  // so grids never load/decode full-size animations. Keyed at time 0.
+  const imgs = ctx.IMGS;
+  if (Array.isArray(imgs)) {
+    for (const u of imgs) {
+      if (typeof u !== 'string' || !/\.gif(\?|$)/i.test(u)) continue;
+      wanted.set(thumbKey(u, 0), { url: u, time: 0, width: 100 });
+    }
   }
 }
 console.log(`videos referenced across data files: ${wanted.size}`);
@@ -84,15 +94,15 @@ for (const h of toPrune) fs.unlinkSync(path.join(THUMBS_DIR, `${h}.jpg`));
 console.log(`existing: ${existing.size}  new: ${toMake.length}  pruned: ${toPrune.length}`);
 
 // ── Generate with bounded concurrency ────────────────────────
-function grabFrame(url, time, outPath) {
+function grabFrame(url, time, width, outPath) {
   return new Promise((resolve) => {
     const src = proxyUrl(url);
     const args = [
       '-hide_banner', '-loglevel', 'error', '-y',
-      '-ss', String(time),
+      ...(time > 0 ? ['-ss', String(time)] : []),
       '-i', src,
       '-frames:v', '1',
-      '-vf', "scale=240:-2",
+      '-vf', 'scale=' + (width || 240) + ':-2',
       '-q:v', '4',
       outPath,
     ];
@@ -113,8 +123,8 @@ async function worker(jobs) {
   for (;;) {
     const job = jobs.shift();
     if (!job) return;
-    const [hash, { url, time }] = job;
-    const res = await grabFrame(url, time, path.join(THUMBS_DIR, `${hash}.jpg`));
+    const [hash, { url, time, width }] = job;
+    const res = await grabFrame(url, time, width, path.join(THUMBS_DIR, `${hash}.jpg`));
     done++;
     if (res.ok) ok++;
     else failures.push({ url, err: res.err });
