@@ -28,7 +28,7 @@ jobs:
         run: |
           git config user.name "vault-thumbs[bot]"
           git config user.email "actions@github.com"
-          git add -A thumbs/
+          git add -A thumbs/ health/
           if git diff --cached --quiet; then
             echo "No thumbnail changes."
           else
