@@ -1,419 +1,128 @@
-https://video.bsky.app/watch/did%3Aplc%3Aopsosud4y6zfhzjklmgprxhc/bafkreidqzc3bvgjsvdrqp6f2fkjpjudsc73opmw5zce2zesbvutp3py32m/playlist.m3u8	spawn ffmpeg ENOENT
-https://video.bsky.app/watch/did%3Aplc%3A2aebqfriku2mebym6l7sn35z/bafkreia6kb22nkmhdqcxrapy5aiwvpsqhhkb4fewdq5uv4.giffowajhve/playlist.m3u8	spawn ffmpeg ENOENT
-https://video.bsky.app/watch/did%3Aplc%3Aopsosud4y6zfhzjklmgprxhc/bafkreiaecoastyo6falx4hu4jd3ibjkhn6rkoa5avek6q722zeorqax6ry/playlist.m3u8	spawn ffmpeg ENOENT
-https://video.bsky.app/watch/did%3Aplc%3Aopsosud4y6zfhzjklmgprxhc/bafkreia2ciclsnssxu2uwvnm66owruy2yxclnmerfpyqqxxfbcq7iy246u/playlist.m3u8	spawn ffmpeg ENOENT
-https://video.bsky.app/watch/did%3Aplc%3Av3pnwoonthpfzaxb2ka6e6pm/bafkreiasagukh5fq4fz5744o7ecprci4nnmh7vylrstbaiftakgui4ytpu/playlist.m3u8	spawn ffmpeg ENOENT
-https://video.bsky.app/watch/did%3Aplc%3Amjq6crczv37xo34hmdho3k2s/bafkreie4ivu5ji6rlu7iey6sw2twtlaolkgf4n7encmxkcg3estic2rba4/playlist.m3u8	spawn ffmpeg ENOENT
-https://video.bsky.app/watch/did%3Aplc%3A3djoqvqmlv62ypemq6l5nkaw/bafkreifhg3lx2rn6c6jhoehhnisx2royvcif67xtcgsemnxectztoohtuu/playlist.m3u8	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1784450429524353024/pu/vid/avc1/720x1090/IC5BuJW_8-GUl155.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1763002149733048320/pu/vid/avc1/720x1280/6qHiUGbfTXNCSetj.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1786365371982684161/pu/vid/avc1/1080x1920/GYRm_Bek0wHJr8E5.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/1900400254089924609/vid/avc1/720x1260/lucRNwneWNmZJec_.mp4?tag=14	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1900287946168700928/pu/vid/avc1/720x1000/8XMf4dNnM3URBJct.mp4?tag=12	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1900255055598563329/pu/vid/avc1/1280x720/EBZ5oM-JOQ2Fli-A.mp4?tag=12	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1900255275849773056/pu/vid/avc1/1544x720/V3ATIdKRHymgiEge.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1839322407649320960/vid/avc1/720x1280/3KlmS1FmQ0ZfnQ3T.mp4?tag=14	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1688151055555846145/pu/vid/1280x720/DRPVWSc-fxyh24hU.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1838164130571972608/pu/vid/avc1/1280x720/Xqtut5TwkN0RiI5e.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1691970824499351552/pu/vid/720x1280/ckaccihvYvrNrMYa.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1753648840551346176/pu/vid/avc1/480x852/vVd5MN9v89k5ilBk.mp4?tag=12	spawn ffmpeg ENOENT
-https://video-t-2.twimg.com/ext_tw_video/1724478527389454336/pu/vid/avc1/1280x720/lMMPfo7RFCLy7Wgd.mp4?tag=12	spawn ffmpeg ENOENT
-https://video-t-1.twimg.com/ext_tw_video/1681448120801013761/pu/vid/720x720/9h9fekAx8iS9gJqU.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1579220353133461507/pu/vid/720x1280/uag5GaXNyuSPu4qr.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1721363901097652224/pu/vid/avc1/720x1166/1OLu_DJkbxan7hoH.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1721363500608688128/pu/vid/avc1/720x1230/myuDMUcmb1FEcpPT.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1649240491471536128/vid/1080x1920/5_EL7YO2mTlIRcMr.mp4?tag=16	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1681618826029350915/pu/vid/718x1280/vSJRmi3wQJezEoqF.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1661907837898092544/vid/720x1280/sFCGZRQICwHwK_TC.mp4?tag=14	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1623768616054272000/pu/vid/1280x720/6-pb3SjlL35U3fxj.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1643972713147674627/pu/vid/1280x676/Z9bYsiUMqsaIVEH6.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1634927275090104321/pu/vid/960x720/jMnsnOu6oAxtG81c.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1623303845181898753/pu/vid/960x720/1w9vdD_W0bEWBpwB.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1530439593568489472/pu/vid/960x720/LQChlWZem3aRn_K2.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1408153791761846272/pu/vid/720x1280/7Vii9xtMbYDSnFnR.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1370188896084975617/pu/vid/854x480/bHGh53sZsjxUazQN.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1328049958407180288/pu/vid/720x1280/TEYmKxi0sqNXY8I4.mp4?tag=10	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1355327451056885761/pu/vid/720x1280/q74dI3FLrxyaBs4k.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1824905306238771200/pu/vid/avc1/720x720/Y5vk3GD-PsPzDxY-.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1735815765587292160/pu/vid/avc1/720x1280/ubiz7lWJK8stWUgd.mp4?tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1649240491471536128/vid/1080x1920/5_EL7YO2mTlIRcMr.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1661907837898092544/vid/720x1280/sFCGZRQICwHwK_TC.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1408153791761846272/pu/vid/720x1280/7Vii9xtMbYDSnFnR.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1328049958407180288/pu/vid/720x1280/TEYmKxi0sqNXY8I4.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1910510701002493952/pu/vid/avc1/720x1232/0TFmCEnowiBpnnYb.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1909119189433921536/pu/vid/avc1/852x480/W07nl0GQRvOtlvhQ.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1909119189425782784/pu/vid/avc1/360x640/zjMrp2mwSNhJXqnQ.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/tweet_video/Gn6Nya-XwAA2WAb.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/tweet_video/Gn6Nya-XAAAtxow.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1899489668141379584/pu/vid/avc1/720x850/llpF09ajUc7mskM0.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/2002145089108230144/vid/avc1/656x1232/Vk_nMLiH7obz0K87.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/1877135788959219712/vid/avc1/1080x1920/bSrCHi4CXM4qzFzA.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/1884014865192210432/vid/avc1/1080x1920/kwQyJwJdb4thSkAI.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/2001451689870606336/vid/avc1/720x1280/OZQMzWF9axdAxDIS.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/2002145089112489985/vid/avc1/720x820/qg8ftZfe7v4J1oki.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1876642101166817280/pu/vid/avc1/720x1280/Ns_cbPBCHsfT60Q7.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/1897775696081989632/vid/avc1/718x1280/-N1_xL1XQ-r5j75u.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/1897775696069439489/vid/avc1/720x1142/GMchbdNSjP4gvKy9.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/ext_tw_video/1802681823991881728/pu/vid/avc1/1280x720/-Madax3KUz28KPM6.mp4	spawn ffmpeg ENOENT
-https://video-s.twimg.com/amplify_video/1810322036402597888/vid/avc1/1920x1080/6GiYFDurHBu4KQDK.mp4	spawn ffmpeg ENOENT
-https://media.redgifs.com/PresentHideousPomeranian.mp4	spawn ffmpeg ENOENT
-https://media.redgifs.com/InexperiencedSurprisedScarletibis.mp4	spawn ffmpeg ENOENT
-https://media.redgifs.com/NeighboringSandybrownSawfish.mp4	spawn ffmpeg ENOENT
-https://media.redgifs.com/SecretCrazyXenops.mp4	spawn ffmpeg ENOENT
-https://media.redgifs.com/WebbedAbsoluteHammerheadshark.mp4	spawn ffmpeg ENOENT
-https://us-01.gff.network/2025/09/30/jerking-off-in-the-bathroom-and-shooting-a-huge-load-trent-williams-trentw-1759235488532/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/10/02/jerking-my-young-cock-until-i-make-myself-cum-nick-fenway-nickfenway-1759403671229/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/09/07/jerking-my-big-thick-cock-and-tasting-my-load-raphael-grey-addictionadd2-1757252896569/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/08/17/anonymous-guy-sucks-my-dick-and-i-blow-my-load-over-his-face-raphael-grey-addictionadd2-1755360448113/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/09/04/jerking-off-with-my-toy-and-shooting-my-load-curved-king-curvedking.inc-1756987675968/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/07/14/stroking-my-cock-and-showing-off-my-muscles-bohdan-musclegod_ua-1752417068668/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/06/12/jerking-off-while-wearing-my-wolverine-mask-capy-mrcapy-1749724809479/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2026/01/18/quick-jerk-off-in-the-restroom-capy-mrcapy-1768736601558-e8l80w/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/05/19/fucking-myself-with-a-dildo-and-jerking-my-cock-til-i-cum-gabriel-antonio-sobrenomeantonio-1747647648977/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2025/05/14/quick-late-night-jerk-off-dubian-jauregui-dubianjauregui-1747212266409/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2025/05/01/jerking-off-in-my-underwear-and-cumming-over-my-exercise-ball-gabriel-antonio-sobrenomeantonio-1746070231953/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2026/03/31/jordan-jerks-off-after-baseball-jordanxbrandt-1774879765430-4e9yww/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2026/03/25/stroking-my-cock-and-cumming-all-over-the-floor-alphadallas6969-1774358722519-7di2oq/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2026/03/25/stroking-my-cock-and-cumming-over-myself-alphadallas6969-1774358812637-nztq4m/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2026/03/25/stroking-my-big-daddy-dick-until-i-cum-big-dick-buddy-bigdbuddyxxx-1774357657267-zel79i/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2026/03/24/stroking-my-thick-cock-and-cumming-over-my-underwear-big-dick-buddy-bigdbuddyxxx-1774273938984-88pr6m/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2026/03/11/philippe-soulier-filoufitt-fucks-ashton-summers-ossanjurjo-1773159573950-w6h26/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2026/03/08/jordans-cumpilation-jordanxbrandt1-1772969040104-lorlvq/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2026/02/21/nycpole9-fucks-thickknpretti-1771651413166-fijhp/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2026/02/21/jerking-off-in-bed-until-i-cum-jacksen-luna-1771676779105-lyjur/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2026/02/01/evan-pitcher-evanpitcher-fucks-zarataco-zarataco-1769947322699-6gkh4o/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2026/01/03/edger-nyc-edgerxnyc-edges-rico-marlon-1767405250657-d9018a/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/12/25/luis-vieira-thelv-fucks-brody-meyer-brodymeyer-1766585997464-e3wan9/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2025/12/19/jerking-my-thick-cock-and-making-myself-cum-raphael-grey-addictionadd2-1766113774296-f7h0ta/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/12/11/showing-off-my-young-muscular-body-and-fucking-my-toy-benjamin-verbeck-therealbenitalian-1765453177069-kzay3/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/wup/c1/42/99/4f/6b/f2/56/34/655b3af7ea8dc2543d5707d3927ef082/Jerking-off-in-the-back-seat-of-the-car-while-my-mate-drives-Andyleexxx/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/12/03/stroking-my-big-cock-and-cumming-over-my-muscular-body-brody-biggs-brodybiggsvip-1764762952119-teunig/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/11/14/stroking-my-big-cock-in-bed-until-i-cum-valk-valkhorne-1763041600005/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2026/02/05/david-christian-dombeeef-fucks-elijah-wilde-1770252264778-fn86d/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/11/07/fucking-my-toy-and-making-myself-cum-hard-david-christian-dombeeef-1762434230858-v4aloj/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2025/04/23/david-christian-dombeeef-fucks-diego-grant-fulltimepapi-1745409544039/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2026/02/05/edging-my-cock-with-my-toy-and-cumming-hard-over-myself-david-christian-dombeeef-1770253361670-62f0zo/index.m3u8	spawn ffmpeg ENOENT
-https://us-02.gff.network/2022/09/23/5c1ac9d196e7dc8449c96db7ab5dccfb/Getting-a-hand-job-and-shooting-a-big-load-David-Christian-Dombeeef/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2022/09/23/cc77235f99dae8f4f99f47dc89dec5ca/Getting-my-cock-edged-and-milked-David-Christian-Dombeeef/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2025/08/18/lydian-grey-lydiangrey-fucks-raw-david-rawdavidx-1755524209880/index.m3u8	spawn ffmpeg ENOENT
-https://us-01.gff.network/2023/05/04/Late-night-jerk-off-FitNarad/index.m3u8	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/b3/7f/b37f86e09928e199b9a69a2c14b1147cc419ed20bbf933e2f3a0c2a0908356c4.mp4?f=0gr6nxyj4pafa4776n97e_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/7a/4b/7a4be0acf265e42fde5a9be0ac2a942088836c95bf123c468d0272cf4b295c3d.mp4?f=0grior3h0x3o2av4m4s7a_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/3d/4f/3d4fc64fab870c58f9befc863dc2d2b7fab7611c05b6d6443615ee8f858fe9b0.mp4?f=0i0sfuvwd635gl4yzdrn7_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/a7/b1/a7b190794807e0d71333f00e3476c07b2e89dc54b4f642a827938714e8bf6e1d.mp4?f=0hlnw6j3fp3udafaxzfki_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/98/01/980178322607eb47a3b40b174f7a8cc53cfd7ed60da986f734ff9e5cbc5f8673.mp4?f=0i14xoh6n0zjag5xu93or_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/43/7f/437f26da2a9b056ae725e575f2c3dcc76ea6cf8f77937f8c91e55c9f683a2f72.mp4?f=0i2sg659nbsoryu4qmz28_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/57/d1/57d113eb04217d7ab86274a6f78cd5fa41df07847a82ab81544ff5ddeeb1c665.mp4?f=0i2hmkmungp5n5n18h3xt_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/a4/21/a4214ac719d154d0aacc58a2f1a2a87407ad28cdf046a1a4ba8f14ffb6f0bb8c.mp4?f=0i25jv2fvuuh4wrxsdqnz_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/8c/f7/8cf7f2dbdb45b88377908b6dbf17eedac30964bb889d9acc585ff8f6a810cb1c.mp4?f=0i3l1a6sjeu8azlneqa5p_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/04/64/0464d7aa8390a681b64b83a12acd26d4b1599429d5a440041d57cc4888f24124.mp4?f=0i1r2rp0cka3uyv36t52w_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/88/de/88de2cca6370f8838c08e8d8e2a0709dce87cdbc243339923cf0ac673c92c4db.mp4?f=0hwyz08uy7zdx8hb7bzv2_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/10/b3/10b37392c3451c4073f279f9cc3c5ad2294663eeefcc5104bc2589b6c611745e.mp4?f=0hp0y46ghzpeu2372yabq_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/09/e1/09e1d9e9eb34e352b11adfc6a3005d533d03349807bad7764d314f080f29cd4e.mp4?f=0hjzb9c60qzkmbaxio5jb_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/52/34/5234b40c7cded09d190adddeb756236403fcd5acfe7487b993f7f8f713961150.m4v?f=c4bd4f5f-17eb-46a2-a4c0-7218f9438a89.m4v	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/c1/5e/c15e3cbb8e214ec7152219c4417bac119625033cb02ca7dc42e371fee248f655.m4v?f=f3360ca1-791c-454b-a8c3-345787a45c88.m4v	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/c5/aa/c5aa7cf94486d04bfe0a119dac21704143920ac3925babb75cd556e6ec50edba.mp4?f=0hc4istwfeja7k9q2lf6i_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/cd/d5/cdd5cbf66d44e000d56dc62112a599e610c7c11c291b6de75c97ee1a8dab1d98.mp4?f=0h6cs4ir7xmmkmn3j6gpt_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/9b/ff/9bff7e7fe54abb61cfe50493eef33c60d8a65b56bd2f356a27030f9c9e50e675.mp4?f=0h4s5iubelrpznoq04d32_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/00/3a/003ada5e8a094ef5ec69fd7e4f306fc6fa63723fd21e16994edc79dbdbd10680.mp4?f=0i4n33jkrhx0na4x42prs_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/db/fc/dbfc6dca86badf699e9bd47cf79eda4ce6889654bd07d894d1589cf1f7cc2831.mp4?f=0himk77nrdnl4kixbax63_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/73/2c/732c17dc5533c056b0158b3ca300a79370eca0c41921523c954208fbe2a190c0.mp4?f=0i4tax8z9pmaikot0ljnb_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/f8/ae/f8ae08983fc126de6fcd7cfb69b91e40553c36aa323d6c2bcdd527ce069ce84b.mp4?f=0hzx9rvl8cf8s9b7k5a91_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/8d/db/8ddb6168553b03c5ba816d4515d080cae7b5b2f0c1a737558d487b1cf9946504.mp4?f=0i1w8se9cank41f4qx7qr_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/82/24/8224225ba3fc25b5052a40c45575d536711d96a73bea019a7ba1b9b7663ab179.mp4?f=0i1w7sitlxtruzzeeehkw_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/95/8c/958cd4d3f50d38e692b5a8afadc296dfa6ea7c0fcd6b19d4bbab7362828fbfc1.mp4?f=0i4psvpxlyt4fki0loccx_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/ca/3f/ca3f2d120d58be2d2098ad41de040fbb4197d1b20201e4d0442d41225bd332f4.mp4?f=0i1dya65bka81zf8pc5sv_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/7d/a0/7da09d2de7e09d32f03ada2c175d2c8dbcbdf4fc1014c0377665075c1f086b4c.mp4?f=0hz9bliegi1mja9o7m8cy_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/ca/3a/ca3a78b3f80e8a937c1f03597ea547d14fdddb9b88335de3f92404a68caf3539.mp4?f=0i0zhm7804qkoehi9b707_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/38/24/382424625b35b054a6b8d2ada33f8ff5eafc5b18f16b03a106daddb8c14e6e45.mp4?f=0i2kb0xqmw3sjkefcqbss_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/07/fb/07fb9b6974bcd8d7f4ff91d221bf3f9e539d157c7ef03684969d3ad50b5331ec.mp4?f=0hln8anierp89qd8z28wg_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/81/3b/813b1d15793dc05f41707f00884c9002e9222817546453611d5ba0a245bf4ed1.mp4?f=0hkw04fmjmtug4zs4l6pn_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/2d/ef/2def2adb3bb25c4c4f7de15ea9569679d96e0674eb6c4ec228f23f5062292290.mp4?f=0hlgei8txr4uneuhz4fso_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/25/63/2563d28a6c0fcf8aed39a8547d6c4d2dfc6be049505d51cfcc775b0179930245.mp4?f=0hmo0dafs5brwni54fkv6_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/86/86/8686469a02f7252ba3eabca4656049d72cf4d47075422e944bc777d1e9351ea2.mp4?f=0hl86j0zedd6twjum0peq_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/9b/3d/9b3db6eb2a1773f21409635adc5fb2c4d774e8649d086622528511b818e4d541.mp4?f=0hfn1r0zmjejdg616xrji_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/02/af/02afb6bb2210a23e75ce0ee03992173148b50619037629c6d7d6bff7ae48e5b7.mp4?f=0hfn1r2t9px2rlophfotv_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/1a/10/1a10b34ff5828947b3162706daa61f61af4a3b40df35921a3b7c6788fefd7431.mp4?f=0hmtht179oq8rslbb5lds_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/39/8a/398a52070e046fcc62fce29a6b81164592ad56984628a7d31530b3edafcbd6e1.mp4?f=0heytkhv65xjyhg6tgfre_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/85/32/85320e27799525782c09fa3f84d2032869d46bb9fd64a7ea7d06981dd3400978.mp4?f=0hm9cu9t43aeggdmntz1b_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/24/d9/24d9777a7ce02c66e9196400037cbab348f3c6378ecc4d7587ce325188402584.mp4?f=0hj8hbh5eqoo8zdd3uzwa_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/2f/7e/2f7e74c431e1b431e611e80f6dace108007eebf6709140d72382ea6c8aa54f1d.mp4?f=0hzysjymoh53f7yg4n26r_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/44/50/445035e7e69301ad9df1d98811b63173ba32d74565034ae14388aa00bd6e062a.mp4?f=0hhmr6q7ishvcgtm44dfa_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/ca/84/ca84950d6c58d86c90f491fe7b8fe38dd7a3dbc4bb3a294580c5dfb970d0a541.mp4?f=0i5ekr97qcbaj55ygml7k_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/02/18/0218e8b28190c31ba625811f24a985c980bbe420bd7390efd9d9c0e5a7348827.mp4?f=0i47dw31tu9u2ssitebcy_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/86/4f/864fbcc1b5e0c14d36535ac13e8178a2e6681bbe358972de712e86771edc7a86.m4v?f=12d32326-7cf5-4b31-a2ce-0880f035fa16.m4v	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/64/af/64af04e9a46b0e814a53011c70315a2ff137676553b411865a23a4e350863adc.mp4?f=PLkX2yS2kA5J02yqaFQvVmWvaWLZjoux.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/88/25/882505426c1245eb2320bd7ada2eee76cee2a58431fd695324667523357c5e97.mp4?f=0hmchw8x3hwvddpn5f1n6_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/f0/c5/f0c54bbad58e7a514850f84ed7242d36101cf8a06f2fe4748f1a1cf22c5e1571.mp4?f=0hmm08wpwzqh17rsd8w0g_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/7c/b6/7cb6ece522105061c1d27b45041f8ae9ed99d22b1d2a2849b747bc0f95067107.mp4?f=0hh1ludygk4unpxdrtw37_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/7c/b6/7cb6ece522105061c1d27b45041f8ae9ed99d22b1d2a2849b747bc0f95067107.mp4?f=0hh1ludygk4unpxdrtw37_source.mp4	spawn ffmpeg ENOENT
-https://n3.coomer.st/data/26/10/261047d87211b92fb3300f62bfcfb63df93207963766cf9634ba8f725bb20f47.mp4?f=0hgp30x59inb8yviwe73h_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/d6/28/d628f07c98101d5fec06626ebb5987ea8d4c7e26772f4c2fdfe4700f3943dadc.mp4?f=0hfnz55f290c94iwahhq0_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/d6/28/d628f07c98101d5fec06626ebb5987ea8d4c7e26772f4c2fdfe4700f3943dadc.mp4?f=0hfnz55f290c94iwahhq0_source.mp4	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/d6/28/d628f07c98101d5fec06626ebb5987ea8d4c7e26772f4c2fdfe4700f3943dadc.mp4?f=0hfnz55f290c94iwahhq0_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/22/f6/22f6f4956ba9ae3a9f50d4f4c80098403e89fbf7459751408e568285f424acb2.mp4?f=0hdc3zc5kki10cptve4q6_source.mp4	spawn ffmpeg ENOENT
-https://n1.coomer.st/data/4f/34/4f34e902080399d62e405defd911fdff2a90b34a086afa59117d5808e809970c.mp4?f=0he0v294okgl18cgnr3hp_source.mp4	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/dc69c83703ccc157f45895e06c1a0bf3/efc897475cf82b6b-0e/s540x810/13ed87c5218919161774eb4d5c2bd1600365d5d9.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/64fc63d86b52aeefa70e627c9f5716e2/efc897475cf82b6b-97/s540x810/4ebfbad8fab13c87d45771200982b5a1f0fcc919.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/6f175eb84fc1e7cccf0769642ccc7795/efc897475cf82b6b-42/s540x810/c9878a7ccdc1221e5eaf8c4d624fea91cd4732ab.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1ced06c95e019e0aac18ae61de93f9ec/efc897475cf82b6b-3b/s540x810/ca4e6d2725b2dd7a987e3b92de30a3765d4f7fe5.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/fa427b4eebf6dbbdebb4cceb19842a14/efc897475cf82b6b-f6/s540x810/88d147d4891754a65d698afe7cbc20f9da720c5d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/30d9d66c6ac6f9f75b96e22fa18bd872/3f7467ef248dc1af-ee/s400x600/1d97b42433e9a1d21cb1868d37ccddae1aaf39cc.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/a238238d0d57de025d167aaabeaefe27/3f7467ef248dc1af-43/s400x600/256106d838a6b1f290bf91b7e3c6b58ce4830ac3.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1c15aa7ff8ffef90bb5684cf8e7f812f/ccd3ff700b5d6a45-d8/s540x810/2dd300cf15011bb6b214792122f68225ca9b05fd.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1f5b900601cee88a97f20c5f7c831fba/56271cc43fbc0c22-ed/s540x810/3bd6ca38834cafa847a7bbd6f62b9d746cf3882f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f70c25e9e5293f54f8652404c09c83a2/56271cc43fbc0c22-6c/s540x810/1302924fd6476176813c9be6920e30c24a93da48.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/61da74c9b892ee4aaea3ce71ec00a081/56271cc43fbc0c22-9d/s540x810/0775652ae09892c8589b753f05c22231b32ce01f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/e31c6d9cc36d88383a0c2a94e38122e4/d94d7257dd1159f9-79/s500x750/6a14ce7955014f0330e590bc1536f4539324cd9d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/0c0de32f457009865eb11393c844e04b/84e8050b426d966a-a8/s500x750/49084f05ba420e8f1bcfb14aa4991f68a0e7155e.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1048cdd4fbe64b97701c03e8ff8bc098/84e8050b426d966a-98/s500x750/8a402f44d5577ac58b3aa15e78e7bcbb42708dca.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/25fdaa7c66bbbc7b6566a022aba6e214/57c3b9c649c01441-e8/s500x750/dee1511633727bb5bdce7a6d4a8a8cba23c30c4b.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/d5c0c2d3a4daf31b5f8f6e919f748584/57c3b9c649c01441-f2/s500x750/711e9f5971869b1ac2bde33ddd4caa7df346492e.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/bd9e3281d0dd4e292a500f479075d629/84e8050b426d966a-ca/s500x750/85cad0e23998c6fc19136034f70e636a43b95360.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/69eaac3a835a0090071d43db1252ca52/84e8050b426d966a-12/s500x750/f4fdb40511938320764f93e8814d10c9471137e9.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/52ab77fbe4bdb05b6d00c478c9894bbb/dbc6f9383b74469e-0e/s500x750/22c2c10bd2bd876de9276a716a8c2615f7c0e852.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/a3184a2d9b750af39a8a721717b2d8d9/dbc6f9383b74469e-ac/s500x750/e7b802a8b8cfd31b6cb2585fc13a2471e77620e8.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/ac33c11d4ae9c41b0ee53d2f824cb577/2c9d7659281bcf3f-3c/s500x750/caa856a9274139defd1d816b78f3f7f97a768a8b.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/cfa81543c25c8426c9af73a39c3671bd/2c9d7659281bcf3f-db/s500x750/b222f9a6a2a1c120e52ac03489bd953e386a8381.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/25e193c3756bb60e49b1bd10fd8938ed/f729ad8dc2595bb4-e7/s400x600/d34d20b6d4e849f10b63318d7bbf9daea62e6d1d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/87b6fab5b339ed8822043b211b634af4/f729ad8dc2595bb4-88/s400x600/a82ad2f7c57ae1a590f4da77f9f8e492e83c5055.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/46ab9bf796297a3bdc74a84a4d8af494/dafe5d8d81d63fce-c0/s540x810/24f61ede66d15e19f0af23b32cc821680be01840.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/3ce7aff029ec461f1f33f84d6e3d0669/dafe5d8d81d63fce-e9/s540x810/0080193596a607de70e56fff6fce4bc48a3fe9b6.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/cea58cfdb54997f5eb91270f13d13976/67be7ad46c65f7de-fe/s540x810/150db6238b9c8c584a460142ed6081b407c90638.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/287df25fbff9f114b621f9168af490eb/67be7ad46c65f7de-d2/s540x810/7add632ae2be07797e61c1aca2fab62b0f5c0ee8.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/ac3655353b99e9927180ba09e38221af/5855790585a73f51-ed/s540x810/3651da41e8ff52698c6a630a2049782f67a1ee57.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/5d64addb558d5f159a635f6e5d6288ce/5855790585a73f51-46/s540x810/94453d945b7868b1e5fadf80393a103cb8104190.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9b7370b7c1b420231d2d8f8c9a963cbf/4f9fb228fcf5d6f7-ae/s540x810/eb0f9f9c3cf278ae9c977625910f54f05416657c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/d1c2a54f27b2f7eface56f54bccada40/4f9fb228fcf5d6f7-d7/s540x810/f78eed9d9348749296e58bb8437d92f923235fec.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/d22c1e35abaca7c3a71e00aeaa3f09ac/b48bd9082880815f-79/s540x810/44110baf5631b60427574182889fd7e288c4e8d3.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/82df6f62c8cfd46e1bc20a1afa3c55b3/b48bd9082880815f-54/s540x810/6989e64900477dd0436b55cddf1db3d60213e028.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/794eb712e9b85b7bd45941ed7eba8345/b48bd9082880815f-2a/s540x810/f247307ebe5b74fb25d2f13128a7a14ab88e2014.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/0876acceb2d2d5a6b6a09a8e2659ed79/90e168031470a346-fb/s540x810/a1fb55d090fa942753e2171dfdb1c6d9ae485bb8.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/8b26e4f7720f8f08c0eea878517ec924/90e168031470a346-3a/s540x810/40ca493d2b26d6ac2aa18e2e20f2c19f89a06178.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/abf84391709570fc269ace15468f9538/90e168031470a346-58/s540x810/b0deadd37483af57f6dff3c893e5285b58e4d2c2.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/62c9792f1996f00d0feca59ee8a744b7/7b41479bdae917a4-b8/s540x810/d30e4ad82771151c2fd4b5e14c04819f7e9e69a7.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7d346e35bf58edf56eebfb0ed42a5b06/7b41479bdae917a4-b2/s540x810/cb5563b5fd4a8c9c4ad8a5fc513cd351e4fb7f8a.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/3e34151b2075b6626493f8506d629dad/9688844b96dcdc5c-cc/s500x750/7a8ed8d188fee01eca56d7a9a38f6b2813da3c79.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/90e4376290497b405c1f54ce8808c91a/9688844b96dcdc5c-e1/s500x750/f3ebbedebc22328103777170293af80c1511af5a.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b534a1559bb03260c45e752b944cda19/285f29ae014912e4-71/s540x810/98231f5efc91d8d54796a749b8cc5d1e4342dab5.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/43ac5e854944425ed6d0754641af1340/233fe3864314c8b0-24/s540x810/7004ef2a825fc6ac8caf595d2c288bf767205d6d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/760d8ccad09564fc09b8d5d96d427bbd/285f29ae014912e4-a7/s540x810/cb2023001c86d293d8d2da2180f9ac98d01cdd8e.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/82927550eddac810bbaea51c0d3ac546/0e54bd9e1a298b63-89/s500x750/227e334611f814ed105e33fe53eaaabed49d6cd2.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/fc9269382a28930354b7276c00867474/0e54bd9e1a298b63-ac/s500x750/b83d075cfadb1e92836102be0ae28aee238584d6.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9635a4f86863f1d67f206fa7f9d9c9fa/30ba237be01108d2-60/s640x960/18234e50c222dc4c1f654e41871b7a60230cd058.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/701aed6dd258c1d90a119a935fe7ccc6/031d0afc49328de0-54/s1280x1920/bf00155d3a6abb242991d0ed7c3815091e59a78b.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7c30a5a5ce0177c3f6f91f48c7e1b186/445025f7a650d640-05/s500x750/2df620748ed084a78b747cc7c792adf0ceec1cf6.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/99b4d5ffca4bd942259303e77c2bf0d5/30ba237be01108d2-b1/s500x750/4cd2601ee0781f708a95f35e0d6983797173bfe5.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/a99d19f1c2c7d7f0273b900304852205/30ba237be01108d2-3a/s540x810/9152726d12386c19227c2d79eb1bfeac85608fb0.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/4725773aacb85bac7ed92d721c1959c3/30ba237be01108d2-03/s640x960/805e4046c6cb1d70d74f0de5b79ac1f804381d48.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b00619682067cc177e4cc08ec33e1d54/70e821c174a17802-5b/s500x750/ff46c923d559362cae9267de83aaaee712b91811.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/171f51f4f4555ee18492cc21cc1f8a1f/031d0afc49328de0-ac/s1280x1920/75ff8de46a5a3b8c779a4c451c709057b946ee21.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/cfd05154791fe55fe2858811ba3dfa73/18e5fe79a964d1ea-b9/s540x810/7f7e164f20a4745d650bf712a6f53e1646695b7a.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f150d6ed2a8668616e227265ab699d10/18e5fe79a964d1ea-e1/s540x810/0d3d0ff543acfd37b44c74d9c3748ec18734d73d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b464f2e51aa2278f92a73882e4a61717/72e1f75ad1001a87-17/s500x750/78e97a8cedd61592723ea3b633aaf19e0aac2f3c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/85edb8f35f590567997882882c4ab25e/72e1f75ad1001a87-64/s500x750/4716a343026a4e111f8906e28584785c7c18a38c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/772ac52426d066b6105461adfdc44560/2a9bfe7d0a6354da-8a/s500x750/91e9b4221f9ec1822f8b86eeb070162d8f3edca1.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/be343b22c46ce8f963b9055f02ba3a1a/2a9bfe7d0a6354da-18/s500x750/66397f1fd3f071c2866657c6a7f18f2ff2f46ba2.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b2aa17544dd7d7e2e5b04997c93e0bd5/c10a0271323302bd-0a/s500x750/621ddeefa50f916d9183b25e36c62a25b848b6a1.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/0427f6ade725555c33f98f970a196edd/c10a0271323302bd-86/s500x750/00f861f5a8e29fa2a55277f6d9e8f5ff5dc04029.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/21612330f9babba577fbcb9f5bcd4ecf/d31a258528e185e3-97/s1280x1920/73f1e93faf866456e12f85ec3fedbb4f3515cfb7.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1791c7c751010cebe4142747b348287e/d31a258528e185e3-b7/s1280x1920/7c2a66ce0c8ad731b053861281215630fc954d22.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/18db9bc0b861f414ed524fea49d3caca/d31a258528e185e3-95/s1280x1920/5e40e133da25008e0a0673b3e5b92b020627801e.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/06ec0160ef38c4f6658a814f5a078aa7/2b39a8e948c1f0ec-dc/s500x750/44353294628ec611a240bc7f2a4c3d66a4004c8f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/db3a6bd98ebd29fecaf4643d4a866d6a/2b39a8e948c1f0ec-86/s500x750/3a07db96139346d9214b8d573c9b3ff435828ff1.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/dccbcc535b21b2f3ab540d93b1106ff1/2b39a8e948c1f0ec-1c/s500x750/b44a08ba37cfea51bfa05a1c4ef9341c032fb13b.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/95000cc6862e607413d4f04620a871d5/2b39a8e948c1f0ec-13/s500x750/c041528420f6349f51dc0139049a6d5c0b3a8186.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1220da345b5555f9920eb61a4f0dbad4/2b39a8e948c1f0ec-34/s500x750/50a8419ca8766038cba5b80d87506a8dc74bd37b.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f1a073e4347992a7938a32fcfddfa70f/2b39a8e948c1f0ec-0c/s500x750/3b8dc3e0a49dcf6d41482d5ef76ea0e7225c8da7.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/af68296d3ff54e1a91635c362ce3933d/96d4a72f9f66e04d-04/s500x750/d53dbec0589f33720729a7e970959a8dbeed1020.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b1a3ee1e9a4ac213b3e9760ea4f7b433/96d4a72f9f66e04d-9b/s500x750/37a7bc17ad2a377d00e5d36f1a7c9e7df7528c60.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/e0aef8a48d19d617b6cef6d7f7e92c99/7e70848a6c2938da-39/s500x750/5df7fe3997d8f7da524f8c88743ff1d7b1bf3e65.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/fd1a5843974e7966e90ab8699ab0f78d/7e70848a6c2938da-ce/s500x750/a48d737ef239800195d98b1b4420f2fa24a5d255.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b3013d3adb7580efe2da70c6a393e76f/4f5d6d6df1e293fe-85/s500x750/ef8b6125908d3abba856f8308ce7f1af7ac72cbc.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/c19903fb5f3253dc83149d3a4447003b/4f5d6d6df1e293fe-86/s500x750/21761b0d635a204ac4c8fe18f0756e4f929680f8.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/3a3e98c182473309d94901d6fd5b25ca/48f36c58f9fb7a2d-68/s500x750/fa27d8bb85cddfb1dcca30a2468171026c186509.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/dd365597b1a428b8dfaa9efad52ddb1e/48f36c58f9fb7a2d-a8/s500x750/02b4276e140842174f76875510911eafd1c61ef5.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/24d52037fe21aaca2014db18a45f7525/c3a1ae19d98b5f21-ef/s540x810/7358566dd3a79e968ff120613d589af726164b72.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/177f26d53358607f9d61e95dd61c0de5/91ad07300d914235-98/s640x960/104d91e3174efbd0fd021423315d18c528907195.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/092917d70cacab55217a2c111123393d/c3a1ae19d98b5f21-db/s540x810/0330f4b8d214abb5b5a7504340754c049422641e.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7deae9d98707f93df8b26e9666b0b3cd/c3a1ae19d98b5f21-61/s540x810/eb46ba2564b34f0c9073808f6780a666f2dbe04c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1b95d7d64e827e719e5dbc60656db2e8/c3a1ae19d98b5f21-ca/s540x810/132e18eff6557c72a25d1a56e88a86c2c6c55e8a.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f6f2e95d8e99c285c44fad8eca808d7f/bb723653b216cde1-e5/s540x810/dd9014352e68c2df8850b0f026efeee1e98e2ead.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/cdc9dd932c4b774c51200e02ea36d7db/bb723653b216cde1-25/s540x810/3577ccebc2b6ecabbd0d349a521e0a387837c814.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/99b4d5ffca4bd942259303e77c2bf0d5/142d77b02b83d8b5-04/s500x750/a1faad6e2c3d96d7d74ad5e5a33558013f315c32.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/a99d19f1c2c7d7f0273b900304852205/142d77b02b83d8b5-f8/s540x810/183f1eb0069407f8453cdad7332e90450c247aad.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9f998903ba3bd17fa7bcb2116ac4b7cb/af89eafe86ff5765-c0/s400x600/6df815b2e25489c035a49f9235b8605ca389cc30.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f588297dc3c2f92dbb6cf7ba78d019d0/af89eafe86ff5765-15/s400x600/fa4cf58538500a3ca26f5f20cf23ff8646c92b0c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/36d294f0c249a318f90232ca1b66683f/a6e0bdec1204dc40-20/s540x810/466cce7d230ac784e9a3cf3f9dd5eadc5c04d154.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/5da42a0a94299bbc8bd0948e5dc5e700/a6e0bdec1204dc40-8f/s540x810/ab570ea06c749cd8ed471db2c6843f3eeba401b2.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/abe64811e26180f0a71d5ca5e29f6cce/5942fb1349c4e00a-89/s640x960/17d0ceebb26650fb01ad56c42997e784370ec1e6.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/c714fc98399fb5007d49ed6d05876a76/4295228a132b81f5-db/s1280x1920/f6b939a523683bc992b5643b535e10533e4066be.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/d03189dc697b7d78191a51f45f1d0411/3b812165e061abba-d9/s540x810/eda4dcbc21bc5fc1df396784d3b5a840cf4e00fb.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/158ae05797000d29ba95390d1d1da85f/74dad295e7d98393-c8/s500x750/144189c905293501159c617f6d7e5de9f5fe4ae5.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f990148d3f1218094a8fe9680704ded3/5fafc84f02d9970f-cc/s640x960/698b6d3787efb499063236f54cfa50aeb840ddec.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/14a117a31d5d2ee52c40852bd0a50326/5fafc84f02d9970f-9e/s640x960/83966730361a1f1196a8cffc34e9bd571515cea8.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/694457c2aecf01f64c6bc0e464cdef0f/c2f5ddab2cbbbc85-7a/s540x810/56d37bccd526b2d733fb6a280184b03b966c2cf4.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/589e4a7a2beda0411f1bf581443bb101/c2f5ddab2cbbbc85-74/s540x810/9d02609763719579fd71c1d7ded134959fa82148.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/8cfa94d27d48f37ef13a49238fe41322/c2f5ddab2cbbbc85-34/s540x810/2c519d58338f43bb3365dc9536ff980d47272508.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7b525ff03cc3ff23cc685b1ff455d5bb/c2f5ddab2cbbbc85-ef/s540x810/b9ee845ab862b49195e2c8652d1bef9b41a5ba9f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/53d171b21a44de34b5f03aef6c3030ce/26c5bb1be4a5c8dd-2d/s500x750/12fa322d7325e53a83109e5deefc9562f4abaabb.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/046babdb37f87d89851122a58dc76636/26c5bb1be4a5c8dd-2f/s400x600/bb32f5be0d6dbe4f55c989ff39c7bb57763eeb74.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/5baec5301eb8a661f816b6d00559e4d6/bcb5b5f7c67d9059-02/s400x600/0ad91397dd1e617bd74c3939cc690324f3da4a7e.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/834b7024ed8876867ad8796bd41a6c25/bcb5b5f7c67d9059-74/s400x600/2949e93bc865bcfcb35b97cd009c7a53f8228438.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/5ef9a5f7eb4b3677a1d98611f9372fa7/1e1b92dfe6cec133-62/s500x750/bf66313ba59311c61abf11ab8a82d78f0b208384.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9f56ed5316d4394aea2f6e2f7e80eeac/1e1b92dfe6cec133-ef/s500x750/8b3047599a72a378d1794d89e04510355c9461b2.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/efdb57e25a1f8043db4494837cbab548/9a4841207bb597fa-40/s500x750/423114674a8dc1a1692f7711e423b09ec794b377.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/fa3e45981da0fbd3a3c40cb1d5cfd57f/9a4841207bb597fa-de/s500x750/29c7635941ae7adbde9b25ad1ec20007947ea08c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/6aef971302d14bc719d761b285850c6e/9a4841207bb597fa-11/s500x750/0189a96dbc9e5a0c795a94b8a4426fe845659471.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7f9b584fbdafc1e78a5f91787097dac9/9a4841207bb597fa-6c/s400x600/bd7c1da4d5b2d7772a898a914eeddbd36b6c1000.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f4cdb81c58158625b1eeacc82baf978b/3e46973304a6feef-a0/s500x750/5d5fafefdefd9137f74881e9a6fe3b756e24a157.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/c904723f89b621f7b9f1cd765a5305c4/dbb2db6e94de0f3f-c6/s400x600/ccebd3e106f4fa08f5421abb07c0a386d32f89c7.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/3d9d8da559533fc0edbe1e038f88bd38/dbb2db6e94de0f3f-55/s400x600/4e922d904ec510fee62dfc3d79800367c76f7735.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7aa28d78536774de99644b0f047f7b8c/dbb2db6e94de0f3f-84/s400x600/509c6be6a11e6c44a25b0a31d7d0c58d337eae7e.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/bbcd3ac8bc2eef67ade069fb5d9e8232/dbb2db6e94de0f3f-3d/s400x600/f83ae354f786c0835e7b9aacd2080f9bb1d2e0ea.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/23a0b484cfc639f3b6e8faa69758009a/5f7d98e30c75ed6f-15/s540x810/b7b9fd6d629a109710d43afa709eb7138477b3d5.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1f09686b8cd810e2f61b1d44508e754a/5f7d98e30c75ed6f-21/s540x810/ef1db8d9c7266e93f9245c8e89692daf050bfe5f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/467ec5a44065c42a3a96cda99a2e024f/5f7d98e30c75ed6f-1d/s540x810/f5ab50a969c77832d4cd5094f348d374957413eb.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/470c3ed0ece9046d811b92c2c23ff354/5f7d98e30c75ed6f-ad/s540x810/fa7512e81db981c4b17813ffeb66b5f5a7cdb175.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/d56c41ff5ed0e5506ce11d10dd54d400/0a32801fde0fe47a-73/s400x600/530ff655ec46ef235c4d7f28788a9dafe78e2f3f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/0754d00ad386181ec518af17a361470a/0a32801fde0fe47a-24/s400x600/5e7c4f39ddb9df010a52c524de9f1cde3db13c5a.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b58a9a9f92a593f5bf66434f94ee7eac/2c31cac5cad6f55f-29/s500x750/30a7855545aa464544a57942806e66e2dad2b735.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f6604e06abeb0692832c5e0590bb0537/2c31cac5cad6f55f-9a/s500x750/57901130cf78fead0a02d5e93897ab2ff30fd7be.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9e38a599608499aec8635768df06cbff/255f0b564294d718-29/s500x750/0f4f4ae6a66aa510cbddfb91083a68fa1269d165.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/636aed1c240cdd68f8314686b50fcc59/048ded06b4aa98bd-19/s500x750/0fd341c6e2c460a15b79b54589c2eb4eb44d5f55.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/d9f29979c3a164db3ef025800a6909a0/87360daf01d7028a-ac/s540x810/9331e7e5c9b4bbe5cf73097e5cedd7962dff503c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/a0f57e2fc3f53fb28ab6c6bc7940b244/87360daf01d7028a-e5/s540x810/25e92768ad84a15ed98825c1a023e1ca1d8f100c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/cd6c33505583655d6f53cfb7d286d4d7/87360daf01d7028a-d3/s540x810/36e4184537e2216a8678a031201059ecb92ddbbc.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/8ce03db90a72f717cab4adf357c88f82/87360daf01d7028a-f3/s540x810/028143b019ad29b3cb6a2eb8a84f9d6016821df6.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/f293c2410f222c12a49b37a3072b77f3/a96d6539ea26e56b-ad/s500x750/8ac7f7d086443e9150d8f40165d484df7f74fdbf.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/bf6c5d0c5aeaa63259fca2403ed670ed/c2b792f7d4c25b3e-e1/s400x600/ce81210585a1f031915a9ddf2030074f32bf35f8.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9d620c2affa9860c947ee4f3e14777e3/a96d6539ea26e56b-bd/s500x750/4b5fb228ab3f286563b358ad7b32cfa1451ab91f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9e1b5ab129705941fc9325af154fa75b/c2b792f7d4c25b3e-6b/s400x600/02b9364f260421fdf873fb1a0621abf0b7e81781.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b58a52a2fbf53d5daddfb481a39c6a4e/878659b2c67caf61-c7/s540x810/cd95d73acf134512f830243727d955b863076bc0.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/75b8c96bff42b89ac198cfcf7d97a5e8/878659b2c67caf61-23/s540x810/9f60ca1eea75252a1ab150e6cb9196b4abd0f4de.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/0193160ad761bc9a6af334713ff9a3e0/b4dc65c8d3f2e2b9-fe/s540x810/0ca0f796bb3489e18823bf207022468a0e94111e.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7637c7e67194b82a8dc5a446c6cc77b7/b4dc65c8d3f2e2b9-64/s540x810/d5ab90ad19ae5d96159c865a4eb19d9321c5c898.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/aeb1117c36dcc77b18ad1b89bbc8ed41/faecdb159d59f8cc-74/s500x750/4bcd7c0577bbdfee1c0c315033cd530e0690a831.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/52769e66a4a3378ccf47d34069fc1f25/faecdb159d59f8cc-ca/s400x600/5baad001806a793c4f74b4fa22e6e0966010d5c6.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/e83fda8f09336c48c217833d74149912/faecdb159d59f8cc-9b/s500x750/0f26384af3594c8ff61ea38d17b14a48fe85840c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/329b90bbe528dbca632e47eef4ec6aa5/b2036c4572cab93f-ae/s540x810/7e11ec0fb95affc5c32fd75d81326eabe7d5961a.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/030ac034c2f68e484efd9057766b48a8/b2036c4572cab93f-74/s540x810/287daf3d6c62c4af8e37a25697fd9136f1f59c01.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1ad24e15a180565b6562fd614aa37b6d/82caad9ce4f42298-56/s400x600/9dace4ffa29af47753ef142abca02e6e169d087c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/86a4cf949aa181280e13702b5351d8ac/82caad9ce4f42298-59/s400x600/9259cee6439e5f85004ba71649ec8e3b918b20ad.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/6db4be7a667d7c1bacd6e9f19bf26fb0/6c3e3e9fe42f53ad-b6/s540x810/453542ace733ae1a97a247a92578bb1da9d8503a.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9f3f5ac0bb01c422d3881dc642eada1c/40694a91a392457d-63/s540x810/41bbf01bf7cb8a840ad2201f91a9e80ce1ef32d1.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7c93b907c81f1274a85a9d492bc4d0be/40694a91a392457d-62/s540x810/654f202923043b325770994c3636ba0860d40559.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/00e87262c8b012e00615914c37a89ab2/40694a91a392457d-21/s540x810/ab2e92817ee15c8ec7bdf263f096bd7ed6699d25.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/215e61bdcb5a49137cb85acd68bb82fa/40694a91a392457d-fd/s540x810/7a1ac2604b29c4d1bd77ef33a4473b0253cde22f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/144351611da911d5d182a9382c75ebc3/612b965d1d657ef4-f0/s540x810/a8ebe301690688fc87ee481dc0e089ebecee967d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b0a21a8304a486169cce5af154473dc9/dfd07b41b5d07dd2-28/s400x600/2630446eb638954d1731a721c4ad274e64640323.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/4a2b3032c513bc91e12869da075a3b0d/0309af4576aa1be7-76/s540x810/1934b5d5e77bd2f0a2a0d27fabcd1f5fe6ee455c.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/587d2b4d7fed0f343c0022119e798869/612b965d1d657ef4-39/s540x810/6fbf6067f3cd8f42fb6dac056c9786c1e06b9e5d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/32021df4b709bb84d846a3763a24b815/1107467492faa749-bc/s500x750/d4abbc18d5d1e098b4e55bbcfdc9115ab3ce9309.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1e7a7d7958b4305bef2b9de0bb48048c/1107467492faa749-8c/s500x750/cf86ce0fbabc1e94fe4b3b1086995775270a00f6.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/9024bc7b804a39bb45a9f045777242b1/dfd07b41b5d07dd2-23/s400x600/392c8348ea83037722dfcb09fa861753df061096.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/7a104f1550f13bc4eed751b1ed21b96e/0309af4576aa1be7-ac/s540x810/15e4da113413ccaff8677444da2033defdeee01a.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/d08617fc7df73f1cc084ac90ab1cc61e/ea3794b62c4a05ca-e2/s540x810/289456c54c727ed5286b3a43940886e6ce823f3b.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/4d405e3330eb8ede396748b3dd24d3f5/ea3794b62c4a05ca-aa/s540x810/f15957f4b831f70389ffc86bc356acf97a09c02f.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/b5a1898e4d317c02f328247e05018853/6c3e3e9fe42f53ad-00/s540x810/084c9840404967c80c8b1f921b8161a6ca6488bd.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/983140bc35380fdf654016c002b22632/98f100ee65f76571-4e/s540x810/7333307e69d662893569d52188c8dc52f9bf6341.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/0fa539f30ce22da734aabcc3a520794f/98f100ee65f76571-09/s540x810/4d564232b708f30c6f926756b2d45bae82d97033.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/6d6eb7b8b6b058042a46f301b540ec0b/98f100ee65f76571-4a/s540x810/e1116a8272c687e8b87da5c1062e2c9987bd51cb.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/baefa037423ea42b4a9f127a4612194e/98f100ee65f76571-d0/s540x810/2e6a5e894e924e789ab37bfa0f32372833ad4c8d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/0b42648d50e955f3cbed0af3f224ba52/1497c1851f283977-4f/s400x600/a13f3c2bfb40ff78f7037f526e3c3bfb75ed7a96.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/1416db4e50a28356464f555ead4f5be9/1497c1851f283977-b6/s400x600/6cc70e3827b56edf3f0b3f17e71fc8fb052a5cb2.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/8b8a1c4c196bbd6341211d29b4f5b859/f35d86e402e3df54-4e/s540x810/1ee5ff9e3a88271cff666027ce5102703e7f171d.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/2649dd7cc6b5697a2f0c27ff3b8ea8e4/f35d86e402e3df54-3c/s540x810/5afd98c8aaa354e738d8fb11bc21e1ec6e559fa0.gif	spawn ffmpeg ENOENT
-https://64.media.tumblr.com/da7d73bff63734d87e22b84b1e92ba65/8a6e204b9b0edd86-f9/s2048x3072/f0b7753d9196c7a12623cc7a62121e17c08c5c18.gif	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/2031533511769804800/pu/pl/INJuft3hkrfYmNsW.m3u8?variant_version=3&tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2006889457710940160/pl/ObWMNmWXb-YOMFOy.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1897384745408868352/pl/EaJZY4xsUFwFVgYd.m3u8?variant_version=3&tag=16	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2028924742204571648/pl/Qynv-TXnYDH-pgow.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2035764863675572224/pl/y87QBfIGJKXxR4_w.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047943320350121984/pl/7NX6HxoMFBn-VGuy.m3u8?tag=14&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1719460155819958272/pu/pl/fbSc98Pv2MEkZ-9z.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047815252432338944/pl/8tz2Qf-Sn9flm2Pj.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2048438219247890432/pl/bFSmyQ4-yFoMYrnb.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047113922587541504/pl/OEslj_L1BCytMsAz.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2054631886203551744/pl/YDpKwv-wgEH4BOZP.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1841913092063551488/pu/pl/KniHbGl81DgIU6HY.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2064772082832130048/pl/_6O3ElA7Z7m7Opkt.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2068038105009954816/pl/d76fVB0KtO0BEqwm.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2063194243229720576/pl/HD4CmvyYRORANfjq.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2071303942466650112/pl/BxR9gCY6DDXbbjHw.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1999018171316187143/pl/RZ3taL2C51TrBpbA.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1994637150843965440/vid/avc1/720x1280/c6Rm5Xdn9t5eWpi6.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1920630267108106240/vid/avc1/720x1280/J90RH2zwSKm0ZrkI.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1907581318206025728/pu/vid/avc1/652x1080/TJbP1Qdn7SguCY3G.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2021797988285272064/vid/avc1/720x1280/euCFtjjYwnOHmRai.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1920515033894674432/vid/avc1/720x1128/hLLh4E4h9sz9VIQK.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1989188024781967360/vid/avc1/708x854/Eh-_FcDKKre-Y6kb.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2048069297805873152/pl/qQICmSvQgatSMenO.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2050327789862014977/pl/Hq1WIefyQtOBoC6T.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2049962899586625536/pl/_EmtCwJzOvHGDdet.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2071805189674221568/pl/a09ic98J-x9GruCS.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2031211656005423104/pl/pf2XAkLOuOOEN_Tv.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2033037561417850880/pl/8VjwPDwkHuDQjun6.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2034114112284688384/pl/R4ScwEZxW5gOyIew.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2028329411083149312/pl/8GZBY9aLZ2NCnRO9.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2027895624150994944/pl/I5yZDfKMH-5KP4SZ.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2029805546124046336/pl/4AYCavYYD71i6MIc.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2029046378781941760/pl/ksd8pJBYlnhnDode.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2029429636459909121/pl/FiKBDiH0XJzL3pFh.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2024726661619470336/pl/IU2o_j_Pj0sLQRJB.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2021382930258395136/pl/ddOGN0fRCo29gbBY.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2025105273283903494/pl/3ij_skJ96uTb-Dyd.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2031594054928977920/pl/P2mhh8x9x-jsUx2n.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2037392628350660608/pl/SMgmK35bb3osmy-V.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2038470794070687744/pl/XCVMDOiGddX3y0Al.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2038474115867090944/pl/qPsCW0mPPA-IbIxl.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2038474256305000448/pl/n-q_jgexttaUIa25.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2039555444088147968/pl/4YF1IdE6TolSS7-T.m3u8?tag=21&variant_version=3	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2040320294506663936/pl/-mshZAktyG88O9So.m3u8?tag=21&variant_version=3	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2041332995794096128/pl/K7Y7QBF0xzWQhXjN.m3u8?tag=21&variant_version=3	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2046397282736640000/pl/wtZrtzYpAnTzZO1L.m3u8?tag=21&variant_version=3	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047163522446999552/pl/haTsl7yQo-j69m6L.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047541531285037056/pl/E5bFcz0YAYQT99jz.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047541657848160256/pl/-QgrnY2aIGKGx1e6.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047548157609865217/pl/HtOpmdK9af0Mxzk_.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047548304200794113/pl/i66NggphH1FVkrbj.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047552098380705792/pl/IsT3buXqMfdOIklD.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2051489887585456130/pl/4WPO3eQ4S1tP4i1e.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2052008446182965253/pl/g1kyh2pCLYqf1YWB.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2052588220253110272/pl/z8DHYXJwmV8peFBV.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2054422768851021824/pl/TrDUZaqcz9_RRQcr.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2054783429649047552/pl/whQlhceGQu4kLX0E.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2055529693072302080/pl/h-XbeaFanTPREnDk.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2055878274815758336/pl/ROH3Oeop7TSL2teo.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2056930706865958913/pl/LCod0MFvj-UL4uhm.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2057695102059880448/pl/TmAMfrpCIYJLIoxu.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2057700604013621248/pl/9Y65sI79l-4VkCDo.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2057828196318326784/pl/1MZosKLP5gUnYjuS.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2061647160395882496/pl/QDI8drQAer-VVUmF.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2063474654187298816/pl/JX8ROu7VImQ067cd.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2063843573163032576/pl/MxI0kb6Gm4v8cnNm.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2064554118794883072/pl/3Pj42vtlXix0OCLn.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2067100982979244032/pl/OrHUM3mqjw7_n8Fw.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2071436503146807296/pl/nJlo2ybh2NzXrxPi.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2073185054042243072/pl/EmUIh1B-fLUZLkh7.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2074718147379122176/pl/RwAKLY6aV22UVtPh.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2075805789906935808/pl/XdrMUBgfg75RDa6c.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2017383313288081408/pl/nWLlAv8jJ1AdROSM.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1910324861450285056/pl/rw4PPIxLuacXXZ-6.m3u8?tag=14&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2017395009952047104/pl/_hKd9qavUMHfG0q6.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1926104796538277888/vid/avc1/720x960/56TsdVh4mcD1zDML.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1908012453650391040/vid/avc1/720x1280/O0KPE9BObvL3EJqR.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1929624039955615746/vid/avc1/1080x1920/fxrH17F3LQt3NI9s.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1949234982850859008/vid/avc1/720x1228/EbdFARuTWk3-cpWj.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1934389177094688768/vid/avc1/720x1280/H3HsitcDR7-GYbIp.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1975594965498540032/vid/avc1/1080x1440/1U5mbfYUcpP3DkeH.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1980022785767317504/vid/avc1/1580x886/JSVz_km-QjodvA2h.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1980848910437330944/vid/avc1/3840x2160/n5xRu9fhh9llMOTL.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1941337184138629120/vid/avc1/720x756/qxY5xICZHan-hdGW.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1982888849467375616/vid/avc1/1080x1920/YYE28kEEVnDYDBRv.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1997086501016866816/vid/avc1/2160x3840/BDUSEqLKVYWhvuEs.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1925821581768400896/vid/avc1/888x460/b9RzHscOi0G-qASO.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2016005145306202112/vid/avc1/352x640/XC-6O_1i_Syhad7V.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1993439824548675584/vid/avc1/720x1280/HQqp8If6GKNvYHM9.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1983301098505965568/vid/avc1/720x1162/L0wL_-oMWinuJAgC.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/1929713867476606976/vid/avc1/720x1030/n1eN0PixZVk7e-Wz.mp4	spawn ffmpeg ENOENT
+https://us-01.gff.network/2025/09/30/jerking-off-in-the-bathroom-and-shooting-a-huge-load-trent-williams-trentw-1759235488532/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2025%2F09%2F30%2Fjerking-off-in-the-bathroom-and
+https://us-02.gff.network/2025/09/07/jerking-my-big-thick-cock-and-tasting-my-load-raphael-grey-addictionadd2-1757252896569/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F09%2F07%2Fjerking-my-big-thick-cock-and-t
+https://us-02.gff.network/2025/10/02/jerking-my-young-cock-until-i-make-myself-cum-nick-fenway-nickfenway-1759403671229/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F10%2F02%2Fjerking-my-young-cock-until-i-m
+https://us-02.gff.network/2025/08/17/anonymous-guy-sucks-my-dick-and-i-blow-my-load-over-his-face-raphael-grey-addictionadd2-1755360448113/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F08%2F17%2Fanonymous-guy-sucks-my-dick-and
+https://us-02.gff.network/2025/07/14/stroking-my-cock-and-showing-off-my-muscles-bohdan-musclegod_ua-1752417068668/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F07%2F14%2Fstroking-my-cock-and-showing-of
+https://us-02.gff.network/2025/09/04/jerking-off-with-my-toy-and-shooting-my-load-curved-king-curvedking.inc-1756987675968/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F09%2F04%2Fjerking-off-with-my-toy-and-sho
+https://us-01.gff.network/2026/01/18/quick-jerk-off-in-the-restroom-capy-mrcapy-1768736601558-e8l80w/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2026%2F01%2F18%2Fquick-jerk-off-in-the-restroom-
+https://us-02.gff.network/2025/06/12/jerking-off-while-wearing-my-wolverine-mask-capy-mrcapy-1749724809479/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F06%2F12%2Fjerking-off-while-wearing-my-wo
+https://us-02.gff.network/2025/05/19/fucking-myself-with-a-dildo-and-jerking-my-cock-til-i-cum-gabriel-antonio-sobrenomeantonio-1747647648977/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F05%2F19%2Ffucking-myself-with-a-dildo-and
+https://us-01.gff.network/2025/05/14/quick-late-night-jerk-off-dubian-jauregui-dubianjauregui-1747212266409/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2025%2F05%2F14%2Fquick-late-night-jerk-off-dubia
+https://us-01.gff.network/2025/05/01/jerking-off-in-my-underwear-and-cumming-over-my-exercise-ball-gabriel-antonio-sobrenomeantonio-1746070231953/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2025%2F05%2F01%2Fjerking-off-in-my-underwear-and
+https://us-01.gff.network/2026/03/31/jordan-jerks-off-after-baseball-jordanxbrandt-1774879765430-4e9yww/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2026%2F03%2F31%2Fjordan-jerks-off-after-baseball
+https://us-01.gff.network/2026/03/25/stroking-my-cock-and-cumming-over-myself-alphadallas6969-1774358812637-nztq4m/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2026%2F03%2F25%2Fstroking-my-cock-and-cumming-ov
+https://us-01.gff.network/2026/03/24/stroking-my-thick-cock-and-cumming-over-my-underwear-big-dick-buddy-bigdbuddyxxx-1774273938984-88pr6m/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2026%2F03%2F24%2Fstroking-my-thick-cock-and-cumm
+https://us-02.gff.network/2026/03/25/stroking-my-big-daddy-dick-until-i-cum-big-dick-buddy-bigdbuddyxxx-1774357657267-zel79i/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2026%2F03%2F25%2Fstroking-my-big-daddy-dick-unti
+https://us-02.gff.network/2026/03/25/stroking-my-cock-and-cumming-all-over-the-floor-alphadallas6969-1774358722519-7di2oq/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2026%2F03%2F25%2Fstroking-my-cock-and-cumming-al
+https://us-01.gff.network/2026/03/11/philippe-soulier-filoufitt-fucks-ashton-summers-ossanjurjo-1773159573950-w6h26/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2026%2F03%2F11%2Fphilippe-soulier-filoufitt-fuck
+https://us-01.gff.network/2026/02/21/nycpole9-fucks-thickknpretti-1771651413166-fijhp/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2026%2F02%2F21%2Fnycpole9-fucks-thickknpretti-17
+https://us-02.gff.network/2026/03/08/jordans-cumpilation-jordanxbrandt1-1772969040104-lorlvq/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2026%2F03%2F08%2Fjordans-cumpilation-jordanxbran
+https://us-01.gff.network/2026/02/01/evan-pitcher-evanpitcher-fucks-zarataco-zarataco-1769947322699-6gkh4o/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2026%2F02%2F01%2Fevan-pitcher-evanpitcher-fucks-
+https://video.bsky.app/watch/did%3Aplc%3Av3pnwoonthpfzaxb2ka6e6pm/bafkreiasagukh5fq4fz5744o7ecprci4nnmh7vylrstbaiftakgui4ytpu/playlist.m3u8	empty output
+https://us-01.gff.network/2026/01/03/edger-nyc-edgerxnyc-edges-rico-marlon-1767405250657-d9018a/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2026%2F01%2F03%2Fedger-nyc-edgerxnyc-edges-rico-
+https://us-02.gff.network/2026/02/21/jerking-off-in-bed-until-i-cum-jacksen-luna-1771676779105-lyjur/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2026%2F02%2F21%2Fjerking-off-in-bed-until-i-cum-
+https://us-01.gff.network/2025/12/19/jerking-my-thick-cock-and-making-myself-cum-raphael-grey-addictionadd2-1766113774296-f7h0ta/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2025%2F12%2F19%2Fjerking-my-thick-cock-and-makin
+https://us-02.gff.network/2025/12/25/luis-vieira-thelv-fucks-brody-meyer-brodymeyer-1766585997464-e3wan9/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F12%2F25%2Fluis-vieira-thelv-fucks-brody-m
+https://us-02.gff.network/2025/12/11/showing-off-my-young-muscular-body-and-fucking-my-toy-benjamin-verbeck-therealbenitalian-1765453177069-kzay3/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F12%2F11%2Fshowing-off-my-young-muscular-b
+https://us-02.gff.network/wup/c1/42/99/4f/6b/f2/56/34/655b3af7ea8dc2543d5707d3927ef082/Jerking-off-in-the-back-seat-of-the-car-while-my-mate-drives-Andyleexxx/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2Fwup%2Fc1%2F42%2F99%2F4f%2F6b%2Ff2%2F56%2F34%2F65
+https://us-02.gff.network/2025/12/03/stroking-my-big-cock-and-cumming-over-my-muscular-body-brody-biggs-brodybiggsvip-1764762952119-teunig/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F12%2F03%2Fstroking-my-big-cock-and-cummin
+https://us-02.gff.network/2025/11/14/stroking-my-big-cock-in-bed-until-i-cum-valk-valkhorne-1763041600005/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F11%2F14%2Fstroking-my-big-cock-in-bed-unt
+https://us-02.gff.network/2026/02/05/david-christian-dombeeef-fucks-elijah-wilde-1770252264778-fn86d/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2026%2F02%2F05%2Fdavid-christian-dombeeef-fucks-
+https://us-02.gff.network/2025/11/07/fucking-my-toy-and-making-myself-cum-hard-david-christian-dombeeef-1762434230858-v4aloj/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F11%2F07%2Ffucking-my-toy-and-making-mysel
+https://us-02.gff.network/2025/04/23/david-christian-dombeeef-fucks-diego-grant-fulltimepapi-1745409544039/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2025%2F04%2F23%2Fdavid-christian-dombeeef-fucks-
+https://us-01.gff.network/2022/09/23/cc77235f99dae8f4f99f47dc89dec5ca/Getting-my-cock-edged-and-milked-David-Christian-Dombeeef/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2022%2F09%2F23%2Fcc77235f99dae8f4f99f47dc89dec5c
+https://us-02.gff.network/2026/02/05/edging-my-cock-with-my-toy-and-cumming-hard-over-myself-david-christian-dombeeef-1770253361670-62f0zo/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2026%2F02%2F05%2Fedging-my-cock-with-my-toy-and-
+https://us-01.gff.network/2025/08/18/lydian-grey-lydiangrey-fucks-raw-david-rawdavidx-1755524209880/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2025%2F08%2F18%2Flydian-grey-lydiangrey-fucks-ra
+https://us-02.gff.network/2022/09/23/5c1ac9d196e7dc8449c96db7ab5dccfb/Getting-a-hand-job-and-shooting-a-big-load-David-Christian-Dombeeef/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-02.gff.network%2F2022%2F09%2F23%2F5c1ac9d196e7dc8449c96db7ab5dccf
+https://us-01.gff.network/2023/05/04/Late-night-jerk-off-FitNarad/index.m3u8	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fus-01.gff.network%2F2023%2F05%2F04%2FLate-night-jerk-off-FitNarad%2F
+https://n2.coomer.st/data/7a/4b/7a4be0acf265e42fde5a9be0ac2a942088836c95bf123c468d0272cf4b295c3d.mp4?f=0grior3h0x3o2av4m4s7a_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F7a%2F4b%2F7a4be0acf265e42fde5a9be0ac2a94208883
+https://n4.coomer.st/data/b3/7f/b37f86e09928e199b9a69a2c14b1147cc419ed20bbf933e2f3a0c2a0908356c4.mp4?f=0gr6nxyj4pafa4776n97e_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Fb3%2F7f%2Fb37f86e09928e199b9a69a2c14b1147cc419
+https://n1.coomer.st/data/3d/4f/3d4fc64fab870c58f9befc863dc2d2b7fab7611c05b6d6443615ee8f858fe9b0.mp4?f=0i0sfuvwd635gl4yzdrn7_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F3d%2F4f%2F3d4fc64fab870c58f9befc863dc2d2b7fab7
+https://n1.coomer.st/data/a7/b1/a7b190794807e0d71333f00e3476c07b2e89dc54b4f642a827938714e8bf6e1d.mp4?f=0hlnw6j3fp3udafaxzfki_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2Fa7%2Fb1%2Fa7b190794807e0d71333f00e3476c07b2e89
+https://n3.coomer.st/data/57/d1/57d113eb04217d7ab86274a6f78cd5fa41df07847a82ab81544ff5ddeeb1c665.mp4?f=0i2hmkmungp5n5n18h3xt_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F57%2Fd1%2F57d113eb04217d7ab86274a6f78cd5fa41df
+https://n4.coomer.st/data/43/7f/437f26da2a9b056ae725e575f2c3dcc76ea6cf8f77937f8c91e55c9f683a2f72.mp4?f=0i2sg659nbsoryu4qmz28_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F43%2F7f%2F437f26da2a9b056ae725e575f2c3dcc76ea6
+https://n4.coomer.st/data/98/01/980178322607eb47a3b40b174f7a8cc53cfd7ed60da986f734ff9e5cbc5f8673.mp4?f=0i14xoh6n0zjag5xu93or_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F98%2F01%2F980178322607eb47a3b40b174f7a8cc53cfd
+https://n4.coomer.st/data/a4/21/a4214ac719d154d0aacc58a2f1a2a87407ad28cdf046a1a4ba8f14ffb6f0bb8c.mp4?f=0i25jv2fvuuh4wrxsdqnz_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Fa4%2F21%2Fa4214ac719d154d0aacc58a2f1a2a87407ad
+https://n1.coomer.st/data/04/64/0464d7aa8390a681b64b83a12acd26d4b1599429d5a440041d57cc4888f24124.mp4?f=0i1r2rp0cka3uyv36t52w_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F04%2F64%2F0464d7aa8390a681b64b83a12acd26d4b159
+https://n2.coomer.st/data/88/de/88de2cca6370f8838c08e8d8e2a0709dce87cdbc243339923cf0ac673c92c4db.mp4?f=0hwyz08uy7zdx8hb7bzv2_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F88%2Fde%2F88de2cca6370f8838c08e8d8e2a0709dce87
+https://n3.coomer.st/data/8c/f7/8cf7f2dbdb45b88377908b6dbf17eedac30964bb889d9acc585ff8f6a810cb1c.mp4?f=0i3l1a6sjeu8azlneqa5p_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F8c%2Ff7%2F8cf7f2dbdb45b88377908b6dbf17eedac309
+https://n2.coomer.st/data/10/b3/10b37392c3451c4073f279f9cc3c5ad2294663eeefcc5104bc2589b6c611745e.mp4?f=0hp0y46ghzpeu2372yabq_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F10%2Fb3%2F10b37392c3451c4073f279f9cc3c5ad22946
+https://n3.coomer.st/data/52/34/5234b40c7cded09d190adddeb756236403fcd5acfe7487b993f7f8f713961150.m4v?f=c4bd4f5f-17eb-46a2-a4c0-7218f9438a89.m4v	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F52%2F34%2F5234b40c7cded09d190adddeb756236403fc
+https://n1.coomer.st/data/09/e1/09e1d9e9eb34e352b11adfc6a3005d533d03349807bad7764d314f080f29cd4e.mp4?f=0hjzb9c60qzkmbaxio5jb_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F09%2Fe1%2F09e1d9e9eb34e352b11adfc6a3005d533d03
+https://n3.coomer.st/data/c5/aa/c5aa7cf94486d04bfe0a119dac21704143920ac3925babb75cd556e6ec50edba.mp4?f=0hc4istwfeja7k9q2lf6i_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2Fc5%2Faa%2Fc5aa7cf94486d04bfe0a119dac2170414392
+https://n2.coomer.st/data/cd/d5/cdd5cbf66d44e000d56dc62112a599e610c7c11c291b6de75c97ee1a8dab1d98.mp4?f=0h6cs4ir7xmmkmn3j6gpt_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2Fcd%2Fd5%2Fcdd5cbf66d44e000d56dc62112a599e610c7
+https://n4.coomer.st/data/c1/5e/c15e3cbb8e214ec7152219c4417bac119625033cb02ca7dc42e371fee248f655.m4v?f=f3360ca1-791c-454b-a8c3-345787a45c88.m4v	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Fc1%2F5e%2Fc15e3cbb8e214ec7152219c4417bac119625
+https://n2.coomer.st/data/9b/ff/9bff7e7fe54abb61cfe50493eef33c60d8a65b56bd2f356a27030f9c9e50e675.mp4?f=0h4s5iubelrpznoq04d32_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F9b%2Fff%2F9bff7e7fe54abb61cfe50493eef33c60d8a6
+https://n1.coomer.st/data/00/3a/003ada5e8a094ef5ec69fd7e4f306fc6fa63723fd21e16994edc79dbdbd10680.mp4?f=0i4n33jkrhx0na4x42prs_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F00%2F3a%2F003ada5e8a094ef5ec69fd7e4f306fc6fa63
+https://n3.coomer.st/data/73/2c/732c17dc5533c056b0158b3ca300a79370eca0c41921523c954208fbe2a190c0.mp4?f=0i4tax8z9pmaikot0ljnb_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F73%2F2c%2F732c17dc5533c056b0158b3ca300a79370ec
+https://n4.coomer.st/data/f8/ae/f8ae08983fc126de6fcd7cfb69b91e40553c36aa323d6c2bcdd527ce069ce84b.mp4?f=0hzx9rvl8cf8s9b7k5a91_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Ff8%2Fae%2Ff8ae08983fc126de6fcd7cfb69b91e40553c
+https://n4.coomer.st/data/8d/db/8ddb6168553b03c5ba816d4515d080cae7b5b2f0c1a737558d487b1cf9946504.mp4?f=0i1w8se9cank41f4qx7qr_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F8d%2Fdb%2F8ddb6168553b03c5ba816d4515d080cae7b5
+https://n3.coomer.st/data/db/fc/dbfc6dca86badf699e9bd47cf79eda4ce6889654bd07d894d1589cf1f7cc2831.mp4?f=0himk77nrdnl4kixbax63_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2Fdb%2Ffc%2Fdbfc6dca86badf699e9bd47cf79eda4ce688
+https://n4.coomer.st/data/82/24/8224225ba3fc25b5052a40c45575d536711d96a73bea019a7ba1b9b7663ab179.mp4?f=0i1w7sitlxtruzzeeehkw_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F82%2F24%2F8224225ba3fc25b5052a40c45575d536711d
+https://n3.coomer.st/data/95/8c/958cd4d3f50d38e692b5a8afadc296dfa6ea7c0fcd6b19d4bbab7362828fbfc1.mp4?f=0i4psvpxlyt4fki0loccx_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F95%2F8c%2F958cd4d3f50d38e692b5a8afadc296dfa6ea
+https://n2.coomer.st/data/ca/3f/ca3f2d120d58be2d2098ad41de040fbb4197d1b20201e4d0442d41225bd332f4.mp4?f=0i1dya65bka81zf8pc5sv_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2Fca%2F3f%2Fca3f2d120d58be2d2098ad41de040fbb4197
+https://n3.coomer.st/data/7d/a0/7da09d2de7e09d32f03ada2c175d2c8dbcbdf4fc1014c0377665075c1f086b4c.mp4?f=0hz9bliegi1mja9o7m8cy_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F7d%2Fa0%2F7da09d2de7e09d32f03ada2c175d2c8dbcbd
+https://n2.coomer.st/data/ca/3a/ca3a78b3f80e8a937c1f03597ea547d14fdddb9b88335de3f92404a68caf3539.mp4?f=0i0zhm7804qkoehi9b707_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2Fca%2F3a%2Fca3a78b3f80e8a937c1f03597ea547d14fdd
+https://n4.coomer.st/data/38/24/382424625b35b054a6b8d2ada33f8ff5eafc5b18f16b03a106daddb8c14e6e45.mp4?f=0i2kb0xqmw3sjkefcqbss_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F38%2F24%2F382424625b35b054a6b8d2ada33f8ff5eafc
+https://n1.coomer.st/data/07/fb/07fb9b6974bcd8d7f4ff91d221bf3f9e539d157c7ef03684969d3ad50b5331ec.mp4?f=0hln8anierp89qd8z28wg_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F07%2Ffb%2F07fb9b6974bcd8d7f4ff91d221bf3f9e539d
+https://n3.coomer.st/data/81/3b/813b1d15793dc05f41707f00884c9002e9222817546453611d5ba0a245bf4ed1.mp4?f=0hkw04fmjmtug4zs4l6pn_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F81%2F3b%2F813b1d15793dc05f41707f00884c9002e922
+https://n4.coomer.st/data/2d/ef/2def2adb3bb25c4c4f7de15ea9569679d96e0674eb6c4ec228f23f5062292290.mp4?f=0hlgei8txr4uneuhz4fso_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F2d%2Fef%2F2def2adb3bb25c4c4f7de15ea9569679d96e
+https://n3.coomer.st/data/25/63/2563d28a6c0fcf8aed39a8547d6c4d2dfc6be049505d51cfcc775b0179930245.mp4?f=0hmo0dafs5brwni54fkv6_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F25%2F63%2F2563d28a6c0fcf8aed39a8547d6c4d2dfc6b
+https://n1.coomer.st/data/86/86/8686469a02f7252ba3eabca4656049d72cf4d47075422e944bc777d1e9351ea2.mp4?f=0hl86j0zedd6twjum0peq_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F86%2F86%2F8686469a02f7252ba3eabca4656049d72cf4
+https://n3.coomer.st/data/9b/3d/9b3db6eb2a1773f21409635adc5fb2c4d774e8649d086622528511b818e4d541.mp4?f=0hfn1r0zmjejdg616xrji_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F9b%2F3d%2F9b3db6eb2a1773f21409635adc5fb2c4d774
+https://n2.coomer.st/data/1a/10/1a10b34ff5828947b3162706daa61f61af4a3b40df35921a3b7c6788fefd7431.mp4?f=0hmtht179oq8rslbb5lds_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F1a%2F10%2F1a10b34ff5828947b3162706daa61f61af4a
+https://n2.coomer.st/data/02/af/02afb6bb2210a23e75ce0ee03992173148b50619037629c6d7d6bff7ae48e5b7.mp4?f=0hfn1r2t9px2rlophfotv_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F02%2Faf%2F02afb6bb2210a23e75ce0ee03992173148b5
+https://n2.coomer.st/data/39/8a/398a52070e046fcc62fce29a6b81164592ad56984628a7d31530b3edafcbd6e1.mp4?f=0heytkhv65xjyhg6tgfre_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F39%2F8a%2F398a52070e046fcc62fce29a6b81164592ad
+https://n2.coomer.st/data/85/32/85320e27799525782c09fa3f84d2032869d46bb9fd64a7ea7d06981dd3400978.mp4?f=0hm9cu9t43aeggdmntz1b_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F85%2F32%2F85320e27799525782c09fa3f84d2032869d4
+https://n4.coomer.st/data/24/d9/24d9777a7ce02c66e9196400037cbab348f3c6378ecc4d7587ce325188402584.mp4?f=0hj8hbh5eqoo8zdd3uzwa_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F24%2Fd9%2F24d9777a7ce02c66e9196400037cbab348f3
+https://n3.coomer.st/data/2f/7e/2f7e74c431e1b431e611e80f6dace108007eebf6709140d72382ea6c8aa54f1d.mp4?f=0hzysjymoh53f7yg4n26r_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F2f%2F7e%2F2f7e74c431e1b431e611e80f6dace108007e
+https://n3.coomer.st/data/44/50/445035e7e69301ad9df1d98811b63173ba32d74565034ae14388aa00bd6e062a.mp4?f=0hhmr6q7ishvcgtm44dfa_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F44%2F50%2F445035e7e69301ad9df1d98811b63173ba32
+https://n2.coomer.st/data/ca/84/ca84950d6c58d86c90f491fe7b8fe38dd7a3dbc4bb3a294580c5dfb970d0a541.mp4?f=0i5ekr97qcbaj55ygml7k_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2Fca%2F84%2Fca84950d6c58d86c90f491fe7b8fe38dd7a3
+https://n2.coomer.st/data/02/18/0218e8b28190c31ba625811f24a985c980bbe420bd7390efd9d9c0e5a7348827.mp4?f=0i47dw31tu9u2ssitebcy_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F02%2F18%2F0218e8b28190c31ba625811f24a985c980bb
+https://n2.coomer.st/data/64/af/64af04e9a46b0e814a53011c70315a2ff137676553b411865a23a4e350863adc.mp4?f=PLkX2yS2kA5J02yqaFQvVmWvaWLZjoux.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 2296.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F64%2Faf%2F64af04e9a46b0e814a53011c70315a2ff
+https://n4.coomer.st/data/88/25/882505426c1245eb2320bd7ada2eee76cee2a58431fd695324667523357c5e97.mp4?f=0hmchw8x3hwvddpn5f1n6_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 151.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F88%2F25%2F882505426c1245eb2320bd7ada2eee76ce
+https://n4.coomer.st/data/f0/c5/f0c54bbad58e7a514850f84ed7242d36101cf8a06f2fe4748f1a1cf22c5e1571.mp4?f=0hmm08wpwzqh17rsd8w0g_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 211.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Ff0%2Fc5%2Ff0c54bbad58e7a514850f84ed7242d3610
+https://n4.coomer.st/data/86/4f/864fbcc1b5e0c14d36535ac13e8178a2e6681bbe358972de712e86771edc7a86.m4v?f=12d32326-7cf5-4b31-a2ce-0880f035fa16.m4v	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2F86%2F4f%2F864fbcc1b5e0c14d36535ac13e8178a2e668
+https://n1.coomer.st/data/7c/b6/7cb6ece522105061c1d27b45041f8ae9ed99d22b1d2a2849b747bc0f95067107.mp4?f=0hh1ludygk4unpxdrtw37_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 331.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F7c%2Fb6%2F7cb6ece522105061c1d27b45041f8ae9ed
+https://n4.coomer.st/data/d6/28/d628f07c98101d5fec06626ebb5987ea8d4c7e26772f4c2fdfe4700f3943dadc.mp4?f=0hfnz55f290c94iwahhq0_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 8.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Fd6%2F28%2Fd628f07c98101d5fec06626ebb5987ea8d4c
+https://n3.coomer.st/data/26/10/261047d87211b92fb3300f62bfcfb63df93207963766cf9634ba8f725bb20f47.mp4?f=0hgp30x59inb8yviwe73h_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 481.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn3.coomer.st%2Fdata%2F26%2F10%2F261047d87211b92fb3300f62bfcfb63df9
+https://n1.coomer.st/data/7c/b6/7cb6ece522105061c1d27b45041f8ae9ed99d22b1d2a2849b747bc0f95067107.mp4?f=0hh1ludygk4unpxdrtw37_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 461.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F7c%2Fb6%2F7cb6ece522105061c1d27b45041f8ae9ed
+https://n1.coomer.st/data/22/f6/22f6f4956ba9ae3a9f50d4f4c80098403e89fbf7459751408e568285f424acb2.mp4?f=0hdc3zc5kki10cptve4q6_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F22%2Ff6%2F22f6f4956ba9ae3a9f50d4f4c80098403e89
+https://n1.coomer.st/data/4f/34/4f34e902080399d62e405defd911fdff2a90b34a086afa59117d5808e809970c.mp4?f=0he0v294okgl18cgnr3hp_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 481.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn1.coomer.st%2Fdata%2F4f%2F34%2F4f34e902080399d62e405defd911fdff2a
+https://n4.coomer.st/data/d6/28/d628f07c98101d5fec06626ebb5987ea8d4c7e26772f4c2fdfe4700f3943dadc.mp4?f=0hfnz55f290c94iwahhq0_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 118.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Fd6%2F28%2Fd628f07c98101d5fec06626ebb5987ea8d
+https://video.twimg.com/amplify_video/1897384745408868352/pl/EaJZY4xsUFwFVgYd.m3u8?variant_version=3&tag=16	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F1897384745408868352%2Fpl%2FEaJZY4x
+https://video.twimg.com/ext_tw_video/2031533511769804800/pu/pl/INJuft3hkrfYmNsW.m3u8?variant_version=3&tag=12	empty output
+https://video.twimg.com/amplify_video/2028924742204571648/pl/Qynv-TXnYDH-pgow.m3u8?variant_version=3&tag=21	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2028924742204571648%2Fpl%2FQynv-TX
+https://video.twimg.com/amplify_video/2035764863675572224/pl/y87QBfIGJKXxR4_w.m3u8?variant_version=3&tag=21	empty output
+https://video.twimg.com/amplify_video/2047943320350121984/pl/7NX6HxoMFBn-VGuy.m3u8?tag=14&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2047943320350121984%2Fpl%2F7NX6Hxo
+https://video.twimg.com/amplify_video/2047815252432338944/pl/8tz2Qf-Sn9flm2Pj.m3u8?tag=21&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2047815252432338944%2Fpl%2F8tz2Qf-
+https://video.twimg.com/ext_tw_video/1719460155819958272/pu/pl/fbSc98Pv2MEkZ-9z.m3u8?tag=12&variant_version=1	empty output
+https://video.twimg.com/amplify_video/2054631886203551744/pl/YDpKwv-wgEH4BOZP.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2054631886203551744%2Fpl%2FYDpKwv-
+https://video.twimg.com/ext_tw_video/1841913092063551488/pu/pl/KniHbGl81DgIU6HY.m3u8?tag=12&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Fext_tw_video%2F1841913092063551488%2Fpu%2Fpl%2FKni
+https://video.twimg.com/amplify_video/2071303942466650112/pl/BxR9gCY6DDXbbjHw.m3u8?tag=28&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2071303942466650112%2Fpl%2FBxR9gCY
+https://video.twimg.com/amplify_video/2049962899586625536/pl/_EmtCwJzOvHGDdet.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2049962899586625536%2Fpl%2F_EmtCwJ
+https://video.twimg.com/amplify_video/2028329411083149312/pl/8GZBY9aLZ2NCnRO9.m3u8?variant_version=3&tag=21	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2028329411083149312%2Fpl%2F8GZBY9a
+https://video.twimg.com/amplify_video/2029046378781941760/pl/ksd8pJBYlnhnDode.m3u8?variant_version=3&tag=21	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2029046378781941760%2Fpl%2Fksd8pJB
+https://video.twimg.com/amplify_video/2024726661619470336/pl/IU2o_j_Pj0sLQRJB.m3u8?variant_version=3&tag=21	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2024726661619470336%2Fpl%2FIU2o_j_
+https://n4.coomer.st/data/d6/28/d628f07c98101d5fec06626ebb5987ea8d4c7e26772f4c2fdfe4700f3943dadc.mp4?f=0hfnz55f290c94iwahhq0_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 371.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Fd6%2F28%2Fd628f07c98101d5fec06626ebb5987ea8d
+https://video.twimg.com/amplify_video/2031594054928977920/pl/P2mhh8x9x-jsUx2n.m3u8?variant_version=3&tag=21	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2031594054928977920%2Fpl%2FP2mhh8x
+https://video.twimg.com/amplify_video/2037392628350660608/pl/SMgmK35bb3osmy-V.m3u8?variant_version=3&tag=21	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2037392628350660608%2Fpl%2FSMgmK35
+https://video.twimg.com/amplify_video/2038470794070687744/pl/XCVMDOiGddX3y0Al.m3u8?variant_version=3&tag=21	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2038470794070687744%2Fpl%2FXCVMDOi
+https://video.twimg.com/amplify_video/2038474256305000448/pl/n-q_jgexttaUIa25.m3u8?variant_version=3&tag=21	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2038474256305000448%2Fpl%2Fn-q_jge
+https://video.twimg.com/amplify_video/2040320294506663936/pl/-mshZAktyG88O9So.m3u8?tag=21&variant_version=3	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2040320294506663936%2Fpl%2F-mshZAk
+https://video.twimg.com/amplify_video/2046397282736640000/pl/wtZrtzYpAnTzZO1L.m3u8?tag=21&variant_version=3	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2046397282736640000%2Fpl%2FwtZrtzY
+https://video.twimg.com/amplify_video/2047163522446999552/pl/haTsl7yQo-j69m6L.m3u8?tag=21&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2047163522446999552%2Fpl%2FhaTsl7y
+https://video.twimg.com/amplify_video/2047548157609865217/pl/HtOpmdK9af0Mxzk_.m3u8?tag=21&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2047548157609865217%2Fpl%2FHtOpmdK
+https://video.twimg.com/amplify_video/2052588220253110272/pl/z8DHYXJwmV8peFBV.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2052588220253110272%2Fpl%2Fz8DHYXJ
+https://video.twimg.com/amplify_video/2054783429649047552/pl/whQlhceGQu4kLX0E.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2054783429649047552%2Fpl%2FwhQlhce
+https://video.twimg.com/amplify_video/2055529693072302080/pl/h-XbeaFanTPREnDk.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2055529693072302080%2Fpl%2Fh-XbeaF
+https://video.twimg.com/amplify_video/2057695102059880448/pl/TmAMfrpCIYJLIoxu.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2057695102059880448%2Fpl%2FTmAMfrp
+https://video.twimg.com/amplify_video/2057700604013621248/pl/9Y65sI79l-4VkCDo.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2057700604013621248%2Fpl%2F9Y65sI7
+https://video.twimg.com/amplify_video/2057828196318326784/pl/1MZosKLP5gUnYjuS.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2057828196318326784%2Fpl%2F1MZosKL
+https://video.twimg.com/amplify_video/2063843573163032576/pl/MxI0kb6Gm4v8cnNm.m3u8?tag=27&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2063843573163032576%2Fpl%2FMxI0kb6
+https://video.twimg.com/amplify_video/2073185054042243072/pl/EmUIh1B-fLUZLkh7.m3u8?tag=28&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2073185054042243072%2Fpl%2FEmUIh1B
+https://video.twimg.com/amplify_video/2074718147379122176/pl/RwAKLY6aV22UVtPh.m3u8?tag=28&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2074718147379122176%2Fpl%2FRwAKLY6
+https://video.twimg.com/amplify_video/2075805789906935808/pl/XdrMUBgfg75RDa6c.m3u8?tag=28&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2075805789906935808%2Fpl%2FXdrMUBg
+https://video.twimg.com/amplify_video/2017383313288081408/pl/nWLlAv8jJ1AdROSM.m3u8?tag=21&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2017383313288081408%2Fpl%2FnWLlAv8
+https://video.twimg.com/amplify_video/1910324861450285056/pl/rw4PPIxLuacXXZ-6.m3u8?tag=14&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F1910324861450285056%2Fpl%2Frw4PPIx
+https://video.twimg.com/amplify_video/1949234982850859008/vid/avc1/720x1228/EbdFARuTWk3-cpWj.mp4	empty output
