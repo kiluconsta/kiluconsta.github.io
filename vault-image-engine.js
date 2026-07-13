@@ -22,7 +22,7 @@
     return url.replace(/\/s\d+x\d+(?:_c\d+)?\//, '/s' + size + 'x' + size + '/');
   }
   function thumbURL(url) {
-    if (/googleusercontent\.com/.test(url)) return url.replace(/=[^/]+$/, '=w280-h280-c');
+    if (/googleusercontent\.com/.test(url)) return url.replace(/=[^/]+$/, '=w50-h50-c');
     // Tumblr's /sWxH/ path segment is dynamic resizing — safe to rewrite.
     if (/media\.tumblr\.com/.test(url) && /\/s\d+x\d+/.test(url)) {
       return tumblrResize(url, isGif(url) ? 100 : 250);
