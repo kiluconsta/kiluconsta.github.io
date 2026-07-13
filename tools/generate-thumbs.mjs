@@ -16,6 +16,7 @@ import { execFile } from 'node:child_process';
 const ROOT = process.cwd();
 const DATA_DIR = path.join(ROOT, 'data');
 const THUMBS_DIR = path.join(ROOT, 'thumbs');
+const HEALTH_DIR = path.join(ROOT, 'health'); // metadata lives here, not in the 4k-file thumbs dir
 const CONCURRENCY = 4;
 const PER_ITEM_TIMEOUT_S = 90;
 
@@ -137,11 +138,15 @@ await Promise.all(Array.from({ length: CONCURRENCY }, () => worker(jobs)));
 if (failures.length) {
   console.log(`\n${failures.length} failed (site falls back to in-browser capture for these):`);
   for (const f of failures.slice(0, 30)) console.log(`  ${f.url}\n    ${f.err}`);
-  fs.writeFileSync(path.join(THUMBS_DIR, '_failures.log'),
+  fs.mkdirSync(HEALTH_DIR, { recursive: true });
+  fs.writeFileSync(path.join(HEALTH_DIR, 'thumbs-failures.log'),
     failures.map((f) => `${f.url}\t${f.err}`).join('\n'));
 } else {
-  try { fs.unlinkSync(path.join(THUMBS_DIR, '_failures.log')); } catch {}
+  try { fs.unlinkSync(path.join(HEALTH_DIR, 'thumbs-failures.log')); } catch {}
 }
+// Legacy locations (pre health/ move)
+try { fs.unlinkSync(path.join(THUMBS_DIR, '_failures.log')); } catch {}
+try { fs.unlinkSync(path.join(THUMBS_DIR, 'index.json')); } catch {}
 
 // Manifest: the site fetches this once and only requests thumbs that exist,
 // so missing thumbs never produce 404s.
@@ -149,8 +154,9 @@ const finalHashes = fs.readdirSync(THUMBS_DIR)
   .filter((f) => f.endsWith('.jpg'))
   .map((f) => f.replace(/\.jpg$/, ''))
   .sort();
-fs.writeFileSync(path.join(THUMBS_DIR, 'index.json'), JSON.stringify(finalHashes));
-console.log(`manifest: thumbs/index.json (${finalHashes.length} entries)`);
+fs.mkdirSync(HEALTH_DIR, { recursive: true });
+fs.writeFileSync(path.join(HEALTH_DIR, 'thumbs-manifest.json'), JSON.stringify(finalHashes));
+console.log(`manifest: health/thumbs-manifest.json (${finalHashes.length} entries)`);
 console.log(`\ndone: ${ok}/${toMake.length} generated, ${toPrune.length} pruned`);
 // Always exit 0 — dead links must not fail the workflow.
 process.exit(0);

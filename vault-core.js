@@ -338,10 +338,17 @@ var VaultPosters = (function () {
   function manifest() {
     if (_manifest) return _manifest;
     if (typeof window.fetch !== 'function') { _manifest = Promise.resolve(null); return _manifest; }
-    _manifest = fetch('/thumbs/index.json').then(function (r) {
-      if (!r.ok) return null;
-      return r.json().then(function (arr) { return new Set(arr); });
-    }).catch(function () { return null; });
+    function grab(path) {
+      return fetch(path).then(function (r) {
+        if (!r.ok) return null;
+        return r.json().then(function (arr) { return new Set(arr); });
+      }).catch(function () { return null; });
+    }
+    // Manifest lives in health/ (thumbs/ has 1000s of files); legacy fallback
+    // covers the window between deploying this file and the next Action run.
+    _manifest = grab('/health/thumbs-manifest.json').then(function (set) {
+      return set || grab('/thumbs/index.json');
+    });
     return _manifest;
   }
   function thumbHash(url, time) {

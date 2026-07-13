@@ -35,7 +35,7 @@ into the `thumbs/` folder whenever you push a change to `data/*.js`:
   next push** (or just edit via the GitHub web editor, which is always current).
 - **First run:** trigger it once manually — repo → Actions → "Generate thumbnails"
   → "Run workflow". It will process the whole back catalogue (may take a while).
-- Dead links are skipped and listed in `thumbs/_failures.log`; the site quietly
+- Dead links are skipped and listed in `health/thumbs-failures.log`; the site quietly
   falls back to generating those thumbnails in the browser.
 - Never edit `thumbs/` by hand — it's fully machine-managed.
 
