@@ -1,1 +1,27 @@
-{}
+{
+  "https://video-s.twimg.com/ext_tw_video/1767576400125423616/pu/vid/avc1/1280x720/BY2dv56EdU5oFqoF.mp4?tag=12": {
+    "count": 1,
+    "last": "2026-07-20",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/ext_tw_video/1676212251907223554/pu/vid/720x1280/J3d8-LfRIHi8gXbA.mp4?tag=12": {
+    "count": 1,
+    "last": "2026-07-20",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/ext_tw_video/1651410085552304128/pu/vid/720x1280/9D4Gb47K3Y4sTa-O.mp4?tag=12": {
+    "count": 1,
+    "last": "2026-07-20",
+    "reason": "dead:404"
+  },
+  "https://video-s.twimg.com/ext_tw_video/1767576400125423616/pu/vid/avc1/1280x720/BY2dv56EdU5oFqoF.mp4": {
+    "count": 1,
+    "last": "2026-07-20",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/amplify_video/2076387466286657536/pl/bErtCjVQrKQF626B.m3u8?tag=28&variant_version=1": {
+    "count": 1,
+    "last": "2026-07-20",
+    "reason": "dead:404"
+  }
+}
