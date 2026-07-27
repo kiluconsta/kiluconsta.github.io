@@ -1,27 +1,57 @@
 {
   "https://video-s.twimg.com/ext_tw_video/1767576400125423616/pu/vid/avc1/1280x720/BY2dv56EdU5oFqoF.mp4?tag=12": {
-    "count": 1,
-    "last": "2026-07-20",
+    "count": 2,
+    "last": "2026-07-27",
     "reason": "dead:404"
   },
   "https://video.twimg.com/ext_tw_video/1676212251907223554/pu/vid/720x1280/J3d8-LfRIHi8gXbA.mp4?tag=12": {
-    "count": 1,
-    "last": "2026-07-20",
+    "count": 2,
+    "last": "2026-07-27",
     "reason": "dead:404"
   },
   "https://video.twimg.com/ext_tw_video/1651410085552304128/pu/vid/720x1280/9D4Gb47K3Y4sTa-O.mp4?tag=12": {
-    "count": 1,
-    "last": "2026-07-20",
+    "count": 2,
+    "last": "2026-07-27",
     "reason": "dead:404"
   },
   "https://video-s.twimg.com/ext_tw_video/1767576400125423616/pu/vid/avc1/1280x720/BY2dv56EdU5oFqoF.mp4": {
-    "count": 1,
-    "last": "2026-07-20",
+    "count": 2,
+    "last": "2026-07-27",
     "reason": "dead:404"
   },
   "https://video.twimg.com/amplify_video/2076387466286657536/pl/bErtCjVQrKQF626B.m3u8?tag=28&variant_version=1": {
+    "count": 2,
+    "last": "2026-07-27",
+    "reason": "dead:404"
+  },
+  "https://video.bsky.app/watch/did%3Aplc%3Agydsioistxd5p3a5bdydko5n/bafkreihlfodleqctuktvhlr3edr26xn6athapq6rtryvqullojzutuk4fq/playlist.m3u8": {
     "count": 1,
-    "last": "2026-07-20",
+    "last": "2026-07-27",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/ext_tw_video/1867766712688320512/pu/vid/avc1/720x720/s5vLinfAs_xPLRJW.mp4": {
+    "count": 1,
+    "last": "2026-07-27",
+    "reason": "dead:403"
+  },
+  "https://video.twimg.com/ext_tw_video/1581567214011957249/pu/vid/608x1080/1r2AfP_89alGhb0b.mp4": {
+    "count": 1,
+    "last": "2026-07-27",
+    "reason": "dead:403"
+  },
+  "https://video.twimg.com/amplify_video/2020245621190320128/pl/U29XIEw3jeNuCgjf.m3u8?tag=21&variant_version=1": {
+    "count": 1,
+    "last": "2026-07-27",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/ext_tw_video/1920910492584804352/pu/vid/avc1/464x848/F6Wc_FAk-zob5u5d.mp4": {
+    "count": 1,
+    "last": "2026-07-27",
+    "reason": "dead:403"
+  },
+  "https://video.twimg.com/ext_tw_video/1855375983194386432/pu/vid/avc1/720x1280/zhoBL-7a0zK8-NlH.mp4": {
+    "count": 1,
+    "last": "2026-07-27",
     "reason": "dead:404"
   }
 }
