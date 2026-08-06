@@ -32,10 +32,16 @@
     + '.va-field{margin-bottom:13px;}'
     + '.va-field label{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;'
     + 'color:rgba(255,255,255,.45);margin-bottom:5px;}'
-    + '.va-field input,.va-field select{width:100%;box-sizing:border-box;padding:9px 11px;'
-    + 'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;'
+    + '.va-field input,.va-field select,.va-field textarea{width:100%;box-sizing:border-box;'
+    + 'padding:9px 11px;background:rgba(255,255,255,.06);'
+    + 'border:1px solid rgba(255,255,255,.12);border-radius:8px;'
     + 'color:#fff;font-size:.9rem;font-family:inherit;}'
-    + '.va-field input:focus,.va-field select:focus{outline:none;border-color:rgba(255,255,255,.4);}'
+    + '.va-field textarea{min-height:76px;resize:vertical;line-height:1.45;'
+    + 'font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;white-space:pre;}'
+    + '.va-field input:focus,.va-field select:focus,.va-field textarea:focus{outline:none;'
+    + 'border-color:rgba(255,255,255,.4);}'
+    + '.va-hint{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:5px;}'
+    + '#va-trim.va-hidden{display:none;}'
     + '.va-field select option{background:#111116;}'
     + '.va-row{display:flex;gap:10px;}.va-row .va-field{flex:1;}'
     + '#va-actions{display:flex;gap:10px;margin-top:18px;}'
@@ -64,8 +70,10 @@
     sectionField = '<div class="va-field"><label for="va-section">Section</label>'
       + '<select id="va-section">' + opts + '</select></div>';
   }
+  // Trim seconds describe a single clip, so this row hides as soon as the box
+  // holds more than one URL.
   var trimField = isVideo
-    ? '<div class="va-row">'
+    ? '<div class="va-row" id="va-trim">'
       + '<div class="va-field"><label for="va-start">Start (s, optional)</label>'
       + '<input id="va-start" type="number" min="0" step="1" placeholder="—"></div>'
       + '<div class="va-field"><label for="va-end">End (s, optional)</label>'
@@ -76,8 +84,10 @@
   modal.id = 'va-modal';
   modal.innerHTML = '<div id="va-card" role="dialog" aria-modal="true" aria-label="Add a link">'
     + '<h2>Add to ' + slug + '</h2>'
-    + '<div class="va-field"><label for="va-url">Media URL</label>'
-    + '<input id="va-url" type="url" placeholder="https://…" autocomplete="off" spellcheck="false"></div>'
+    + '<div class="va-field"><label for="va-url">Media URL<span id="va-count"></span></label>'
+    + '<textarea id="va-url" rows="3" placeholder="https://…&#10;https://…" '
+    + 'autocomplete="off" spellcheck="false" autocapitalize="off"></textarea>'
+    + '<div class="va-hint">One URL per line — paste as many as you like.</div></div>'
     + sectionField + trimField
     + '<div class="va-field"><label for="va-key">Vault key</label>'
     + '<input id="va-key" type="password" placeholder="saved after first use" autocomplete="off"></div>'
@@ -94,15 +104,31 @@
   var sectionIn = modal.querySelector('#va-section');
   var saveBtn = modal.querySelector('#va-save');
   var msg = modal.querySelector('#va-msg');
+  var countEl = modal.querySelector('#va-count');
+  var trimRow = modal.querySelector('#va-trim');
 
   function say(text, cls) {
     msg.textContent = text;
     msg.className = cls || '';
   }
+  // Split on newlines; also tolerate URLs separated by spaces on one line.
+  function urlList() {
+    return urlIn.value.split(/[\r\n\s]+/).map(function (s) { return s.trim(); })
+      .filter(Boolean);
+  }
+  function refresh() {
+    var n = urlList().length;
+    countEl.textContent = n > 1 ? ' — ' + n + ' links' : '';
+    // Trim seconds only apply to a single clip.
+    if (trimRow) trimRow.classList.toggle('va-hidden', n > 1);
+  }
+  urlIn.addEventListener('input', refresh);
+
   function open() {
     modal.classList.add('va-open');
     try { keyIn.value = localStorage.getItem(KEY_STORE) || ''; } catch (e) {}
     say('');
+    refresh();
     urlIn.focus();
   }
   function close() {
@@ -110,6 +136,7 @@
     urlIn.value = '';
     if (startIn) startIn.value = '';
     if (endIn) endIn.value = '';
+    refresh();
     say('');
   }
 
@@ -121,8 +148,14 @@
   });
 
   saveBtn.addEventListener('click', function () {
-    var url = urlIn.value.trim();
-    if (!/^https?:\/\/\S+$/i.test(url)) { say('Enter a valid http(s) URL.', 'va-err'); return; }
+    var urls = urlList();
+    if (!urls.length) { say('Enter at least one URL.', 'va-err'); return; }
+    for (var i = 0; i < urls.length; i++) {
+      if (!/^https?:\/\/\S+$/i.test(urls[i])) {
+        say('Line ' + (i + 1) + ' is not a valid http(s) URL.', 'va-err');
+        return;
+      }
+    }
     var key = keyIn.value.trim();
     if (!key) { say('Vault key required.', 'va-err'); return; }
     if (!ADMIN_URL) {
@@ -130,15 +163,18 @@
       return;
     }
 
-    var payload = { slug: slug, url: url };
+    var payload = { slug: slug, urls: urls };
     if (isVideo) {
-      if (startIn && startIn.value !== '') payload.start = Number(startIn.value);
-      if (endIn && endIn.value !== '') payload.end = Number(endIn.value);
+      // A batch has no single clip to trim, so start/end are sent only for one.
+      if (urls.length === 1) {
+        if (startIn && startIn.value !== '') payload.start = Number(startIn.value);
+        if (endIn && endIn.value !== '') payload.end = Number(endIn.value);
+      }
       if (sectionIn) payload.section = Number(sectionIn.value);
     }
 
     saveBtn.disabled = true;
-    say('Committing…');
+    say(urls.length > 1 ? 'Committing ' + urls.length + ' links…' : 'Committing…');
 
     fetch(ADMIN_URL, {
       method: 'POST',
@@ -151,10 +187,13 @@
       if (!res.ok) { say(res.data.error || 'Commit failed.', 'va-err'); return; }
       try { localStorage.setItem(KEY_STORE, key); } catch (e) {}
       var sha = (res.data.commit || '').slice(0, 7);
-      say('Committed ' + sha + ' — live once Pages redeploys (~1 min).', 'va-ok');
+      var n = res.data.added || urls.length;
+      say('Committed ' + sha + ' (' + n + (n === 1 ? ' link' : ' links')
+        + ') — live once Pages redeploys (~1 min).', 'va-ok');
       urlIn.value = '';
       if (startIn) startIn.value = '';
       if (endIn) endIn.value = '';
+      refresh();
     }).catch(function () {
       saveBtn.disabled = false;
       say('Could not reach the worker.', 'va-err');

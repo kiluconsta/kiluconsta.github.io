@@ -56,12 +56,13 @@ function jsString(s) {
 }
 
 /**
- * Insert one entry line into the array literal.
+ * Insert one or more entry lines into the array literal, in order.
  * Video files: `var SOURCES = [ … ]` where a bare `null,` opens a new section,
  * so section N is the run of lines after the Nth null (0-based).
  * Image files: `var IMGS = [ … ]` — flat, always appended at the end.
  */
-export function insertLine(text, varName, line, sectionIndex) {
+export function insertLine(text, varName, newLines, sectionIndex) {
+  if (!Array.isArray(newLines)) newLines = [newLines];
   const lines = text.split('\n');
   const openRe = new RegExp('var\\s+' + varName + '\\s*=\\s*\\[');
   const open = lines.findIndex((l) => openRe.test(l));
@@ -91,7 +92,7 @@ export function insertLine(text, varName, line, sectionIndex) {
     if (m) { indent = m[1]; break; }
   }
 
-  lines.splice(at, 0, indent + line);
+  lines.splice(at, 0, ...newLines.map(function (l) { return indent + l; }));
   return lines.join('\n');
 }
 
@@ -116,14 +117,24 @@ export default {
     const isImage = IMAGE_SLUGS.includes(slug);
     if (!isVideo && !isImage) return json({ error: 'unknown collection: ' + slug }, 400, origin);
 
-    const url = String(body.url || '').trim();
-    if (!/^https?:\/\/\S+$/i.test(url) || url.length > 2000) {
-      return json({ error: 'url must be a single http(s) link' }, 400, origin);
+    // Accepts `url` (one) or `urls` (a batch). A batch lands in a single commit
+    // so the thumbnail bot fires once instead of once per link.
+    const rawUrls = Array.isArray(body.urls)
+      ? body.urls
+      : (body.url == null ? [] : [body.url]);
+    const urls = rawUrls.map((u) => String(u == null ? '' : u).trim()).filter(Boolean);
+    if (!urls.length) return json({ error: 'no urls given' }, 400, origin);
+    if (urls.length > 200) return json({ error: 'too many urls at once (max 200)' }, 400, origin);
+    for (const u of urls) {
+      if (!/^https?:\/\/\S+$/i.test(u) || u.length > 2000) {
+        return json({ error: 'not a valid http(s) link: ' + u.slice(0, 80) }, 400, origin);
+      }
     }
 
-    // Build the entry exactly as EDITING.md documents it.
-    let line;
-    if (isVideo) {
+    // Build the entries exactly as EDITING.md documents them. Trim seconds only
+    // describe one clip, so they are accepted only for a single-link request.
+    let newLines;
+    if (isVideo && urls.length === 1) {
       const start = body.start === '' || body.start == null ? null : Number(body.start);
       const end = body.end === '' || body.end == null ? null : Number(body.end);
       for (const v of [start, end]) {
@@ -132,15 +143,15 @@ export default {
         }
       }
       if (start === null && end === null) {
-        line = jsString(url) + ',';
+        newLines = [jsString(urls[0]) + ','];
       } else {
-        const parts = ['url: ' + jsString(url)];
+        const parts = ['url: ' + jsString(urls[0])];
         if (start !== null) parts.push('start: ' + start);
         if (end !== null) parts.push('end: ' + end);
-        line = '{ ' + parts.join(', ') + ' },';
+        newLines = ['{ ' + parts.join(', ') + ' },'];
       }
     } else {
-      line = jsString(url) + ',';
+      newLines = urls.map((u) => jsString(u) + ',');
     }
 
     let section = null;
@@ -173,7 +184,7 @@ export default {
 
     let updated;
     try {
-      updated = insertLine(current, isVideo ? 'SOURCES' : 'IMGS', line, section);
+      updated = insertLine(current, isVideo ? 'SOURCES' : 'IMGS', newLines, section);
     } catch (e) {
       return json({ error: e.message }, 422, origin);
     }
@@ -183,7 +194,9 @@ export default {
       method: 'PUT',
       headers: { ...gh, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: `data: add link to ${slug}`,
+        message: newLines.length === 1
+          ? `data: add link to ${slug}`
+          : `data: add ${newLines.length} links to ${slug}`,
         content: encoded,
         sha: file.sha,
         branch: BRANCH
@@ -203,6 +216,11 @@ export default {
     }
 
     const out = await putRes.json();
-    return json({ ok: true, commit: out.commit && out.commit.sha, path }, 200, origin);
+    return json({
+      ok: true,
+      commit: out.commit && out.commit.sha,
+      path,
+      added: newLines.length
+    }, 200, origin);
   }
 };

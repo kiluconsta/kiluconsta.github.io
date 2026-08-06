@@ -86,10 +86,16 @@ Paste the result into `HASH` at the top of `vault-lock.js`.
 
 ## Adding links from the site (`vault-additions.js`)
 
-Collection pages have a **+** button (bottom-left). It takes a URL, a section
-(video collections only), and optional start/end trim seconds, then commits the
-new entry straight into `data/<slug>.js` — same format this file documents, so
+Collection pages have a **+** button (bottom-left). It takes one URL per line, a
+section (video collections only), and optional start/end trim seconds, then
+commits straight into `data/<slug>.js` — same format this file documents, so
 thumbnails and link-health keep working normally.
+
+Paste as many URLs as you like (up to 200). They are added in the order given,
+all into the chosen section, as a **single commit** — so the thumbnail Action
+runs once for the batch rather than once per link. The start/end fields hide
+themselves as soon as there is more than one URL, since trim seconds describe one
+clip; they apply only when you add a single link.
 
 Setup, once:
 
