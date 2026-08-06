@@ -5,7 +5,7 @@
 //
 // SETUP: deploy tools/vault-admin-worker.js, then put its URL here.
 (function () {
-  var ADMIN_URL = ''; // e.g. 'https://vault-admin.kiluconsta.workers.dev'
+  var ADMIN_URL = 'https://vault-admin.kiluconsta.workers.dev';
   var KEY_STORE = 'vault-admin-key';
 
   var mount = document.querySelector('[data-vault-video], [data-vault-image]');

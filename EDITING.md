@@ -98,7 +98,9 @@ Setup, once:
 2. Set two encrypted variables on it:
    - `GITHUB_TOKEN` — fine-grained PAT, this repo only, Contents: Read and write.
    - `VAULT_KEY` — any long random string.
-3. Put the worker's URL into `ADMIN_URL` at the top of `vault-additions.js`.
+3. `ADMIN_URL` in `vault-additions.js` already points at
+   `https://vault-admin.kiluconsta.workers.dev` — only change it if you move or
+   rename the worker.
 4. First time you use the **+** button, paste `VAULT_KEY` into the Vault key
    field; it is remembered in that browser afterwards.
 
