@@ -16,6 +16,13 @@
 const REPO = 'kiluconsta/kiluconsta.github.io';
 const BRANCH = 'mein';
 
+// Without this, GitHub stamps API commits with the token owner's default
+// identity (the real account name and email). Pin it to the alias instead.
+const COMMIT_IDENTITY = {
+  name: 'darkstarth',
+  email: 'kiluconsta@users.noreply.github.com'
+};
+
 // Only these files can ever be written, and only in this shape.
 const VIDEO_SLUGS = [
   'animations', 'bluesky-likes', 'bomb-ass-dee', 'bomb-ass-dee-pt-2',
@@ -199,7 +206,9 @@ export default {
           : `data: add ${newLines.length} links to ${slug}`,
         content: encoded,
         sha: file.sha,
-        branch: BRANCH
+        branch: BRANCH,
+        author: COMMIT_IDENTITY,
+        committer: COMMIT_IDENTITY
       })
     });
 

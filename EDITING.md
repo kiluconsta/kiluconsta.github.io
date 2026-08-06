@@ -115,6 +115,10 @@ The GitHub token lives only in the worker. The browser only ever holds
 data files. The worker commits with the file's blob sha, so if a bot commits at
 the same moment the write is rejected rather than clobbering it — just retry.
 
+Commits are attributed to `darkstarth` via `COMMIT_IDENTITY` at the top of the
+worker. Without that, GitHub stamps API commits with the token owner's default
+account name and email instead.
+
 Changes appear once Pages redeploys (~1 min), and the thumbnail Action picks the
 new link up on its next run.
 
