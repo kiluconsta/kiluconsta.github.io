@@ -53,5 +53,62 @@ link through the same proxy the site uses:
 - Thumbnails for removed links are pruned in the same run.
 - Run it on demand: Actions → "Link health" → Run workflow.
 
+## Pattern lock (`vault-lock.js`)
+
+Every page opens with a 3x3 pattern grid before anything else renders. Numbering
+is phone-keypad order:
+
+```
+1 2 3
+4 5 6
+7 8 9
+```
+
+The current pattern is **8 → 5 → 2 → 6 → 4**: start bottom-middle, drag straight
+up through the centre to the top-middle, over to the middle-right, then straight
+across to the middle-left. Dragging 6 → 4 passes back over the centre, which is
+already used, so it is not counted twice. Unlocking lasts for the browser
+session (same as the age gate).
+
+To change it, pick your dot sequence and regenerate the digest:
+
+```bash
+printf '%s' 'vault:8-5-2-6-4' | shasum -a 256
+```
+
+Paste the result into `HASH` at the top of `vault-lock.js`.
+
+> This is a UI gate, not access control. The site is a public static host, so
+> `data/*.js`, `thumbs/` and every media URL stay directly fetchable no matter
+> what this screen does. The hash only keeps the pattern out of plain
+> view-source; a 9-dot keyspace is small enough to brute-force offline. Treat it
+> the same way you treat the age gate.
+
+## Adding links from the site (`vault-additions.js`)
+
+Collection pages have a **+** button (bottom-left). It takes a URL, a section
+(video collections only), and optional start/end trim seconds, then commits the
+new entry straight into `data/<slug>.js` — same format this file documents, so
+thumbnails and link-health keep working normally.
+
+Setup, once:
+
+1. Deploy `tools/vault-admin-worker.js` as a **new** Cloudflare Worker. Keep it
+   separate from the existing media proxy so that one stays untouched.
+2. Set two encrypted variables on it:
+   - `GITHUB_TOKEN` — fine-grained PAT, this repo only, Contents: Read and write.
+   - `VAULT_KEY` — any long random string.
+3. Put the worker's URL into `ADMIN_URL` at the top of `vault-additions.js`.
+4. First time you use the **+** button, paste `VAULT_KEY` into the Vault key
+   field; it is remembered in that browser afterwards.
+
+The GitHub token lives only in the worker. The browser only ever holds
+`VAULT_KEY`, which can do exactly one thing: append a link to one of the known
+data files. The worker commits with the file's blob sha, so if a bot commits at
+the same moment the write is rejected rather than clobbering it — just retry.
+
+Changes appear once Pages redeploys (~1 min), and the thumbnail Action picks the
+new link up on its next run.
+
 **What still needs a rebuild (send the source zip to Claude):**
 adding a whole new collection, renaming one, or any design/layout change.
