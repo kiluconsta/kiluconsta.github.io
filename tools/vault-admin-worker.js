@@ -58,6 +58,19 @@ function safeEqual(a, b) {
   return diff === 0;
 }
 
+// Base64 in chunks. `btoa(String.fromCharCode(...bytes))` blows the argument
+// stack on real data files — dropbox.js alone is ~250KB — with
+// "Maximum call stack size exceeded".
+function toBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  const CHUNK = 0x8000;
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+  }
+  return btoa(bin);
+}
+
 function jsString(s) {
   return '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/[\r\n]/g, '') + '"';
 }
@@ -196,7 +209,7 @@ export default {
       return json({ error: e.message }, 422, origin);
     }
 
-    const encoded = btoa(String.fromCharCode(...new TextEncoder().encode(updated)));
+    const encoded = toBase64(updated);
     const putRes = await fetch(api, {
       method: 'PUT',
       headers: { ...gh, 'Content-Type': 'application/json' },
