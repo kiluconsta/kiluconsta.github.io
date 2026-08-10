@@ -42,7 +42,6 @@ var SOURCES = [
   "https://video.twimg.com/amplify_video/1926716088936525824/vid/avc1/1080x1920/fP6P4gtx_p9flZf_.mp4",
   "https://video.twimg.com/amplify_video/1929994856157286400/vid/avc1/1080x1920/X3-gRS22NtmGjYmc.mp4",
   "https://video.twimg.com/amplify_video/1916368830890184704/vid/avc1/1080x1920/heNV7OE86tO4ay_W.mp4",
-  "https://video.twimg.com/ext_tw_video/1855375983194386432/pu/vid/avc1/720x1280/zhoBL-7a0zK8-NlH.mp4",
   "https://video.twimg.com/amplify_video/1931218037467729920/vid/avc1/940x720/khf-iKVfuslM1Vzk.mp4",
   "https://video.twimg.com/ext_tw_video/1915705890897874944/pu/vid/avc1/720x900/i9ySkP67MKA8Bpgo.mp4",
   "https://video.twimg.com/amplify_video/1867322726072860672/vid/avc1/720x1280/J8BtdNjD7kuYFwFm.mp4",
