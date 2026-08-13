@@ -98,6 +98,7 @@ https://video.twimg.com/ext_tw_video/1719460155819958272/pu/pl/fbSc98Pv2MEkZ-9z.
 https://video.twimg.com/amplify_video/2047815252432338944/pl/8tz2Qf-Sn9flm2Pj.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/ext_tw_video/1668207669113417729/pu/pl/-tMue-P6rLArL9sZ.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/ext_tw_video/1980976137560842240/pu/pl/fBmczBT7c7NC6VBe.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
+https://video.twimg.com/ext_tw_video/1971723196467671040/pu/pl/pFfY9dhchYzss3E_.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2030025945185406979/pl/D8Ww-v8wJyCBLk-l.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2049962899586625536/pl/_EmtCwJzOvHGDdet.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2038474256305000448/pl/n-q_jgexttaUIa25.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
