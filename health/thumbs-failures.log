@@ -97,6 +97,9 @@ https://video.twimg.com/amplify_video/2047943320350121984/pl/7NX6HxoMFBn-VGuy.m3
 https://video.twimg.com/ext_tw_video/1719460155819958272/pu/pl/fbSc98Pv2MEkZ-9z.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2047815252432338944/pl/8tz2Qf-Sn9flm2Pj.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/ext_tw_video/1971723196467671040/pu/pl/pFfY9dhchYzss3E_.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
+https://video.twimg.com/amplify_video/1797801849518440449/pl/I0h1ccUmEPiz1u9H.m3u8?tag=16&variant_version=1	spawn ffmpeg ENOENT
+https://video.twimg.com/amplify_video/2082459416360558593/pl/2_z3ePF79F4TKx2N.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
+https://video.twimg.com/ext_tw_video/2048784057019088897/pu/pl/zhUba34tsHu_Ezvq.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2057700604013621248/pl/9Y65sI79l-4VkCDo.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2057828196318326784/pl/1MZosKLP5gUnYjuS.m3u8?tag=27&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/1949234982850859008/vid/avc1/720x1228/EbdFARuTWk3-cpWj.mp4	spawn ffmpeg ENOENT
