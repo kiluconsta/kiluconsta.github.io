@@ -181,6 +181,7 @@ var SOURCES = [
         "https://video.twimg.com/ext_tw_video/1952151176688095232/pu/pl/_lT2-TlqHLvOsF6b.m3u8?tag=12&variant_version=1",
         "https://video.twimg.com/amplify_video/2082459416360558593/pl/2_z3ePF79F4TKx2N.m3u8?tag=29&variant_version=1",
         "https://video.twimg.com/ext_tw_video/2048784057019088897/pu/pl/zhUba34tsHu_Ezvq.m3u8?tag=12&variant_version=1",
+        "https://video.twimg.com/amplify_video/2088994505798098944/pl/7ouOM-YXUXXJJDVa.m3u8?tag=29&variant_version=1",
   null,
   "https://video.twimg.com/amplify_video/1894267059485208576/vid/avc1/720x1280/a4CQn0FLBU5LGdXv.mp4",
   "https://video.twimg.com/ext_tw_video/1451580606157049861/pu/vid/720x1280/qff_UcHdaYG2Efn6.mp4",
