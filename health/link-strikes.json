@@ -1,32 +1,37 @@
 {
-  "https://video-ft.twimg.com/ext_tw_video/1749163087645532162/pu/vid/avc1/720x1280/7LF7p5665a_hWjHH.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-08-17",
-    "reason": "dead:404"
-  },
-  "https://video-s.twimg.com/ext_tw_video/1999350253829365761/pu/vid/avc1/720x1090/4_G2xZSPas4DnxB7.mp4": {
-    "count": 2,
-    "last": "2026-08-17",
-    "reason": "dead:403"
-  },
-  "https://video.twimg.com/amplify_video/1953054234951233537/vid/avc1/1080x1920/wbSk5dl7ySNj1BUP.mp4": {
-    "count": 2,
-    "last": "2026-08-17",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/amplify_video/2003982955987824640/vid/avc1/2160x3840/VZtyMLTE59BjWTFr.mp4": {
-    "count": 2,
-    "last": "2026-08-17",
-    "reason": "dead:404"
-  },
   "https://video-s.twimg.com/amplify_video/1900944253053698048/vid/avc1/852x462/bjw501Gv4RS6_U3a.mp4?tag=16": {
-    "count": 1,
-    "last": "2026-08-17",
+    "count": 2,
+    "last": "2026-08-24",
     "reason": "dead:403"
   },
   "https://video.twimg.com/amplify_video/2026346052844916737/pl/_2l7PlOOLi4jUwEG.m3u8?tag=21&variant_version=1": {
+    "count": 2,
+    "last": "2026-08-24",
+    "reason": "dead:404"
+  },
+  "https://video-t-1.twimg.com/ext_tw_video/1722479843957497856/pu/vid/avc1/1108x720/PPWk19Kpr_Xks8Ut.mp4?tag=12": {
     "count": 1,
-    "last": "2026-08-17",
+    "last": "2026-08-24",
+    "reason": "dead:404"
+  },
+  "https://video-t-1.twimg.com/ext_tw_video/1722479843957497856/pu/vid/avc1/1108x720/PPWk19Kpr_Xks8Ut.mp4": {
+    "count": 1,
+    "last": "2026-08-24",
+    "reason": "dead:404"
+  },
+  "https://video-s.twimg.com/amplify_video/1920156427760394241/vid/avc1/1080x1920/nZ7EzJE1kEU2b7BH.mp4": {
+    "count": 1,
+    "last": "2026-08-24",
+    "reason": "dead:403"
+  },
+  "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:v6qcrttanao2sme7ebjbuj4d/bafkreigpcet2oe2zhhi6qcodfjtzs56cagjegap55ev47qe5mjz5e3pxka": {
+    "count": 1,
+    "last": "2026-08-24",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/amplify_video/1975700378659528704/vid/avc1/720x966/0Tp-wqjAU5AR-Ek7.mp4": {
+    "count": 1,
+    "last": "2026-08-24",
     "reason": "dead:404"
   }
 }
