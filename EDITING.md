@@ -191,5 +191,50 @@ Two more grid details:
   top are not stored, and the restore waits until enough tiles exist to reach
   the saved offset.
 
+## The health page
+
+`/pages/health/` — linked from the bottom of the home page — renders the three
+machine-managed files as something you can act on:
+
+- **Removed** — every link the weekly check dropped, newest first, filterable by
+  collection or URL. **Restore** puts one straight back into its data file, so
+  you no longer paste URLs back by hand.
+- **On strike** — links that have failed once or twice. Three consecutive
+  failures is what removes one, so this is the early warning.
+- **No thumbnail** — links the generator could not fetch a frame from. They
+  still play; the site falls back to making a poster in the browser.
+
+Nothing on this page writes to `health/` — restoring goes through the same
+worker the **+** button uses. Tiles for links on the no-thumbnail list are dimmed
+and marked *dead?* in the grid, but stay clickable: the log can be out of date,
+and you should be the one to judge.
+
+## Sections without editing files
+
+The add dialog can now create and rename sections. **+** beside the section
+picker adds one (a `null` break plus a `DIV_LABELS` entry); **Rename** relabels
+the selected one. Collections with no sections yet offer *"+ Add one"*, which
+creates `DIV_LABELS` from scratch — this is how an image collection gets its
+first section.
+
+## Offline
+
+The site registers a service worker, so an installed copy opens and works
+without a connection. The shell, scripts and thumbnails are cached; data files
+are fetched fresh when possible and fall back to the cached copy; media is never
+cached (far too large). The health logs are deliberately excluded so they are
+never shown stale.
+
+To ship an update, bump `VERSION` at the top of `sw.js` — old caches are dropped
+on activation.
+
+## Small things
+
+- **`?`** anywhere opens the keyboard shortcut list. It ignores the key while
+  you are typing in a field.
+- **Unfavouriting shows an Undo** for six seconds, and puts the entry back in
+  its original position.
+- Tiles shimmer while their poster loads instead of sitting blank.
+
 **What still needs a rebuild (send the source zip to Claude):**
 adding a whole new collection, renaming one, or any design/layout change.

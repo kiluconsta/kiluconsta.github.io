@@ -158,11 +158,55 @@ var Favourites = (function() {
     var l = load(), i = -1;
     for (var k = 0; k < l.length; k++) { if (l[k].url === entry.url) { i = k; break; } }
     var state;
-    if (i >= 0) { l.splice(i, 1); state = false; }
-    else { l.unshift({ url: entry.url, slug: entry.slug, type: entry.type, start: entry.start || null, end: entry.end || null, t: Date.now() }); state = true; }
+    if (i >= 0) {
+      // Keep the removed record and its position so it can be put back exactly.
+      var dropped = l[i];
+      l.splice(i, 1);
+      state = false;
+      toast('Removed from favourites', function () {
+        var cur = load();
+        cur.splice(Math.min(i, cur.length), 0, dropped);
+        save();
+        document.dispatchEvent(new CustomEvent('vault-fav-change', { detail: { url: entry.url, state: true } }));
+      });
+    } else {
+      l.unshift({ url: entry.url, slug: entry.slug, type: entry.type, start: entry.start || null, end: entry.end || null, t: Date.now() });
+      state = true;
+    }
     save();
     document.dispatchEvent(new CustomEvent('vault-fav-change', { detail: { url: entry.url, state: state } }));
     return state;
+  }
+
+  // A mis-tapped heart on a phone was otherwise unrecoverable.
+  var toastEl = null, toastTimer = null;
+  function toast(msg, onUndo) {
+    if (!toastEl) {
+      var style = document.createElement('style');
+      style.textContent =
+        '#vf-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:980;'
+        + 'display:none;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;'
+        + 'background:rgba(20,20,26,.95);border:1px solid rgba(255,255,255,.14);color:#fff;'
+        + 'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;'
+        + 'font-size:.86rem;box-shadow:0 6px 24px rgba(0,0,0,.5);max-width:92vw;}'
+        + '#vf-toast.on{display:flex;}'
+        + '#vf-toast button{padding:4px 10px;border-radius:6px;cursor:pointer;font:inherit;'
+        + 'font-size:.8rem;font-weight:600;background:#fff;color:#000;border:0;}';
+      document.head.appendChild(style);
+      toastEl = document.createElement('div');
+      toastEl.id = 'vf-toast';
+      document.body.appendChild(toastEl);
+    }
+    toastEl.innerHTML = '<span></span><button type="button">Undo</button>';
+    toastEl.querySelector('span').textContent = msg;
+    toastEl.classList.add('on');
+    toastEl.querySelector('button').addEventListener('click', function () {
+      toastEl.classList.remove('on');
+      clearTimeout(toastTimer);
+      onUndo();
+    });
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('on'); }, 6000);
   }
 
   // Wholesale replacement from sync — silent so it never re-triggers a push
@@ -385,6 +429,78 @@ var VaultPosters = (function () {
   }
   // thumbFor(url, time): Promise<'/thumbs/<hash>.jpg'|null> — manifest lookup only
   return { load: load, thumbFor: tryStaticThumb };
+})();
+
+// ── Offline support ────────────────────────────────────────
+// Registered after load so it never competes with the first paint.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+
+// ── Keyboard shortcuts overlay ─────────────────────────────
+// The lightbox binds a useful set of keys, but the only hint is a title
+// tooltip on each button — invisible on touch, and easy to never notice.
+(function () {
+  var KEYS = [
+    ['?', 'Show this list'],
+    ['/', 'Filter the collection'],
+    ['Esc', 'Close the lightbox'],
+    ['← →', 'Previous / next'],
+    ['S', 'Shuffle'],
+    ['L', 'Loop the clip'],
+    ['A', 'Auto-advance'],
+    ['T', 'Advance after 12s'],
+    ['F', 'Fullscreen'],
+    ['Alt-click', 'Remove a tile']
+  ];
+  var panel = null;
+
+  function build() {
+    var style = document.createElement('style');
+    style.textContent =
+      '#vk-help{position:fixed;inset:0;z-index:970;display:flex;align-items:center;'
+      + 'justify-content:center;background:rgba(0,0,0,.72);padding:20px;'
+      + 'backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}'
+      + '#vk-card{background:#111116;border:1px solid rgba(255,255,255,.1);border-radius:16px;'
+      + 'padding:22px 24px;max-width:360px;width:100%;color:#fff;'
+      + 'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}'
+      + '#vk-card h2{margin:0 0 14px;font-size:1rem;font-weight:600;}'
+      + '#vk-card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:9px 14px;align-items:baseline;}'
+      + '#vk-card dt{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.76rem;'
+      + 'background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);'
+      + 'border-radius:5px;padding:2px 7px;white-space:nowrap;justify-self:start;}'
+      + '#vk-card dd{margin:0;font-size:.86rem;color:rgba(255,255,255,.65);}'
+      + '#vk-close{margin-top:18px;width:100%;padding:9px;border-radius:9px;cursor:pointer;'
+      + 'font:inherit;font-size:.86rem;background:rgba(255,255,255,.08);color:#fff;'
+      + 'border:1px solid rgba(255,255,255,.16);}';
+    document.head.appendChild(style);
+
+    panel = document.createElement('div');
+    panel.id = 'vk-help';
+    panel.style.display = 'none';
+    panel.innerHTML = '<div id="vk-card" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">'
+      + '<h2>Shortcuts</h2><dl>'
+      + KEYS.map(function (k) {
+          return '<dt>' + k[0] + '</dt><dd>' + k[1] + '</dd>';
+        }).join('')
+      + '</dl><button type="button" id="vk-close">Close</button></div>';
+    document.body.appendChild(panel);
+    panel.addEventListener('click', function (e) { if (e.target === panel) hide(); });
+    panel.querySelector('#vk-close').addEventListener('click', hide);
+  }
+
+  function show() { if (!panel) build(); panel.style.display = 'flex'; }
+  function hide() { if (panel) panel.style.display = 'none'; }
+
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    // Never steal a keystroke from a field the user is typing in.
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.key === '?') { e.preventDefault(); panel && panel.style.display === 'flex' ? hide() : show(); }
+    else if (e.key === 'Escape' && panel && panel.style.display === 'flex') { e.preventDefault(); hide(); }
+  });
 })();
 
 // ── Scroll memory ──────────────────────────────────────────

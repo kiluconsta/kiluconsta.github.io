@@ -95,8 +95,48 @@
     + 'padding:2px 6px;border-radius:5px;font-size:11px;line-height:1.4;'
     + 'font-variant-numeric:tabular-nums;color:#fff;background:rgba(0,0,0,.72);'
     + 'backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);'
-    + 'pointer-events:none;letter-spacing:.02em;}';
+    + 'pointer-events:none;letter-spacing:.02em;}'
+    // A blank tile reads as broken; a moving one reads as loading.
+    + '.vs-tile.loading{background:linear-gradient(100deg,'
+    + 'rgba(255,255,255,.04) 30%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.04) 70%);'
+    + 'background-size:220% 100%;animation:cs-shimmer 1.4s ease-in-out infinite;}'
+    + '@keyframes cs-shimmer{from{background-position:180% 0}to{background-position:-40% 0}}'
+    + '@media (prefers-reduced-motion:reduce){.vs-tile.loading{animation:none;}}'
+    // Known-dead links stay clickable — the log can be stale, so judge for yourself.
+    + '.vs-tile.cs-dead{opacity:.4;}'
+    + '.vs-dead-badge{position:absolute;left:6px;bottom:6px;z-index:2;padding:2px 6px;'
+    + 'border-radius:5px;font-size:10px;letter-spacing:.04em;text-transform:uppercase;'
+    + 'color:#ff8d97;background:rgba(255,77,94,.18);pointer-events:none;}';
   document.head.appendChild(filterStyle);
+
+  // ── Known-dead links ─────────────────────────────────────
+  // thumbs-failures.log lists what the generator could not fetch. Marking those
+  // tiles explains a broken-looking thumbnail instead of leaving you guessing.
+  var deadSet = null;
+  fetch('/health/thumbs-failures.log', { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.text() : ''; })
+    .then(function (txt) {
+      if (!txt) return;
+      deadSet = new Set(txt.split('\n').map(function (l) { return l.split('\t')[0]; }).filter(Boolean));
+      markDead();
+    })
+    .catch(function () {});
+
+  function markDead() {
+    if (!deadSet) return;
+    var tiles = body.querySelectorAll('.vs-tile:not(.cs-checked)');
+    for (var i = 0; i < tiles.length; i++) {
+      tiles[i].classList.add('cs-checked');
+      var it = items[Number(tiles[i].dataset.vi)];
+      if (it && deadSet.has(it.url)) {
+        tiles[i].classList.add('cs-dead');
+        var b = document.createElement('span');
+        b.className = 'vs-dead-badge';
+        b.textContent = 'dead?';
+        tiles[i].appendChild(b);
+      }
+    }
+  }
 
   var bar = document.createElement('div');
   bar.className = 'cs-filter';
@@ -200,6 +240,7 @@
     body.insertBefore(frag, lightbox);
     // Tiles can arrive while a filter is already typed.
     if (query) applyFilter();
+    markDead();
     if (scroller) scroller.reachedTarget();
     // setTimeout, not requestAnimationFrame: rAF stops firing in a background
     // or throttled tab, which would leave the grid permanently half-built.

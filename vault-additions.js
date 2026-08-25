@@ -55,7 +55,14 @@
     + 'font:inherit;font-size:.78rem;color:#fff;background:rgba(255,255,255,.1);'
     + 'border:1px solid rgba(255,255,255,.2);}'
     + '.va-undo:hover{background:rgba(255,255,255,.2);}'
-    + '.va-undo:disabled{opacity:.5;cursor:default;}';
+    + '.va-undo:disabled{opacity:.5;cursor:default;}'
+    + '.va-row-tight{display:flex;gap:7px;align-items:center;}'
+    + '.va-row-tight select{flex:1;min-width:0;}'
+    + '.va-row-tight button{padding:8px 11px;border-radius:8px;cursor:pointer;font:inherit;'
+    + 'font-size:.8rem;color:#fff;background:rgba(255,255,255,.07);'
+    + 'border:1px solid rgba(255,255,255,.14);white-space:nowrap;}'
+    + '.va-row-tight button:hover{background:rgba(255,255,255,.16);}'
+    + '.va-nosec{flex:1;font-size:.86rem;color:rgba(255,255,255,.35);}';
   var style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
@@ -74,7 +81,16 @@
       return '<option value="' + i + '">' + String(l).replace(/[<>&]/g, '') + '</option>';
     }).join('');
     sectionField = '<div class="va-field"><label for="va-section">Section</label>'
-      + '<select id="va-section">' + opts + '</select></div>';
+      + '<div class="va-row-tight"><select id="va-section">' + opts + '</select>'
+      + '<button type="button" id="va-sec-new" title="New section">+</button>'
+      + '<button type="button" id="va-sec-ren" title="Rename this section">Rename</button>'
+      + '</div></div>';
+  } else {
+    // No sections yet — offer to start one rather than requiring a file edit.
+    sectionField = '<div class="va-field"><label>Section</label>'
+      + '<div class="va-row-tight"><span class="va-nosec">None yet</span>'
+      + '<button type="button" id="va-sec-new" title="New section">+ Add one</button>'
+      + '</div></div>';
   }
   // Trim seconds describe a single clip, so this row hides as soon as the box
   // holds more than one URL.
@@ -240,6 +256,40 @@
     refresh();
     say('');
   }
+
+  // ── Sections ─────────────────────────────────────────────
+  // Creating one used to mean hand-editing DIV_LABELS and adding a null.
+  function sectionOp(action, label, index) {
+    var key = keyIn.value.trim();
+    if (!key) { say('Vault key required.', 'va-err'); return; }
+    say(action === 'add-section' ? 'Creating section…' : 'Renaming…');
+    var payload = { slug: slug, action: action, label: label };
+    if (index != null) payload.section = index;
+    fetch(ADMIN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Vault-Key': key },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      return r.json().then(function (d) { return { ok: r.ok, data: d }; });
+    }).then(function (res) {
+      if (!res.ok) { say(res.data.error || 'Failed.', 'va-err'); return; }
+      try { localStorage.setItem(KEY_STORE, key); } catch (e) {}
+      say('Done — reload once Pages redeploys to see it.', 'va-ok');
+    }).catch(function () { say('Could not reach the worker.', 'va-err'); });
+  }
+
+  var newBtn = modal.querySelector('#va-sec-new');
+  if (newBtn) newBtn.addEventListener('click', function () {
+    var label = prompt('Name the new section:');
+    if (label && label.trim()) sectionOp('add-section', label.trim());
+  });
+  var renBtn = modal.querySelector('#va-sec-ren');
+  if (renBtn) renBtn.addEventListener('click', function () {
+    if (!sectionIn) return;
+    var i = Number(sectionIn.value);
+    var label = prompt('Rename this section:', sectionIn.options[i] && sectionIn.options[i].text);
+    if (label && label.trim()) sectionOp('rename-section', label.trim(), i);
+  });
 
   fab.addEventListener('click', open);
   modal.querySelector('#va-cancel').addEventListener('click', close);

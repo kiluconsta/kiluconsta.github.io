@@ -131,6 +131,51 @@ export function entryUrl(line) {
   return m ? m[1] : null;
 }
 
+/**
+ * Append a new section: a `null` break at the end of the array, plus its label
+ * in DIV_LABELS. Creates the DIV_LABELS declaration if the file has none,
+ * which is the case for image collections that never used sections.
+ */
+export function addSection(text, varName, label) {
+  const lines = text.split('\n');
+  const openRe = new RegExp('var\\s+' + varName + '\\s*=\\s*\\[');
+  const open = lines.findIndex((l) => openRe.test(l));
+  if (open === -1) throw new Error('could not find `var ' + varName + ' = [`');
+  let close = -1;
+  for (let i = open + 1; i < lines.length; i++) {
+    if (/^\s*\];\s*$/.test(lines[i])) { close = i; break; }
+  }
+  if (close === -1) throw new Error('could not find the closing `];`');
+
+  const quoted = jsString(label);
+  const labelsAt = lines.findIndex((l) => /var\s+DIV_LABELS\s*=\s*\[/.test(l));
+  if (labelsAt === -1) {
+    lines.splice(open, 0, 'var DIV_LABELS = [' + quoted + '];', '');
+    return lines.join('\n').replace(/\n\];/, '\n  null,\n];');
+  }
+  // Single-line declaration is how every data file writes it.
+  const m = lines[labelsAt].match(/^(var\s+DIV_LABELS\s*=\s*\[)(.*)(\];\s*)$/);
+  if (!m) throw new Error('DIV_LABELS is not on one line — edit it by hand');
+  const inner = m[2].trim();
+  lines[labelsAt] = m[1] + (inner ? inner + ', ' : '') + quoted + '];';
+  lines.splice(close, 0, '  null,');
+  return lines.join('\n');
+}
+
+/** Rename the label at DIV_LABELS[index]. */
+export function renameSection(text, index, label) {
+  const lines = text.split('\n');
+  const at = lines.findIndex((l) => /var\s+DIV_LABELS\s*=\s*\[/.test(l));
+  if (at === -1) throw new Error('this collection has no sections');
+  const m = lines[at].match(/^(var\s+DIV_LABELS\s*=\s*\[)(.*)(\];\s*)$/);
+  if (!m) throw new Error('DIV_LABELS is not on one line — edit it by hand');
+  const parts = m[2].match(/"(?:[^"\\]|\\.)*"/g) || [];
+  if (index < 0 || index >= parts.length) throw new Error('section ' + index + ' does not exist');
+  parts[index] = jsString(label);
+  lines[at] = m[1] + parts.join(', ') + '];';
+  return lines.join('\n');
+}
+
 /** Every URL currently present as an entry, in file order. */
 export function listUrls(text) {
   const out = [];
@@ -321,22 +366,32 @@ export default {
     const isImage = IMAGE_SLUGS.includes(slug);
     if (!isVideo && !isImage) return json({ error: 'unknown collection: ' + slug }, 400, origin);
 
+    // All actions share the sha-guarded read/write loop below.
+    const ACTIONS = ['add', 'remove', 'add-section', 'rename-section'];
+    const action = ACTIONS.includes(body.action) ? body.action : 'add';
+    const isSectionOp = action === 'add-section' || action === 'rename-section';
+
+    let label = '';
+    if (isSectionOp) {
+      label = String(body.label == null ? '' : body.label).trim();
+      if (!label || label.length > 120) {
+        return json({ error: 'label must be 1–120 characters' }, 400, origin);
+      }
+    }
+
     // Accepts `url` (one) or `urls` (a batch). A batch lands in a single commit
     // so the thumbnail bot fires once instead of once per link.
     const rawUrls = Array.isArray(body.urls)
       ? body.urls
       : (body.url == null ? [] : [body.url]);
     const urls = rawUrls.map((u) => String(u == null ? '' : u).trim()).filter(Boolean);
-    if (!urls.length) return json({ error: 'no urls given' }, 400, origin);
+    if (!isSectionOp && !urls.length) return json({ error: 'no urls given' }, 400, origin);
     if (urls.length > 200) return json({ error: 'too many urls at once (max 200)' }, 400, origin);
     for (const u of urls) {
       if (!/^https?:\/\/\S+$/i.test(u) || u.length > 2000) {
         return json({ error: 'not a valid http(s) link: ' + u.slice(0, 80) }, 400, origin);
       }
     }
-
-    // 'add' (default) or 'remove'. Both share the sha-guarded read/write below.
-    const action = body.action === 'remove' ? 'remove' : 'add';
 
     // Build the entries exactly as EDITING.md documents them. Trim seconds only
     // describe one clip, so they are accepted only for a single-link request.
@@ -398,7 +453,11 @@ export default {
       let updated, lines = newLines, addedUrls = [];
       removed = 0; skipped = [];
       try {
-        if (action === 'remove') {
+        if (action === 'add-section') {
+          updated = addSection(current, isVideo ? 'SOURCES' : 'IMGS', label);
+        } else if (action === 'rename-section') {
+          updated = renameSection(current, section == null ? -1 : section, label);
+        } else if (action === 'remove') {
           const r = removeUrls(current, urls);
           updated = r.text;
           removed = r.removed;
@@ -435,7 +494,11 @@ export default {
         method: 'PUT',
         headers: { ...gh, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: action === 'remove'
+          message: action === 'add-section'
+            ? `data: add section "${label}" to ${slug}`
+            : action === 'rename-section'
+            ? `data: rename section in ${slug}`
+            : action === 'remove'
             ? (removed === 1
                 ? `data: remove link from ${slug}`
                 : `data: remove ${removed} links from ${slug}`)
@@ -459,7 +522,7 @@ export default {
         });
         return json({
           ok: true, commit: sha, path,
-          added: action === 'remove' ? 0 : lines.length,
+          added: (action === 'remove' || isSectionOp) ? 0 : lines.length,
           // Exactly what went in, so the site can offer a precise undo.
           addedUrls,
           removed, skipped: skipped.length, retries: attempt
