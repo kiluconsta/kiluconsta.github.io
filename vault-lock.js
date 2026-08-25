@@ -23,7 +23,14 @@
     + 'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;'
     + '-webkit-user-select:none;user-select:none;touch-action:none;}'
     + '#vault-lock.vl-out{opacity:0;transition:opacity .38s ease;pointer-events:none;}'
+    + '#vl-label{color:rgba(255,255,255,.34);font-size:.68rem;letter-spacing:.16em;'
+    + 'text-transform:uppercase;margin:0 0 .55rem;}'
     + '#vl-title{color:#fff;font-size:1.05rem;font-weight:600;letter-spacing:.02em;margin:0 0 .4rem;}'
+    + '#vl-foot{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);'
+    + 'width:min(420px,88vw);margin:0;text-align:center;font-size:.72rem;line-height:1.55;'
+    + 'color:rgba(255,255,255,.3);}'
+    + '#vl-foot a{color:rgba(255,255,255,.5);text-underline-offset:2px;}'
+    + '#vl-foot a:hover{color:rgba(255,255,255,.8);}'
     + '#vl-hint{color:rgba(255,255,255,.42);font-size:.82rem;margin:0 0 1.8rem;min-height:1.2em;'
     + 'transition:color .2s ease;}'
     + '#vl-hint.vl-bad{color:#ff4d5e;}'
@@ -52,13 +59,17 @@
   root.setAttribute('aria-modal', 'true');
   root.setAttribute('aria-label', 'Pattern lock');
   root.innerHTML = ''
+    + '<div id="vl-label">Adults only &middot; 18+</div>'
     + '<h1 id="vl-title">The Vault</h1>'
     + '<p id="vl-hint">Draw your pattern to unlock</p>'
     + '<div id="vl-grid"><svg id="vl-svg" viewBox="0 0 264 264" aria-hidden="true">'
     + '<polyline id="vl-path" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="3" '
     + 'stroke-linecap="round" stroke-linejoin="round"/>'
     + '<line id="vl-live" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/>'
-    + '</svg></div>';
+    + '</svg></div>'
+    + '<p id="vl-foot">This site contains explicit adult material. Drawing the pattern '
+    + 'confirms you are at least 18 and of legal age where you live. '
+    + '<a id="vl-leave" href="https://www.google.com">Leave</a></p>';
 
   function mount() { document.body.appendChild(root); }
   if (document.body) mount();
@@ -160,11 +171,7 @@
 
   function unlock() {
     try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
-    // The age gate sets its own scroll lock after this script runs. If it is
-    // still up it owns the lock and clears it on "enter" — don't undo it here.
-    var gate = document.getElementById('age-gate');
-    var gateUp = gate && getComputedStyle(gate).display !== 'none';
-    if (!gateUp) document.documentElement.style.overflow = prevOverflow;
+    document.documentElement.style.overflow = prevOverflow;
     root.classList.add('vl-out');
     setTimeout(function () { root.remove(); styleEl.remove(); }, 400);
     document.dispatchEvent(new CustomEvent('vault-unlocked'));

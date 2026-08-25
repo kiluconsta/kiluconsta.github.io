@@ -57,8 +57,12 @@ link through the same proxy the site uses:
 
 ## Pattern lock (`vault-lock.js`)
 
-Every page opens with a 3x3 pattern grid before anything else renders. Numbering
-is phone-keypad order:
+Every page opens with a 3x3 pattern grid before anything else renders. This is
+also the age gate — the separate 18+ screen is gone, and the notice now sits on
+the lock itself, with drawing the pattern standing as the confirmation. One
+screen, not two.
+
+Numbering is phone-keypad order:
 
 ```
 1 2 3
