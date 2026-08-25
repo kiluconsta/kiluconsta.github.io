@@ -159,6 +159,62 @@ export function removeUrls(text, urls) {
   return { text: kept.join('\n'), removed };
 }
 
+// ── Rate limiting ────────────────────────────────────────────────────────
+// A valid key otherwise allows unlimited writes at any speed, so a leaked key
+// could rewrite every data file before you noticed.
+//
+// This counter lives in the isolate, so it is best-effort: Cloudflare may run
+// several isolates, and each keeps its own tally. It reliably stops a runaway
+// script or a stuck retry loop; it is not a hard guarantee. Bind a KV
+// namespace as RATE_KV for a limit that holds across isolates.
+const WRITE_LIMIT = 40;          // writes ...
+const WRITE_WINDOW_MS = 300000;  // ... per 5 minutes, per caller
+const hits = new Map();
+
+function clientId(request) {
+  return request.headers.get('CF-Connecting-IP')
+    || request.headers.get('X-Forwarded-For')
+    || 'unknown';
+}
+
+async function rateLimited(request, env) {
+  const id = clientId(request);
+  const now = Date.now();
+
+  if (env.RATE_KV) {
+    const key = 'rl:' + id;
+    let stamps = [];
+    try { stamps = JSON.parse((await env.RATE_KV.get(key)) || '[]'); } catch (e) {}
+    stamps = stamps.filter((t) => now - t < WRITE_WINDOW_MS);
+    if (stamps.length >= WRITE_LIMIT) return true;
+    stamps.push(now);
+    await env.RATE_KV.put(key, JSON.stringify(stamps), {
+      expirationTtl: Math.ceil(WRITE_WINDOW_MS / 1000)
+    });
+    return false;
+  }
+
+  const stamps = (hits.get(id) || []).filter((t) => now - t < WRITE_WINDOW_MS);
+  if (stamps.length >= WRITE_LIMIT) { hits.set(id, stamps); return true; }
+  stamps.push(now);
+  hits.set(id, stamps);
+  if (hits.size > 500) hits.clear(); // never let the map grow without bound
+  return false;
+}
+
+// Structured line per write, visible in the Cloudflare dashboard's live logs.
+// Never logs the key or the URLs themselves — just what changed.
+function audit(request, fields) {
+  try {
+    console.log(JSON.stringify({
+      at: new Date().toISOString(),
+      ip: clientId(request),
+      ua: (request.headers.get('User-Agent') || '').slice(0, 80),
+      ...fields
+    }));
+  } catch (e) {}
+}
+
 // ── Favourites sync ──────────────────────────────────────────────────────
 // The gist token used to sit in localStorage on the public site. It lives here
 // now; the browser holds only VAULT_KEY, which reaches nothing but this worker.
@@ -255,6 +311,11 @@ export default {
       return json({ error: 'worker is missing GITHUB_TOKEN' }, 500, origin);
     }
 
+    if (await rateLimited(request, env)) {
+      audit(request, { action: 'rate-limited' });
+      return json({ error: 'too many writes — wait a few minutes' }, 429, origin);
+    }
+
     const slug = String(body.slug || '');
     const isVideo = VIDEO_SLUGS.includes(slug);
     const isImage = IMAGE_SLUGS.includes(slug);
@@ -302,12 +363,11 @@ export default {
       newLines = urls.map((u) => jsString(u) + ',');
     }
 
-    let section = null;
-    if (isVideo) {
-      section = body.section == null || body.section === '' ? null : Number(body.section);
-      if (section !== null && (!Number.isInteger(section) || section < 0)) {
-        return json({ error: 'section must be a non-negative integer' }, 400, origin);
-      }
+    // Image collections support sections too, once their data file has null
+    // breaks and a DIV_LABELS array.
+    let section = body.section == null || body.section === '' ? null : Number(body.section);
+    if (section !== null && (!Number.isInteger(section) || section < 0)) {
+      return json({ error: 'section must be a non-negative integer' }, 400, origin);
     }
 
     const path = 'data/' + slug + '.js';
@@ -319,91 +379,109 @@ export default {
       'X-GitHub-Api-Version': '2022-11-28'
     };
 
-    // Read → modify → write, using the blob sha so a concurrent bot commit
-    // makes GitHub reject this write (409) instead of silently clobbering it.
-    const getRes = await fetch(`${api}?ref=${BRANCH}`, { headers: gh });
-    if (!getRes.ok) {
-      return json({ error: 'could not read ' + path, status: getRes.status }, 502, origin);
-    }
-    const file = await getRes.json();
-    const current = new TextDecoder().decode(
-      Uint8Array.from(atob(file.content.replace(/\n/g, '')), (c) => c.charCodeAt(0))
-    );
+    // Read → modify → write, using the blob sha so a concurrent bot commit is
+    // rejected rather than clobbered. The thumbnail and link-health bots commit
+    // on their own schedule, so losing that race is routine — re-read and try
+    // again rather than handing the problem back.
+    let removed = 0, skipped = [], lastErr = null;
 
-    let updated, removed = 0, skipped = [];
-    try {
-      if (action === 'remove') {
-        const r = removeUrls(current, urls);
-        updated = r.text;
-        removed = r.removed;
-      } else {
-        // Drop anything already in the file rather than creating a second tile
-        // for the same media — data files have picked up duplicates this way.
-        const existing = new Set(listUrls(current));
-        const fresh = [];
-        urls.forEach((u, i) => {
-          if (existing.has(u)) skipped.push(u);
-          else { fresh.push(u); existing.add(u); }
-        });
-        if (!fresh.length) {
-          return json({
-            ok: true, commit: null, path, added: 0,
-            skipped: skipped.length,
-            note: skipped.length === 1
-              ? 'that link is already in this collection'
-              : 'all ' + skipped.length + ' links are already in this collection'
-          }, 200, origin);
-        }
-        // Rebuild the lines from just the fresh URLs, preserving the trim form.
-        newLines = (newLines.length === 1 && fresh.length === 1)
-          ? newLines
-          : fresh.map((u) => jsString(u) + ',');
-        updated = insertLine(current, isVideo ? 'SOURCES' : 'IMGS', newLines, section);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const getRes = await fetch(`${api}?ref=${BRANCH}`, { headers: gh });
+      if (!getRes.ok) {
+        return json({ error: 'could not read ' + path, status: getRes.status }, 502, origin);
       }
-    } catch (e) {
-      return json({ error: e.message }, 422, origin);
-    }
+      const file = await getRes.json();
+      const current = new TextDecoder().decode(
+        Uint8Array.from(atob(file.content.replace(/\n/g, '')), (c) => c.charCodeAt(0))
+      );
 
-    const encoded = toBase64(updated);
-    const putRes = await fetch(api, {
-      method: 'PUT',
-      headers: { ...gh, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: action === 'remove'
-          ? (removed === 1
-              ? `data: remove link from ${slug}`
-              : `data: remove ${removed} links from ${slug}`)
-          : (newLines.length === 1
-              ? `data: add link to ${slug}`
-              : `data: add ${newLines.length} links to ${slug}`),
-        content: encoded,
-        sha: file.sha,
-        branch: BRANCH,
-        author: COMMIT_IDENTITY,
-        committer: COMMIT_IDENTITY
-      })
-    });
+      let updated, lines = newLines, addedUrls = [];
+      removed = 0; skipped = [];
+      try {
+        if (action === 'remove') {
+          const r = removeUrls(current, urls);
+          updated = r.text;
+          removed = r.removed;
+        } else {
+          // Drop anything already in the file rather than creating a second
+          // tile for the same media — files have picked up duplicates this way.
+          const existing = new Set(listUrls(current));
+          const fresh = [];
+          urls.forEach((u) => {
+            if (existing.has(u)) skipped.push(u);
+            else { fresh.push(u); existing.add(u); }
+          });
+          if (!fresh.length) {
+            return json({
+              ok: true, commit: null, path, added: 0,
+              skipped: skipped.length,
+              note: skipped.length === 1
+                ? 'that link is already in this collection'
+                : 'all ' + skipped.length + ' links are already in this collection'
+            }, 200, origin);
+          }
+          // Rebuild the lines from just the fresh URLs, keeping the trim form.
+          lines = (newLines.length === 1 && fresh.length === 1)
+            ? newLines
+            : fresh.map((u) => jsString(u) + ',');
+          addedUrls = fresh;
+          updated = insertLine(current, isVideo ? 'SOURCES' : 'IMGS', lines, section);
+        }
+      } catch (e) {
+        return json({ error: e.message }, 422, origin);
+      }
 
-    if (!putRes.ok) {
+      const putRes = await fetch(api, {
+        method: 'PUT',
+        headers: { ...gh, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: action === 'remove'
+            ? (removed === 1
+                ? `data: remove link from ${slug}`
+                : `data: remove ${removed} links from ${slug}`)
+            : (lines.length === 1
+                ? `data: add link to ${slug}`
+                : `data: add ${lines.length} links to ${slug}`),
+          content: toBase64(updated),
+          sha: file.sha,
+          branch: BRANCH,
+          author: COMMIT_IDENTITY,
+          committer: COMMIT_IDENTITY
+        })
+      });
+
+      if (putRes.ok) {
+        const out = await putRes.json();
+        const sha = out.commit && out.commit.sha;
+        audit(request, {
+          action, slug, added: action === 'remove' ? 0 : lines.length,
+          removed, skipped: skipped.length, commit: sha, retries: attempt
+        });
+        return json({
+          ok: true, commit: sha, path,
+          added: action === 'remove' ? 0 : lines.length,
+          // Exactly what went in, so the site can offer a precise undo.
+          addedUrls,
+          removed, skipped: skipped.length, retries: attempt
+        }, 200, origin);
+      }
+
       const detail = await putRes.text();
+      lastErr = { status: putRes.status, detail: detail.slice(0, 300) };
       const conflict = putRes.status === 409 || putRes.status === 422;
-      return json({
-        error: conflict
-          ? 'the file changed while committing (a bot ran) — try again'
-          : 'commit failed',
-        status: putRes.status,
-        detail: detail.slice(0, 300)
-      }, 502, origin);
+      if (!conflict) break;
+      // Someone committed between our read and write. Back off briefly and
+      // rebuild against whatever is there now.
+      await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
     }
 
-    const out = await putRes.json();
+    audit(request, { action, slug, error: true, status: lastErr && lastErr.status });
     return json({
-      ok: true,
-      commit: out.commit && out.commit.sha,
-      path,
-      added: action === 'remove' ? 0 : newLines.length,
-      removed,
-      skipped: skipped.length
-    }, 200, origin);
+      error: lastErr && (lastErr.status === 409 || lastErr.status === 422)
+        ? 'the file kept changing under us — try again in a moment'
+        : 'commit failed',
+      status: lastErr && lastErr.status,
+      detail: lastErr && lastErr.detail
+    }, 502, origin);
   }
 };

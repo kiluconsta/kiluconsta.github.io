@@ -50,7 +50,12 @@
     + '#va-save{background:#fff!important;color:#000!important;font-weight:600;border-color:#fff!important;}'
     + '#va-save:disabled{opacity:.5;cursor:not-allowed;}'
     + '#va-msg{margin-top:13px;font-size:.82rem;min-height:1.2em;color:rgba(255,255,255,.5);}'
-    + '#va-msg.va-ok{color:#3ddc84;}#va-msg.va-err{color:#ff4d5e;}';
+    + '#va-msg.va-ok{color:#3ddc84;}#va-msg.va-err{color:#ff4d5e;}'
+    + '.va-undo{margin-left:2px;padding:2px 8px;border-radius:5px;cursor:pointer;'
+    + 'font:inherit;font-size:.78rem;color:#fff;background:rgba(255,255,255,.1);'
+    + 'border:1px solid rgba(255,255,255,.2);}'
+    + '.va-undo:hover{background:rgba(255,255,255,.2);}'
+    + '.va-undo:disabled{opacity:.5;cursor:default;}';
   var style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
@@ -63,7 +68,8 @@
   fab.textContent = '+';
 
   var sectionField = '';
-  if (isVideo && labels.length) {
+  // Image collections carry sections too, once their data file has them.
+  if (labels.length) {
     var opts = labels.map(function (l, i) {
       return '<option value="' + i + '">' + String(l).replace(/[<>&]/g, '') + '</option>';
     }).join('');
@@ -174,6 +180,38 @@
     msg.textContent = text;
     msg.className = cls || '';
   }
+
+  // A wrong paste otherwise means hand-editing the data file. Undo removes
+  // exactly the URLs the worker reported adding — not a blind revert, so a bot
+  // commit landing in between is harmless.
+  function offerUndo(addedUrls) {
+    if (!addedUrls.length) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'va-undo';
+    btn.textContent = 'Undo';
+    msg.append(' ', btn);
+    btn.addEventListener('click', function () {
+      btn.disabled = true;
+      btn.textContent = 'Undoing…';
+      var key = keyIn.value.trim();
+      fetch(ADMIN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Vault-Key': key },
+        body: JSON.stringify({ slug: slug, action: 'remove', urls: addedUrls })
+      }).then(function (r) {
+        return r.json().then(function (d) { return { ok: r.ok, data: d }; });
+      }).then(function (res) {
+        if (!res.ok) { btn.disabled = false; btn.textContent = 'Undo';
+          say(res.data.error || 'Undo failed.', 'va-err'); return; }
+        say('Undone — removed ' + res.data.removed
+          + (res.data.removed === 1 ? ' link' : ' links') + '.', 'va-ok');
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = 'Undo';
+        say('Could not reach the worker.', 'va-err');
+      });
+    });
+  }
   // Split on newlines; also tolerate URLs separated by spaces on one line.
   function urlList() {
     return urlIn.value.split(/[\r\n\s]+/).map(function (s) { return s.trim(); })
@@ -227,14 +265,12 @@
     }
 
     var payload = { slug: slug, urls: urls };
-    if (isVideo) {
-      // A batch has no single clip to trim, so start/end are sent only for one.
-      if (urls.length === 1) {
-        if (startIn && startIn.value !== '') payload.start = Number(startIn.value);
-        if (endIn && endIn.value !== '') payload.end = Number(endIn.value);
-      }
-      if (sectionIn) payload.section = Number(sectionIn.value);
+    // A batch has no single clip to trim, so start/end are sent only for one.
+    if (isVideo && urls.length === 1) {
+      if (startIn && startIn.value !== '') payload.start = Number(startIn.value);
+      if (endIn && endIn.value !== '') payload.end = Number(endIn.value);
     }
+    if (sectionIn) payload.section = Number(sectionIn.value);
 
     saveBtn.disabled = true;
     say(urls.length > 1 ? 'Committing ' + urls.length + ' links…' : 'Committing…');
@@ -249,10 +285,15 @@
       saveBtn.disabled = false;
       if (!res.ok) { say(res.data.error || 'Commit failed.', 'va-err'); return; }
       try { localStorage.setItem(KEY_STORE, key); } catch (e) {}
-      var sha = (res.data.commit || '').slice(0, 7);
-      var n = res.data.added || urls.length;
-      say('Committed ' + sha + ' (' + n + (n === 1 ? ' link' : ' links')
-        + ') — live once Pages redeploys (~1 min).', 'va-ok');
+      var d = res.data;
+      if (!d.commit && d.note) { say(d.note, 'va-err'); return; }
+      var sha = (d.commit || '').slice(0, 7);
+      var n = d.added || urls.length;
+      var msg = 'Committed ' + sha + ' (' + n + (n === 1 ? ' link' : ' links') + ')';
+      if (d.skipped) msg += ', ' + d.skipped + ' already there';
+      msg += ' — live once Pages redeploys (~1 min).';
+      say(msg, 'va-ok');
+      offerUndo(d.addedUrls || []);
       urlIn.value = '';
       if (startIn) startIn.value = '';
       if (endIn) endIn.value = '';

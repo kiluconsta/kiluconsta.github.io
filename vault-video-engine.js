@@ -89,7 +89,13 @@
     + '.cs-filter input:focus{outline:none;border-color:rgba(255,255,255,.4);}'
     + '.cs-count{font-size:.78rem;color:rgba(255,255,255,.4);white-space:nowrap;'
     + 'font-variant-numeric:tabular-nums;}'
-    + '.cs-none{color:rgba(255,255,255,.45);font-size:.9rem;padding:22px 0;}';
+    + '.cs-none{color:rgba(255,255,255,.45);font-size:.9rem;padding:22px 0;}'
+    + '.vs-tile{position:relative;}'
+    + '.vs-clip-badge{position:absolute;right:6px;bottom:6px;z-index:2;'
+    + 'padding:2px 6px;border-radius:5px;font-size:11px;line-height:1.4;'
+    + 'font-variant-numeric:tabular-nums;color:#fff;background:rgba(0,0,0,.72);'
+    + 'backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);'
+    + 'pointer-events:none;letter-spacing:.02em;}';
   document.head.appendChild(filterStyle);
 
   var bar = document.createElement('div');
@@ -147,13 +153,35 @@
     overlay.className = 'vs-play-overlay';
     overlay.innerHTML = '<svg viewBox="0 0 80 80" fill="none"><polygon points="28,20 64,40 28,60" fill="white"/></svg>';
     tile.append(img, overlay);
+
+    // A trimmed clip is indistinguishable from a full video in the grid, so
+    // say how long it runs — or where it starts, when there is no end.
+    if (it.start != null || it.end != null) {
+      var badge = document.createElement('span');
+      badge.className = 'vs-clip-badge';
+      badge.textContent = (it.end != null)
+        ? clock(it.end - (it.start || 0))
+        : '› ' + clock(it.start);
+      tile.appendChild(badge);
+    }
+
     tile.addEventListener('click', function () { openLightbox(idx); });
     return tile;
+  }
+
+  function clock(secs) {
+    secs = Math.max(0, Math.round(secs));
+    var h = Math.floor(secs / 3600);
+    var m = Math.floor((secs % 3600) / 60);
+    var s = secs % 60;
+    return (h ? h + ':' + String(m).padStart(2, '0') : String(m))
+      + ':' + String(s).padStart(2, '0');
   }
 
   // Build in chunks across frames rather than all at once. The largest
   // collection is ~1,900 tiles, and constructing every node up front delays
   // first paint on a phone for no benefit — nothing below the fold is visible.
+  var scroller = window.VaultScroll ? VaultScroll.init(slug) : null;
   var CHUNK = 200;
   function renderChunk(start) {
     var frag = document.createDocumentFragment();
@@ -172,6 +200,7 @@
     body.insertBefore(frag, lightbox);
     // Tiles can arrive while a filter is already typed.
     if (query) applyFilter();
+    if (scroller) scroller.reachedTarget();
     // setTimeout, not requestAnimationFrame: rAF stops firing in a background
     // or throttled tab, which would leave the grid permanently half-built.
     if (end < items.length) {

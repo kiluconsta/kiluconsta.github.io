@@ -387,6 +387,52 @@ var VaultPosters = (function () {
   return { load: load, thumbFor: tryStaticThumb };
 })();
 
+// ── Scroll memory ──────────────────────────────────────────
+// Long collections always reopened at the top. Remember roughly where you
+// were, per collection, and go back there once enough tiles exist to reach it.
+var VaultScroll = (function () {
+  var KEY = 'vault-scroll';
+
+  function all() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; }
+  }
+  function save(slug, y) {
+    var m = all();
+    if (y > 200) m[slug] = Math.round(y); else delete m[slug];
+    try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {}
+  }
+
+  function init(slug) {
+    if (!slug) return { reachedTarget: function () { return true; } };
+    var target = all()[slug] || 0;
+    var restored = target <= 0;
+
+    // The grid builds in chunks, so the saved offset may not exist yet.
+    // Keep nudging until the page is tall enough, then stop trying.
+    function tryRestore() {
+      if (restored) return true;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max >= target) {
+        window.scrollTo(0, target);
+        restored = true;
+        return true;
+      }
+      return false;
+    }
+
+    var t = null;
+    window.addEventListener('scroll', function () {
+      if (t) return;
+      t = setTimeout(function () { t = null; save(slug, window.scrollY); }, 400);
+    }, { passive: true });
+    window.addEventListener('pagehide', function () { save(slug, window.scrollY); });
+
+    return { reachedTarget: tryRestore };
+  }
+
+  return { init: init };
+})();
+
 // ── Favourites sync via the vault-admin worker ─────────────
 // The gist token lives in the worker, not here. This browser stores only the
 // vault key, which can reach nothing except that worker. Pull-on-boot: newer

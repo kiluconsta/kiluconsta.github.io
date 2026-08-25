@@ -16,7 +16,9 @@ null,                                                // section break
 Section-break labels come from `DIV_LABELS` at the top of the file, in order:
 the 1st `null` gets the 1st label, and so on.
 
-**Image collections** use `IMGS` — one URL string per line.
+**Image collections** use `IMGS` — one URL string per line. They support the
+same `null` section breaks and `DIV_LABELS` as video collections; a file with no
+`null` in it behaves exactly as it always has.
 
 Order in the file = order on the page. Keep the trailing comma on every line.
 
@@ -110,6 +112,10 @@ paste is already there, nothing is committed at all.
 confirm. It commits the deletion to `data/<slug>.js` the same way, leaving
 section breaks and comments untouched.
 
+**Undo** appears next to the confirmation after every add. It removes exactly
+the links that add put in — not a blind revert — so a bot commit landing in
+between does not matter.
+
 Setup, once:
 
 1. Deploy `tools/vault-admin-worker.js` as a **new** Cloudflare Worker. Keep it
@@ -120,6 +126,16 @@ Setup, once:
    - `GIST_TOKEN` — classic PAT, **`gist` scope only**. This is the token that
      used to live in your browser for favourites sync (see below).
    - `GIST_ID` — optional. Set it to skip gist discovery on every sync.
+
+   Optionally bind a KV namespace as `RATE_KV`. Writes are capped at 40 per
+   caller per 5 minutes either way, but without KV the count is kept per
+   isolate, so it is best-effort — enough to stop a runaway script, not a hard
+   guarantee. Every write is logged as one JSON line visible in the worker's
+   live logs (what changed, never the key or the URLs).
+
+If a bot commits between the worker reading a file and writing it, the write is
+rejected rather than clobbering anything — the worker now re-reads and retries
+twice on its own before reporting a problem.
 3. `ADMIN_URL` in `vault-additions.js` already points at
    `https://vault-admin.kiluconsta.workers.dev` — only change it if you move or
    rename the worker.
@@ -165,6 +181,15 @@ they no longer describe what is on screen.
 Grids also build in chunks of 200 rather than all at once — the largest
 collection is ~1,900 tiles, and building them up front delayed first paint.
 The whole grid still ends up in the DOM; it just no longer blocks the page.
+
+Two more grid details:
+
+- **Trimmed clips show their length** on the tile — `0:35` for a clip with a
+  start and an end, `› 8:00` for one that only has a start.
+- **Your place is remembered** per collection. Scroll away, come back, and the
+  page returns to roughly where you were instead of the top. Positions near the
+  top are not stored, and the restore waits until enough tiles exist to reach
+  the saved offset.
 
 **What still needs a rebuild (send the source zip to Claude):**
 adding a whole new collection, renaming one, or any design/layout change.

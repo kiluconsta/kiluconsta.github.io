@@ -3,10 +3,22 @@
   if (!mount) return;
   var slug = mount.getAttribute('data-vault-image');
 
-  // IMGS comes from /data/<slug>.js — plain URL strings; nulls are ignored.
+  // IMGS comes from /data/<slug>.js. Same shape as the video files: URL
+  // strings, with a bare `null` opening a new section whose label comes from
+  // DIV_LABELS in order. Files without any nulls behave exactly as before.
   var RAW = (typeof IMGS !== 'undefined') ? IMGS : [];
-  var items = RAW.filter(Boolean).map(function (u) {
-    return typeof u === 'string' ? { url: u } : { url: u.url };
+  var LABELS = (typeof DIV_LABELS !== 'undefined' && Array.isArray(DIV_LABELS)) ? DIV_LABELS : [];
+  var items = [];
+  var divByIndex = {};
+  var divCount = 0;
+  RAW.forEach(function (u) {
+    if (u === null) {
+      divByIndex[items.length] = LABELS[divCount] || ('Part ' + (divCount + 1));
+      divCount++;
+      return;
+    }
+    if (!u) return;
+    items.push(typeof u === 'string' ? { url: u } : { url: u.url });
   });
 
   var body = mount.querySelector('.is-body');
@@ -83,6 +95,9 @@
       tiles[i].classList.toggle('cs-hidden', !hit);
       if (hit) shown++;
     }
+    // Section headings stop describing what is on screen once filtered.
+    var divs = body.querySelectorAll('.is-divider');
+    for (var d = 0; d < divs.length; d++) divs[d].classList.toggle('cs-hidden', !!q);
     countEl.textContent = q ? shown + ' of ' + items.length : '';
     noneMsg.classList.toggle('cs-hidden', !(q && shown === 0));
   }
@@ -91,12 +106,19 @@
     applyFilter();
   });
 
+  var scroller = window.VaultScroll ? VaultScroll.init(slug) : null;
   // Chunked build so a 800-image collection paints immediately.
   var CHUNK = 200;
   function renderChunk(start) {
     var frag = document.createDocumentFragment();
     var end = Math.min(start + CHUNK, items.length);
     for (var idx = start; idx < end; idx++) {
+      if (divByIndex[idx] !== undefined) {
+        var div = document.createElement('div');
+        div.className = 'is-divider';
+        div.textContent = divByIndex[idx];
+        frag.appendChild(div);
+      }
       (function (it, i) {
         var tile = document.createElement('div');
         tile.className = 'is-tile';
@@ -112,9 +134,11 @@
     }
     body.insertBefore(frag, lightbox);
     if (query) applyFilter();
+    if (scroller) scroller.reachedTarget();
     // setTimeout, not requestAnimationFrame: rAF stops firing in a background
     // or throttled tab, which would leave the grid permanently half-built.
     if (end < items.length) setTimeout(function () { renderChunk(end); }, 0);
+    else VaultLB.initJumpNav([].slice.call(body.querySelectorAll('.is-divider')));
   }
   renderChunk(0);
 
