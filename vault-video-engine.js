@@ -62,7 +62,6 @@
   var divByIndex = {};
   dividers.forEach(function (d) { divByIndex[d.atIndex] = d.label; });
 
-  var frag = document.createDocumentFragment();
   var posterObserver = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       var tile = entry.target;
@@ -78,13 +77,63 @@
     });
   }, { rootMargin: '600px' });
 
-  items.forEach(function (it, idx) {
-    if (divByIndex[idx] !== undefined) {
-      var div = document.createElement('div');
-      div.className = 'vs-divider';
-      div.textContent = divByIndex[idx];
-      frag.appendChild(div);
+  // ── Filter bar ───────────────────────────────────────────
+  // Scrolling is the only way through a long collection otherwise.
+  var filterStyle = document.createElement('style');
+  filterStyle.textContent =
+    '.cs-hidden{display:none!important}'
+    + '.cs-filter{display:flex;align-items:center;gap:10px;margin:0 0 14px;}'
+    + '.cs-filter input{flex:1;min-width:0;padding:9px 12px;border-radius:9px;'
+    + 'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);'
+    + 'color:#fff;font:inherit;font-size:.9rem;}'
+    + '.cs-filter input:focus{outline:none;border-color:rgba(255,255,255,.4);}'
+    + '.cs-count{font-size:.78rem;color:rgba(255,255,255,.4);white-space:nowrap;'
+    + 'font-variant-numeric:tabular-nums;}'
+    + '.cs-none{color:rgba(255,255,255,.45);font-size:.9rem;padding:22px 0;}';
+  document.head.appendChild(filterStyle);
+
+  var bar = document.createElement('div');
+  bar.className = 'cs-filter';
+  bar.innerHTML = '<input type="search" id="cs-q" placeholder="Filter this collection…" '
+    + 'autocomplete="off" spellcheck="false" aria-label="Filter this collection">'
+    + '<span class="cs-count" id="cs-count"></span>';
+  var noneMsg = document.createElement('div');
+  noneMsg.className = 'cs-none cs-hidden';
+  noneMsg.textContent = 'Nothing here matches that.';
+  body.parentNode.insertBefore(bar, body);
+  body.parentNode.insertBefore(noneMsg, body);
+
+  var qInput = bar.querySelector('#cs-q');
+  var countEl = bar.querySelector('#cs-count');
+  var query = '';
+
+  function applyFilter() {
+    var q = query;
+    var shown = 0;
+    var tiles = body.querySelectorAll('.vs-tile');
+    for (var i = 0; i < tiles.length; i++) {
+      var it = items[Number(tiles[i].dataset.vi)];
+      var hit = !q || (it && it.url.toLowerCase().indexOf(q) !== -1);
+      tiles[i].classList.toggle('cs-hidden', !hit);
+      if (hit) shown++;
     }
+    // Section headings are meaningless once the list is filtered.
+    var divs = body.querySelectorAll('.vs-divider');
+    for (var d = 0; d < divs.length; d++) divs[d].classList.toggle('cs-hidden', !!q);
+    countEl.textContent = q ? shown + ' of ' + items.length : '';
+    noneMsg.classList.toggle('cs-hidden', !(q && shown === 0));
+  }
+  qInput.addEventListener('input', function () {
+    query = qInput.value.trim().toLowerCase();
+    applyFilter();
+  });
+
+  function onGridComplete() {
+    VaultLB.initJumpNav([].slice.call(body.querySelectorAll('.vs-divider')));
+    if (query) applyFilter();
+  }
+
+  function buildTile(it, idx) {
     var tile = document.createElement('div');
     tile.className = 'vs-tile loading';
     tile.dataset.vi = idx;
@@ -99,10 +148,39 @@
     overlay.innerHTML = '<svg viewBox="0 0 80 80" fill="none"><polygon points="28,20 64,40 28,60" fill="white"/></svg>';
     tile.append(img, overlay);
     tile.addEventListener('click', function () { openLightbox(idx); });
-    frag.appendChild(tile);
-    posterObserver.observe(tile);
-  });
-  body.insertBefore(frag, lightbox);
+    return tile;
+  }
+
+  // Build in chunks across frames rather than all at once. The largest
+  // collection is ~1,900 tiles, and constructing every node up front delays
+  // first paint on a phone for no benefit — nothing below the fold is visible.
+  var CHUNK = 200;
+  function renderChunk(start) {
+    var frag = document.createDocumentFragment();
+    var end = Math.min(start + CHUNK, items.length);
+    for (var idx = start; idx < end; idx++) {
+      if (divByIndex[idx] !== undefined) {
+        var div = document.createElement('div');
+        div.className = 'vs-divider';
+        div.textContent = divByIndex[idx];
+        frag.appendChild(div);
+      }
+      var tile = buildTile(items[idx], idx);
+      frag.appendChild(tile);
+      posterObserver.observe(tile);
+    }
+    body.insertBefore(frag, lightbox);
+    // Tiles can arrive while a filter is already typed.
+    if (query) applyFilter();
+    // setTimeout, not requestAnimationFrame: rAF stops firing in a background
+    // or throttled tab, which would leave the grid permanently half-built.
+    if (end < items.length) {
+      setTimeout(function () { renderChunk(end); }, 0);
+    } else {
+      onGridComplete();
+    }
+  }
+  renderChunk(0);
 
   // ── Lightbox ─────────────────────────────────────────────
   var favApi = window.Favourites ? window.Favourites.initSection(mount, { type: 'video', platterEl: platter }) : null;
@@ -111,7 +189,6 @@
   setToggle(btnShuffle, shuffleMode); setToggle(btnTimer, timerMode);
   VaultLB.swipe(lightbox, function () { step(-1); }, function () { step(1); });
   VaultLB.initScrollTop();
-  VaultLB.initJumpNav([].slice.call(body.querySelectorAll('.vs-divider')));
   lbVideo.addEventListener('playing', function () { VaultLB.loading(videoWrap, false); startAdv(); });
   lbVideo.addEventListener('waiting', function () { VaultLB.loading(videoWrap, true); pauseAdv(); });
   lbVideo.addEventListener('pause', function () { pauseAdv(); });

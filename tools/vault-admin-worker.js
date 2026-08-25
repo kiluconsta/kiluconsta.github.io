@@ -116,14 +116,128 @@ export function insertLine(text, varName, newLines, sectionIndex) {
   return lines.join('\n');
 }
 
+/**
+ * The URL on a line, but only when the line is a real entry.
+ * Every data file opens with a comment block that contains a sample
+ * `"https://…"`, so matching URLs anywhere in the text picks up documentation
+ * as if it were content. An entry is a whole line holding either a bare string
+ * or an object literal — nothing else counts.
+ */
+export function entryUrl(line) {
+  const t = line.trim();
+  if (!t || t.startsWith('//') || t.startsWith('*') || t.startsWith('/*')) return null;
+  if (!/^(\{.*\}|"[^"]*")\s*,?$/.test(t)) return null;
+  const m = t.match(/"(https?:\/\/[^"]+)"/);
+  return m ? m[1] : null;
+}
+
+/** Every URL currently present as an entry, in file order. */
+export function listUrls(text) {
+  const out = [];
+  for (const line of text.split('\n')) {
+    const u = entryUrl(line);
+    if (u) out.push(u);
+  }
+  return out;
+}
+
+/**
+ * Delete the entries whose URL matches, wherever they sit in the array.
+ * Only whole entries are touched, so section breaks, comments and the array
+ * scaffolding are never disturbed.
+ */
+export function removeUrls(text, urls) {
+  const wanted = new Set(urls);
+  const kept = [];
+  let removed = 0;
+  for (const line of text.split('\n')) {
+    const u = entryUrl(line);
+    if (u && wanted.has(u)) { removed++; continue; }
+    kept.push(line);
+  }
+  if (!removed) throw new Error('none of those URLs are in this collection');
+  return { text: kept.join('\n'), removed };
+}
+
+// ── Favourites sync ──────────────────────────────────────────────────────
+// The gist token used to sit in localStorage on the public site. It lives here
+// now; the browser holds only VAULT_KEY, which reaches nothing but this worker.
+const SYNC_FILENAME = 'vault-favourites.json';
+
+function ghFetch(env, path, opts = {}) {
+  return fetch('https://api.github.com' + path, {
+    ...opts,
+    headers: {
+      'Authorization': 'Bearer ' + env.GIST_TOKEN,
+      'Accept': 'application/vnd.github+json',
+      'User-Agent': 'vault-admin-worker',
+      ...(opts.headers || {})
+    }
+  });
+}
+
+// Set GIST_ID to skip discovery; otherwise find the gist by filename, creating
+// it the first time.
+async function findGist(env) {
+  if (env.GIST_ID) return env.GIST_ID;
+  const r = await ghFetch(env, '/gists?per_page=100');
+  if (!r.ok) throw new Error('gist list failed (' + r.status + ')');
+  const hit = (await r.json()).find((g) => g.files && g.files[SYNC_FILENAME]);
+  if (hit) return hit.id;
+  const files = { [SYNC_FILENAME]: { content: JSON.stringify({ updated: 0, list: [] }) } };
+  const c = await ghFetch(env, '/gists', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ description: 'The Vault — favourites sync', public: false, files })
+  });
+  if (!c.ok) throw new Error('gist create failed (' + c.status + ')');
+  return (await c.json()).id;
+}
+
+async function handleSync(body, env, origin) {
+  if (!env.GIST_TOKEN) {
+    return json({ error: 'worker is missing GIST_TOKEN' }, 500, origin);
+  }
+  let id;
+  try { id = await findGist(env); }
+  catch (e) { return json({ error: e.message }, 502, origin); }
+
+  if (body.op === 'pull') {
+    const r = await ghFetch(env, '/gists/' + id);
+    if (!r.ok) return json({ error: 'gist fetch failed (' + r.status + ')' }, 502, origin);
+    const g = await r.json();
+    let doc = { updated: 0, list: [] };
+    try { doc = JSON.parse(g.files[SYNC_FILENAME].content); } catch (e) {}
+    return json({ ok: true, doc }, 200, origin);
+  }
+
+  if (body.op === 'push') {
+    const doc = body.doc;
+    if (!doc || !Array.isArray(doc.list) || typeof doc.updated !== 'number') {
+      return json({ error: 'doc must be { updated:number, list:array }' }, 400, origin);
+    }
+    if (doc.list.length > 20000) return json({ error: 'favourites list too large' }, 400, origin);
+    const files = { [SYNC_FILENAME]: { content: JSON.stringify(doc) } };
+    const r = await ghFetch(env, '/gists/' + id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ files })
+    });
+    if (!r.ok) return json({ error: 'push failed (' + r.status + ')' }, 502, origin);
+    return json({ ok: true }, 200, origin);
+  }
+
+  return json({ error: 'op must be pull or push' }, 400, origin);
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(origin) });
     if (request.method !== 'POST') return json({ error: 'POST only' }, 405, origin);
 
-    if (!env.VAULT_KEY || !env.GITHUB_TOKEN) {
-      return json({ error: 'worker is missing VAULT_KEY or GITHUB_TOKEN' }, 500, origin);
+    if (!env.VAULT_KEY) {
+      return json({ error: 'worker is missing VAULT_KEY' }, 500, origin);
     }
     if (!safeEqual(request.headers.get('X-Vault-Key') || '', env.VAULT_KEY)) {
       return json({ error: 'bad key' }, 401, origin);
@@ -131,6 +245,15 @@ export default {
 
     let body;
     try { body = await request.json(); } catch { return json({ error: 'bad JSON' }, 400, origin); }
+
+    // Favourites sync is a different resource from the data files.
+    if (new URL(request.url).pathname.replace(/\/+$/, '') === '/sync') {
+      return handleSync(body, env, origin);
+    }
+
+    if (!env.GITHUB_TOKEN) {
+      return json({ error: 'worker is missing GITHUB_TOKEN' }, 500, origin);
+    }
 
     const slug = String(body.slug || '');
     const isVideo = VIDEO_SLUGS.includes(slug);
@@ -151,10 +274,15 @@ export default {
       }
     }
 
+    // 'add' (default) or 'remove'. Both share the sha-guarded read/write below.
+    const action = body.action === 'remove' ? 'remove' : 'add';
+
     // Build the entries exactly as EDITING.md documents them. Trim seconds only
     // describe one clip, so they are accepted only for a single-link request.
-    let newLines;
-    if (isVideo && urls.length === 1) {
+    let newLines = [];
+    if (action === 'remove') {
+      // nothing to build — the URLs themselves identify what to drop
+    } else if (isVideo && urls.length === 1) {
       const start = body.start === '' || body.start == null ? null : Number(body.start);
       const end = body.end === '' || body.end == null ? null : Number(body.end);
       for (const v of [start, end]) {
@@ -202,9 +330,36 @@ export default {
       Uint8Array.from(atob(file.content.replace(/\n/g, '')), (c) => c.charCodeAt(0))
     );
 
-    let updated;
+    let updated, removed = 0, skipped = [];
     try {
-      updated = insertLine(current, isVideo ? 'SOURCES' : 'IMGS', newLines, section);
+      if (action === 'remove') {
+        const r = removeUrls(current, urls);
+        updated = r.text;
+        removed = r.removed;
+      } else {
+        // Drop anything already in the file rather than creating a second tile
+        // for the same media — data files have picked up duplicates this way.
+        const existing = new Set(listUrls(current));
+        const fresh = [];
+        urls.forEach((u, i) => {
+          if (existing.has(u)) skipped.push(u);
+          else { fresh.push(u); existing.add(u); }
+        });
+        if (!fresh.length) {
+          return json({
+            ok: true, commit: null, path, added: 0,
+            skipped: skipped.length,
+            note: skipped.length === 1
+              ? 'that link is already in this collection'
+              : 'all ' + skipped.length + ' links are already in this collection'
+          }, 200, origin);
+        }
+        // Rebuild the lines from just the fresh URLs, preserving the trim form.
+        newLines = (newLines.length === 1 && fresh.length === 1)
+          ? newLines
+          : fresh.map((u) => jsString(u) + ',');
+        updated = insertLine(current, isVideo ? 'SOURCES' : 'IMGS', newLines, section);
+      }
     } catch (e) {
       return json({ error: e.message }, 422, origin);
     }
@@ -214,9 +369,13 @@ export default {
       method: 'PUT',
       headers: { ...gh, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: newLines.length === 1
-          ? `data: add link to ${slug}`
-          : `data: add ${newLines.length} links to ${slug}`,
+        message: action === 'remove'
+          ? (removed === 1
+              ? `data: remove link from ${slug}`
+              : `data: remove ${removed} links from ${slug}`)
+          : (newLines.length === 1
+              ? `data: add link to ${slug}`
+              : `data: add ${newLines.length} links to ${slug}`),
         content: encoded,
         sha: file.sha,
         branch: BRANCH,
@@ -242,7 +401,9 @@ export default {
       ok: true,
       commit: out.commit && out.commit.sha,
       path,
-      added: newLines.length
+      added: action === 'remove' ? 0 : newLines.length,
+      removed,
+      skipped: skipped.length
     }, 200, origin);
   }
 };

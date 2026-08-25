@@ -78,6 +78,11 @@ printf '%s' 'vault:8-5-2-6-4' | shasum -a 256
 
 Paste the result into `HASH` at the top of `vault-lock.js`.
 
+After two wrong attempts the grid backs off — 5s, then 15s, 30s, up to 5
+minutes — and the correct pattern is refused while the timer runs. The counter
+lives in `localStorage`, so reloading or opening a new tab does not clear it;
+a successful unlock does.
+
 > This is a UI gate, not access control. The site is a public static host, so
 > `data/*.js`, `thumbs/` and every media URL stay directly fetchable no matter
 > what this screen does. The hash only keeps the pattern out of plain
@@ -97,13 +102,24 @@ runs once for the batch rather than once per link. The start/end fields hide
 themselves as soon as there is more than one URL, since trim seconds describe one
 clip; they apply only when you add a single link.
 
+Duplicates are rejected: anything already in the file is skipped rather than
+added a second time, and the reply says how many were skipped. If every URL you
+paste is already there, nothing is committed at all.
+
+**Removing** a link: **Alt-click** a tile (or **long-press** on a phone) and
+confirm. It commits the deletion to `data/<slug>.js` the same way, leaving
+section breaks and comments untouched.
+
 Setup, once:
 
 1. Deploy `tools/vault-admin-worker.js` as a **new** Cloudflare Worker. Keep it
    separate from the existing media proxy so that one stays untouched.
-2. Set two encrypted variables on it:
+2. Set three encrypted variables on it:
    - `GITHUB_TOKEN` — fine-grained PAT, this repo only, Contents: Read and write.
    - `VAULT_KEY` — any long random string.
+   - `GIST_TOKEN` — classic PAT, **`gist` scope only**. This is the token that
+     used to live in your browser for favourites sync (see below).
+   - `GIST_ID` — optional. Set it to skip gist discovery on every sync.
 3. `ADMIN_URL` in `vault-additions.js` already points at
    `https://vault-admin.kiluconsta.workers.dev` — only change it if you move or
    rename the worker.
@@ -121,6 +137,34 @@ account name and email instead.
 
 Changes appear once Pages redeploys (~1 min), and the thumbnail Action picks the
 new link up on its next run.
+
+## Favourites sync (token moved out of the browser)
+
+Sync still works the same way — a private GitHub Gist, newer side wins — but the
+token no longer lives in this browser. Previously a classic PAT with `gist`
+scope sat in `localStorage` on a public page that also loaded a third-party
+script; anything able to run JS there could read it.
+
+Now the gist token is a worker secret (`GIST_TOKEN`) and the browser stores only
+your vault key, which reaches nothing but the worker. On the favourites page,
+paste the **vault key** where the token used to go — the same key the **+**
+button uses.
+
+Any old `vault-sync-token` still in a browser is deleted automatically on next
+load. **Revoke that token on GitHub** — it has been sitting in browser storage,
+so treat it as exposed: github.com → Settings → Developer settings → Tokens
+(classic) → Delete. Then issue a fresh one straight into `GIST_TOKEN`.
+
+## Filtering a collection
+
+Every collection page has a filter box above the grid. It matches on the media
+URL, so a host name, a file extension or any fragment narrows the grid, with a
+live "172 of 819" count. Section dividers hide while a filter is active, since
+they no longer describe what is on screen.
+
+Grids also build in chunks of 200 rather than all at once — the largest
+collection is ~1,900 tiles, and building them up front delayed first paint.
+The whole grid still ends up in the DOM; it just no longer blocks the page.
 
 **What still needs a rebuild (send the source zip to Claude):**
 adding a whole new collection, renaming one, or any design/layout change.

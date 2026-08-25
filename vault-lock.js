@@ -170,13 +170,51 @@
     document.dispatchEvent(new CustomEvent('vault-unlocked'));
   }
 
+  // ── Attempt throttling ─────────────────────────────────────────────────
+  // A 9-dot grid is small enough to grind by hand, so back off after a few
+  // misses. State lives in localStorage, not sessionStorage — otherwise a
+  // reload or a new tab resets the counter and the throttle means nothing.
+  var F_KEY = 'vault-lock-fails', U_KEY = 'vault-lock-until';
+  var BACKOFF = [0, 0, 5, 15, 30, 60, 120, 300]; // seconds, by failure count
+  var cooldownTimer = null;
+
+  function readNum(k) {
+    try { return Number(localStorage.getItem(k)) || 0; } catch (e) { return 0; }
+  }
+  function writeNum(k, v) {
+    try { localStorage.setItem(k, String(v)); } catch (e) {}
+  }
+  function lockedFor() {
+    return Math.max(0, Math.ceil((readNum(U_KEY) - Date.now()) / 1000));
+  }
+
+  function tickCooldown() {
+    var left = lockedFor();
+    if (left > 0) {
+      hint.classList.add('vl-bad');
+      hint.textContent = 'Too many attempts — wait ' + left + 's';
+      cooldownTimer = setTimeout(tickCooldown, 500);
+    } else {
+      cooldownTimer = null;
+      hint.classList.remove('vl-bad');
+      hint.textContent = 'Draw your pattern to unlock';
+    }
+  }
+  if (lockedFor() > 0) tickCooldown();
+
   function fail() {
+    var n = readNum(F_KEY) + 1;
+    writeNum(F_KEY, n);
+    var wait = BACKOFF[Math.min(n, BACKOFF.length - 1)];
+    if (wait) writeNum(U_KEY, Date.now() + wait * 1000);
+
     grid.classList.add('vl-err', 'vl-shake');
     hint.classList.add('vl-bad');
     hint.textContent = 'Wrong pattern — try again';
     setTimeout(function () {
       grid.classList.remove('vl-shake');
       reset();
+      if (lockedFor() > 0) { if (!cooldownTimer) tickCooldown(); return; }
       hint.classList.remove('vl-bad');
       hint.textContent = 'Draw your pattern to unlock';
     }, 700);
@@ -184,15 +222,20 @@
 
   function submit() {
     if (seq.length < MIN_NODES) { reset(); return; }
+    if (lockedFor() > 0) { reset(); if (!cooldownTimer) tickCooldown(); return; }
     var candidate = seq.join('-');
     sha256Hex(SALT + candidate).then(function (hex) {
       if (hex === null) { fail(); return; } // no crypto.subtle → refuse rather than fall back
-      if (hex === HASH) unlock(); else fail();
+      if (hex === HASH) {
+        try { localStorage.removeItem(F_KEY); localStorage.removeItem(U_KEY); } catch (e) {}
+        unlock();
+      } else fail();
     });
   }
 
   grid.addEventListener('pointerdown', function (ev) {
     ev.preventDefault();
+    if (lockedFor() > 0) { if (!cooldownTimer) tickCooldown(); return; }
     reset();
     drawing = true;
     try { grid.setPointerCapture(ev.pointerId); } catch (e) {}

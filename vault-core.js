@@ -387,67 +387,57 @@ var VaultPosters = (function () {
   return { load: load, thumbFor: tryStaticThumb };
 })();
 
-// ── Favourites sync via private GitHub Gist ────────────────
-// Token (classic PAT, "gist" scope ONLY) lives in localStorage. The gist is
-// found by filename or created on first enable. Pull-on-boot: newer side wins
-// wholesale. Pushes are debounced so rapid toggles = one API call.
+// ── Favourites sync via the vault-admin worker ─────────────
+// The gist token lives in the worker, not here. This browser stores only the
+// vault key, which can reach nothing except that worker. Pull-on-boot: newer
+// side wins wholesale. Pushes are debounced so rapid toggles = one call.
 var VaultSync = (function () {
-  var API = 'https://api.github.com';
-  var FILENAME = 'vault-favourites.json';
-  var T_KEY = 'vault-sync-token', G_KEY = 'vault-sync-gist', U_KEY = 'vault-favourites-updated';
+  var ADMIN_URL = 'https://vault-admin.kiluconsta.workers.dev';
+  // The key is shared with the add-link form, so its presence cannot mean
+  // "sync is on" — that needs a flag of its own.
+  var K_KEY = 'vault-admin-key', U_KEY = 'vault-favourites-updated', ON_KEY = 'vault-sync-on';
+  var LEGACY_T_KEY = 'vault-sync-token', LEGACY_G_KEY = 'vault-sync-gist';
   var pushTimer = null, status = 'off';
 
-  function token() { try { return localStorage.getItem(T_KEY) || ''; } catch (e) { return ''; } }
-  function gistId() { try { return localStorage.getItem(G_KEY) || ''; } catch (e) { return ''; } }
+  // Purge the credential the old build left behind. It is a live GitHub token
+  // sitting in storage on a public page, so clear it whether or not sync is on.
+  try {
+    if (localStorage.getItem(LEGACY_T_KEY)) {
+      localStorage.removeItem(LEGACY_T_KEY);
+      localStorage.removeItem(LEGACY_G_KEY);
+    }
+  } catch (e) {}
+
+  function key() { try { return localStorage.getItem(K_KEY) || ''; } catch (e) { return ''; } }
   function localUpdated() { try { return Number(localStorage.getItem(U_KEY)) || 0; } catch (e) { return 0; } }
   function markUpdated(t) { try { localStorage.setItem(U_KEY, String(t)); } catch (e) {} }
-  function enabled() { return !!token(); }
+  function enabled() {
+    try { return localStorage.getItem(ON_KEY) === '1' && !!key(); } catch (e) { return false; }
+  }
 
   function setStatus(s, detail) {
     status = s;
     document.dispatchEvent(new CustomEvent('vault-sync-status', { detail: { status: s, detail: detail || '' } }));
   }
-  function gh(path, opts) {
-    opts = opts || {};
-    opts.headers = Object.assign({
-      'Authorization': 'Bearer ' + token(),
-      'Accept': 'application/vnd.github+json'
-    }, opts.headers || {});
-    return fetch(API + path, opts);
-  }
 
-  function findOrCreateGist() {
-    if (gistId()) return Promise.resolve(gistId());
-    return gh('/gists?per_page=100').then(function (r) {
-      if (!r.ok) throw new Error('token rejected (' + r.status + ')');
-      return r.json();
-    }).then(function (gists) {
-      var hit = gists.find(function (g) { return g.files && g.files[FILENAME]; });
-      if (hit) { localStorage.setItem(G_KEY, hit.id); return hit.id; }
-      var files = {};
-      files[FILENAME] = { content: JSON.stringify({ updated: 0, list: [] }) };
-      return gh('/gists', {
-        method: 'POST',
-        body: JSON.stringify({ description: 'The Vault — favourites sync', public: false, files: files })
-      }).then(function (r) {
-        if (!r.ok) throw new Error('gist create failed (' + r.status + ')');
-        return r.json();
-      }).then(function (g) { localStorage.setItem(G_KEY, g.id); return g.id; });
+  function callSync(payload) {
+    return fetch(ADMIN_URL + '/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Vault-Key': key() },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) throw new Error(d.error || ('sync failed (' + r.status + ')'));
+        return d;
+      });
     });
   }
 
   function pull() {
     if (!enabled()) return Promise.resolve(false);
     setStatus('syncing');
-    return findOrCreateGist().then(function (id) {
-      return gh('/gists/' + id).then(function (r) {
-        if (!r.ok) throw new Error('gist fetch failed (' + r.status + ')');
-        return r.json();
-      });
-    }).then(function (g) {
-      var file = g.files && g.files[FILENAME];
-      var doc = { updated: 0, list: [] };
-      try { doc = JSON.parse(file.content); } catch (e) {}
+    return callSync({ op: 'pull' }).then(function (d) {
+      var doc = d.doc || { updated: 0, list: [] };
       if ((doc.updated || 0) > localUpdated() && Array.isArray(doc.list)) {
         Favourites._replaceAll(doc.list);
         markUpdated(doc.updated);
@@ -470,22 +460,28 @@ var VaultSync = (function () {
     var now = Date.now();
     markUpdated(now);
     setStatus('syncing');
-    return findOrCreateGist().then(function (id) {
-      var files = {};
-      files[FILENAME] = { content: JSON.stringify({ updated: now, list: Favourites.list() }) };
-      return gh('/gists/' + id, { method: 'PATCH', body: JSON.stringify({ files: files }) });
-    }).then(function (r) {
-      if (!r.ok) throw new Error('push failed (' + r.status + ')');
-      setStatus('synced');
-    }).catch(function (e) { setStatus('error', String(e.message || e)); });
+    return callSync({ op: 'push', doc: { updated: now, list: Favourites.list() } })
+      .then(function () { setStatus('synced'); })
+      .catch(function (e) { setStatus('error', String(e.message || e)); });
   }
 
-  function enable(tok) {
-    try { localStorage.setItem(T_KEY, tok.trim()); } catch (e) {}
-    return pull().then(function () { if (status !== 'error') pushNow(); return status !== 'error'; });
+  function enable(vaultKey) {
+    try {
+      localStorage.setItem(K_KEY, String(vaultKey).trim());
+      localStorage.setItem(ON_KEY, '1');
+    } catch (e) {}
+    return pull().then(function () {
+      if (status === 'error') {
+        try { localStorage.removeItem(ON_KEY); } catch (e) {}
+        return false;
+      }
+      pushNow();
+      return true;
+    });
   }
   function disable() {
-    try { localStorage.removeItem(T_KEY); localStorage.removeItem(G_KEY); } catch (e) {}
+    // Clear the flag, not the key — the add-link form uses the same one.
+    try { localStorage.removeItem(ON_KEY); localStorage.removeItem(U_KEY); } catch (e) {}
     if (pushTimer) clearTimeout(pushTimer);
     setStatus('off');
   }

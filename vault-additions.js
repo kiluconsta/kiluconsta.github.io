@@ -97,6 +97,69 @@
 
   document.body.append(fab, modal);
 
+  // ── Remove a link ────────────────────────────────────────
+  // Adding was possible from the site while deleting still meant hand-editing
+  // a data file. Alt/long-press a tile to drop it from the collection.
+  var rmStyle = document.createElement('style');
+  rmStyle.textContent = '.va-removing{opacity:.35;filter:grayscale(1);transition:opacity .2s ease;}';
+  document.head.appendChild(rmStyle);
+
+  function removeUrl(url, tile) {
+    var key;
+    try { key = localStorage.getItem(KEY_STORE) || ''; } catch (e) { key = ''; }
+    if (!ADMIN_URL) { alert('ADMIN_URL is not set in /vault-additions.js yet.'); return; }
+    if (!key) { alert('Add a link once first so the vault key is saved.'); return; }
+    if (!confirm('Remove this from ' + slug + '?\n\n' + url.slice(0, 90) + '…')) return;
+
+    tile.classList.add('va-removing');
+    fetch(ADMIN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Vault-Key': key },
+      body: JSON.stringify({ slug: slug, action: 'remove', urls: [url] })
+    }).then(function (r) {
+      return r.json().then(function (d) { return { ok: r.ok, data: d }; });
+    }).then(function (res) {
+      if (!res.ok) {
+        tile.classList.remove('va-removing');
+        alert(res.data.error || 'Remove failed.');
+        return;
+      }
+      tile.remove(); // gone from the file; drop it from the grid too
+    }).catch(function () {
+      tile.classList.remove('va-removing');
+      alert('Could not reach the worker.');
+    });
+  }
+
+  // Alt-click on desktop, long-press on touch — both deliberate enough not to
+  // fire by accident while browsing.
+  document.addEventListener('click', function (e) {
+    if (!e.altKey) return;
+    var tile = e.target.closest('.vs-tile, .is-tile');
+    if (!tile || !tile.dataset.favUrl) return;
+    e.preventDefault(); e.stopPropagation();
+    removeUrl(tile.dataset.favUrl, tile);
+  }, true);
+
+  var pressTimer = null, pressTile = null;
+  document.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'touch') return;
+    var tile = e.target.closest('.vs-tile, .is-tile');
+    if (!tile || !tile.dataset.favUrl) return;
+    pressTile = tile;
+    pressTimer = setTimeout(function () {
+      pressTimer = null;
+      removeUrl(tile.dataset.favUrl, tile);
+    }, 700);
+  }, true);
+  function cancelPress() {
+    if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+    pressTile = null;
+  }
+  ['pointerup', 'pointercancel', 'pointermove', 'scroll'].forEach(function (ev) {
+    document.addEventListener(ev, cancelPress, true);
+  });
+
   var urlIn = modal.querySelector('#va-url');
   var keyIn = modal.querySelector('#va-key');
   var startIn = modal.querySelector('#va-start');

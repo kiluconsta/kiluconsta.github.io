@@ -46,20 +46,77 @@
     }
   }
 
-  var frag = document.createDocumentFragment();
-  items.forEach(function (it, idx) {
-    var tile = document.createElement('div');
-    tile.className = 'is-tile';
-    tile.dataset.favUrl = it.url;
-    var img = document.createElement('img');
-    img.loading = 'lazy';
-    img.alt = '';
-    setTileSrc(img, it.url);
-    tile.appendChild(img);
-    tile.addEventListener('click', function () { openLightbox(idx); });
-    frag.appendChild(tile);
+  // ── Filter bar ───────────────────────────────────────────
+  var filterStyle = document.createElement('style');
+  filterStyle.textContent =
+    '.cs-hidden{display:none!important}'
+    + '.cs-filter{display:flex;align-items:center;gap:10px;margin:0 0 14px;}'
+    + '.cs-filter input{flex:1;min-width:0;padding:9px 12px;border-radius:9px;'
+    + 'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);'
+    + 'color:#fff;font:inherit;font-size:.9rem;}'
+    + '.cs-filter input:focus{outline:none;border-color:rgba(255,255,255,.4);}'
+    + '.cs-count{font-size:.78rem;color:rgba(255,255,255,.4);white-space:nowrap;'
+    + 'font-variant-numeric:tabular-nums;}'
+    + '.cs-none{color:rgba(255,255,255,.45);font-size:.9rem;padding:22px 0;}';
+  document.head.appendChild(filterStyle);
+
+  var bar = document.createElement('div');
+  bar.className = 'cs-filter';
+  bar.innerHTML = '<input type="search" id="cs-q" placeholder="Filter this collection…" '
+    + 'autocomplete="off" spellcheck="false" aria-label="Filter this collection">'
+    + '<span class="cs-count" id="cs-count"></span>';
+  var noneMsg = document.createElement('div');
+  noneMsg.className = 'cs-none cs-hidden';
+  noneMsg.textContent = 'Nothing here matches that.';
+  body.parentNode.insertBefore(bar, body);
+  body.parentNode.insertBefore(noneMsg, body);
+
+  var qInput = bar.querySelector('#cs-q');
+  var countEl = bar.querySelector('#cs-count');
+  var query = '';
+
+  function applyFilter() {
+    var q = query, shown = 0;
+    var tiles = body.querySelectorAll('.is-tile');
+    for (var i = 0; i < tiles.length; i++) {
+      var hit = !q || tiles[i].dataset.favUrl.toLowerCase().indexOf(q) !== -1;
+      tiles[i].classList.toggle('cs-hidden', !hit);
+      if (hit) shown++;
+    }
+    countEl.textContent = q ? shown + ' of ' + items.length : '';
+    noneMsg.classList.toggle('cs-hidden', !(q && shown === 0));
+  }
+  qInput.addEventListener('input', function () {
+    query = qInput.value.trim().toLowerCase();
+    applyFilter();
   });
-  body.insertBefore(frag, lightbox);
+
+  // Chunked build so a 800-image collection paints immediately.
+  var CHUNK = 200;
+  function renderChunk(start) {
+    var frag = document.createDocumentFragment();
+    var end = Math.min(start + CHUNK, items.length);
+    for (var idx = start; idx < end; idx++) {
+      (function (it, i) {
+        var tile = document.createElement('div');
+        tile.className = 'is-tile';
+        tile.dataset.favUrl = it.url;
+        var img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = '';
+        setTileSrc(img, it.url);
+        tile.appendChild(img);
+        tile.addEventListener('click', function () { openLightbox(i); });
+        frag.appendChild(tile);
+      })(items[idx], idx);
+    }
+    body.insertBefore(frag, lightbox);
+    if (query) applyFilter();
+    // setTimeout, not requestAnimationFrame: rAF stops firing in a background
+    // or throttled tab, which would leave the grid permanently half-built.
+    if (end < items.length) setTimeout(function () { renderChunk(end); }, 0);
+  }
+  renderChunk(0);
 
   var favApi = window.Favourites ? window.Favourites.initSection(mount, { type: 'image', platterEl: controls }) : null;
   var imgWrap = mount.querySelector('.is-lb-img-wrap');
