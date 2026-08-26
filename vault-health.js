@@ -49,7 +49,17 @@
     + '.hz-hosts .hz-badge b{color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums;}'
     + '.hz-h{font-size:.95rem;font-weight:600;margin:26px 0 8px;color:#fff;}'
     + '.hz-h:first-of-type{margin-top:8px;}'
-    + '#hz-clean-log{margin-top:14px;min-height:1.2em;}';
+    + '#hz-clean-log{margin-top:14px;min-height:1.2em;}'
+    + '.hz-rowmsg{font-size:.78rem;color:#3ddc84;padding:2px 0 8px;}'
+    + '.hz-rowmsg.bad{color:#ff8d97;}'
+    + '.hz-keyrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 16px;'
+    + 'padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;'
+    + 'background:rgba(255,255,255,.04);}'
+    + '.hz-keyrow label{font-size:.78rem;color:rgba(255,255,255,.5);}'
+    + '.hz-keyrow input{flex:1;min-width:160px;padding:7px 10px;border-radius:7px;'
+    + 'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);'
+    + 'color:#fff;font:inherit;font-size:.85rem;}'
+    + '.hz-keyrow input:focus{outline:none;border-color:rgba(255,255,255,.4);}';
   var style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
@@ -310,6 +320,10 @@
   // "Dead" means the weekly checker's verdict — link-strikes.json — NOT the
   // thumbnail-failure log. Those links still play; treating them as dead would
   // delete working videos.
+  function storedKey() {
+    try { return localStorage.getItem(KEY_STORE) || ''; } catch (e) { return ''; }
+  }
+
   var SALVAGE_SLUG = 'tragic-dee';
   var SALVAGE_MAX = 3;
   var cleanLoaded = false;
@@ -386,9 +400,17 @@
     });
   }
 
+  function keyRowHtml() {
+    return '<div class="hz-keyrow"><label for="hz-key">Vault key</label>'
+      + '<input id="hz-key" type="password" placeholder="the key the + button uses" '
+      + 'autocomplete="off"><button type="button" class="hz-btn" id="hz-key-save">Save</button>'
+      + '</div>';
+  }
+
   function paintCleanup(host, dupPlan, totalDups, salvagePlan, deadCount) {
     host.innerHTML =
-      '<p class="hz-note">Both actions rewrite data files and commit. Nothing runs '
+      (storedKey() ? '' : keyRowHtml())
+      + '<p class="hz-note">Both actions rewrite data files and commit. Nothing runs '
       + 'until you confirm. <b>Dead</b> here means the weekly checker\'s verdict ('
       + deadCount + ' link' + (deadCount === 1 ? '' : 's') + ' on strike) — not the '
       + 'thumbnail-failure list, whose links still play.</p>'
@@ -435,15 +457,49 @@
     var log = host.querySelector('#hz-clean-log');
     function say(m) { log.textContent = m; }
 
+    function wireKeyRow() {
+      var keyInput = host.querySelector('#hz-key');
+      if (!keyInput) return;
+      var saveKey = function () {
+        var v = keyInput.value.trim();
+        if (!v) return;
+        try { localStorage.setItem(KEY_STORE, v); } catch (e) {}
+        var r = host.querySelector('.hz-keyrow');
+        if (r) r.remove();
+      };
+      host.querySelector('#hz-key-save').addEventListener('click', saveKey);
+      keyInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') saveKey(); });
+    }
+    wireKeyRow();
+
     host.querySelectorAll('.hz-dedupe').forEach(function (b) {
       b.addEventListener('click', function () {
         var slug = b.closest('.hz-row').dataset.slug;
+        if (!requireKey(b)) return;
         if (!confirm('Remove duplicate links from ' + slug + '?\n\nThe first copy of each is kept.')) return;
         runDedupe(slug, b, say);
       });
     });
+    function requireKey(btn) {
+      if (storedKey()) return true;
+      // The field is removed once a key is saved, so put it back if the key
+      // was cleared since this panel rendered — otherwise the message below
+      // points at something that is not on screen.
+      var f = host.querySelector('#hz-key');
+      if (!f) { host.insertAdjacentHTML('afterbegin', keyRowHtml()); wireKeyRow(); f = host.querySelector('#hz-key'); }
+      rowSay(btn, 'Enter your vault key at the top of this panel first.', true);
+      if (f) { f.focus(); f.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+      return false;
+    }
+
     var all = host.querySelector('#hz-dedupe-all');
     if (all) all.addEventListener('click', function () {
+      if (!storedKey()) {
+        say('Enter your vault key at the top of this panel first.');
+        var f = host.querySelector('#hz-key');
+        if (f) { f.focus(); f.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+        return;
+      }
       if (!confirm('Remove all ' + totalDups + ' duplicates across '
         + dupPlan.length + ' collections?\n\nEach collection commits separately.')) return;
       all.disabled = true;
@@ -459,6 +515,7 @@
     host.querySelectorAll('.hz-salvage').forEach(function (b) {
       b.addEventListener('click', function () {
         var p = salvagePlan[Number(b.closest('.hz-row').dataset.i)];
+        if (!requireKey(b)) return;
         if (!confirm('Move ' + p.survivors.length + ' link'
           + (p.survivors.length === 1 ? '' : 's') + ' from ' + p.slug + ' · ' + p.label
           + ' into Tragic Dee?')) return;
@@ -467,10 +524,25 @@
     });
   }
 
+  // Status belongs beside the control that was pressed. A shared log at the
+  // foot of the panel is off-screen when you click a row near the top, which
+  // makes a real failure look like nothing happening at all.
+  function rowSay(btn, msg, bad) {
+    var row = btn && btn.closest('.hz-row');
+    if (!row) return;
+    var el = row.nextElementSibling;
+    if (!el || !el.classList.contains('hz-rowmsg')) {
+      el = document.createElement('div');
+      el.className = 'hz-rowmsg';
+      row.parentNode.insertBefore(el, row.nextSibling);
+    }
+    el.textContent = msg;
+    el.classList.toggle('bad', !!bad);
+  }
+
   function post(payload) {
-    var key;
-    try { key = localStorage.getItem(KEY_STORE) || ''; } catch (e) { key = ''; }
-    if (!key) return Promise.reject(new Error('Add a link from a collection page once so the vault key is saved.'));
+    var key = storedKey();
+    if (!key) return Promise.reject(new Error('Enter your vault key above first.'));
     return fetch(ADMIN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Vault-Key': key },
@@ -488,10 +560,12 @@
     say('Deduplicating ' + slug + '…');
     post({ slug: slug, action: 'dedupe' }).then(function (d) {
       if (btn) btn.textContent = d.removed ? 'Removed ' + d.removed : 'None';
+      rowSay(btn, 'Removed ' + (d.removed || 0) + '.', false);
       say(slug + ': removed ' + (d.removed || 0) + '.');
       if (done) setTimeout(done, 700); // stay clear of the worker's rate limit
     }).catch(function (e) {
-      if (btn) { btn.disabled = false; btn.textContent = 'Remove'; }
+      if (btn) { btn.disabled = false; btn.textContent = 'Failed'; btn.title = e.message; }
+      rowSay(btn, e.message, true);
       say(slug + ': ' + e.message);
       if (done) setTimeout(done, 700);
     });
@@ -527,7 +601,8 @@
       btn.textContent = 'Moved';
       say('Moved ' + p.survivors.length + ' link(s) into Tragic Dee.');
     }).catch(function (e) {
-      btn.disabled = false; btn.textContent = 'Move';
+      btn.disabled = false; btn.textContent = 'Failed'; btn.title = e.message;
+      rowSay(btn, e.message, true);
       say('Failed: ' + e.message);
     });
   }

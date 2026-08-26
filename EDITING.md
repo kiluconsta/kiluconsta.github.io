@@ -252,6 +252,10 @@ on activation.
 Two destructive operations, both preview-then-confirm, each collection
 committing separately so anything can be reverted.
 
+Both need your **vault key** — the same one the **+** button uses. If this
+browser has not got it, the panel shows a field at the top to paste it into.
+Rotating `VAULT_KEY` on the worker means entering the new one here again.
+
 **Duplicates within a collection** — drops repeats of the same URL, keeping the
 first copy. Remove them one collection at a time or all at once.
 
