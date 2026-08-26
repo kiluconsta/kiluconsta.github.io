@@ -174,16 +174,97 @@
     else if (e.key === 'f' || e.key === 'F') { btnFullscreen && btnFullscreen.click(); }
   });
 
+  // ── Sort / group controls (UI-12) ────────────────────────
+  // A flat reverse-added list stops scaling once this is more than a screenful.
+  var VIEW_KEY = 'vault-fav-view';
+  var view = 'recent';
+  try { view = localStorage.getItem(VIEW_KEY) || 'recent'; } catch (e) {}
+
+  (function buildControls() {
+    if (!grid || document.getElementById('fav-view')) return;
+    var style = document.createElement('style');
+    style.textContent =
+      '#fav-view{display:flex;gap:7px;align-items:center;margin:0 0 16px;flex-wrap:wrap;}'
+      + '#fav-view button{padding:6px 12px;border-radius:8px;cursor:pointer;font:inherit;'
+      + 'font-size:.82rem;color:rgba(255,255,255,.65);background:rgba(255,255,255,.05);'
+      + 'border:1px solid rgba(255,255,255,.1);}'
+      + '#fav-view button.on{background:#fff;color:#000;border-color:#fff;font-weight:600;}'
+      + '.fav-group{grid-column:1/-1;display:flex;align-items:center;gap:12px;'
+      + 'margin:20px 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;'
+      + 'color:var(--v-text-faint,rgba(255,255,255,.4));}'
+      + '.fav-group:first-child{margin-top:0;}'
+      + '.fav-group:after{content:"";flex:1;height:1px;background:var(--v-border,rgba(255,255,255,.12));}'
+      + '.fav-group b{color:rgba(255,255,255,.6);font-weight:500;}';
+    document.head.appendChild(style);
+
+    var wrap = document.createElement('div');
+    wrap.id = 'fav-view';
+    wrap.innerHTML = '<button type="button" data-v="recent">Recent</button>'
+      + '<button type="button" data-v="collection">By collection</button>'
+      + '<button type="button" data-v="type">By type</button>';
+    grid.parentNode.insertBefore(wrap, grid);
+    wrap.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        view = b.dataset.v;
+        try { localStorage.setItem(VIEW_KEY, view); } catch (e) {}
+        render();
+      });
+    });
+  })();
+
+  function collectionLabel(slug) {
+    var meta = (typeof COLLECTION_META !== 'undefined') ? COLLECTION_META[slug] : null;
+    return meta ? (meta.icon ? meta.icon + '  ' + meta.label : meta.label) : (slug || 'Unknown');
+  }
+
   function render() {
     list = window.Favourites ? window.Favourites.list() : [];
     grid.innerHTML = '';
+    var viewBar = document.getElementById('fav-view');
+    if (viewBar) {
+      viewBar.hidden = list.length < 2;
+      viewBar.querySelectorAll('button').forEach(function (b) {
+        b.classList.toggle('on', b.dataset.v === view);
+      });
+    }
     if (!list.length) {
       if (emptyEl) emptyEl.classList.add('show');
       return;
     }
     if (emptyEl) emptyEl.classList.remove('show');
 
+    // Reorder into the chosen view. `list` stays the array the lightbox
+    // indexes into, so grouping must reorder it, not just the DOM.
+    if (view === 'collection' || view === 'type') {
+      var keyOf = view === 'collection'
+        ? function (e) { return e.slug || 'unknown'; }
+        : function (e) { return e.type === 'video' ? 'video' : 'image'; };
+      var buckets = {};
+      list.forEach(function (e) { (buckets[keyOf(e)] = buckets[keyOf(e)] || []).push(e); });
+      var keys = Object.keys(buckets).sort();
+      var flat = [];
+      keys.forEach(function (k) { buckets[k].forEach(function (e) { flat.push(e); }); });
+      list = flat;
+      var headingBefore = {};
+      var seen = 0;
+      keys.forEach(function (k) {
+        headingBefore[seen] = view === 'collection'
+          ? collectionLabel(k) + ' <b>' + buckets[k].length + '</b>'
+          : (k === 'video' ? 'Videos' : 'Images') + ' <b>' + buckets[k].length + '</b>';
+        seen += buckets[k].length;
+      });
+      render._headings = headingBefore;
+    } else {
+      render._headings = null;
+    }
+
     list.forEach(function (entry, idx) {
+      if (render._headings && render._headings[idx] !== undefined) {
+        var h = document.createElement('div');
+        h.className = 'fav-group';
+        h.innerHTML = render._headings[idx];
+        grid.appendChild(h);
+      }
       var card = document.createElement('div');
       card.className = 'fav-card' + (entry.type === 'video' ? ' loading' : '');
       card.dataset.favUrl = entry.url;

@@ -44,7 +44,9 @@
     + '.hz-btn:disabled{opacity:.45;cursor:default;}'
     + '.hz-empty{color:rgba(255,255,255,.4);padding:26px 0;font-size:.9rem;}'
     + '.hz-note{color:rgba(255,255,255,.4);font-size:.82rem;margin:0 0 14px;}'
-    + '.hz-more{margin-top:16px;}';
+    + '.hz-more{margin-top:16px;}'
+    + '.hz-hosts{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px;font-size:.72rem;}'
+    + '.hz-hosts .hz-badge b{color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums;}';
   var style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
@@ -106,10 +108,12 @@
       + tab('removed', 'Removed', removed.length, true)
       + tab('strikes', 'On strike', strikes.length, false)
       + tab('thumbs', 'No thumbnail', failures.length, false)
+      + tab('dupes', 'Duplicates', '·', false)
       + '</div>'
       + '<div class="hz-panel on" id="hz-removed"></div>'
       + '<div class="hz-panel" id="hz-strikes"></div>'
-      + '<div class="hz-panel" id="hz-thumbs"></div>';
+      + '<div class="hz-panel" id="hz-thumbs"></div>'
+      + '<div class="hz-panel" id="hz-dupes"></div>';
 
     root.querySelectorAll('.hz-tab').forEach(function (t) {
       t.addEventListener('click', function () {
@@ -117,6 +121,7 @@
         root.querySelectorAll('.hz-panel').forEach(function (x) { x.classList.remove('on'); });
         t.classList.add('on');
         document.getElementById('hz-' + t.dataset.k).classList.add('on');
+        if (t.dataset.k === 'dupes') loadDupes(t);
       });
     });
 
@@ -203,6 +208,86 @@
       if (!btn) return;
       var row = btn.closest('.hz-row');
       restore(row.dataset.slug, row.dataset.url, btn);
+    });
+  }
+
+  // ── Duplicates across collections ────────────────────────
+  // Loaded on demand: this reads every data file (~1MB), which is not worth
+  // doing unless you actually open the tab.
+  var SLUGS = [
+    'animations', 'bluesky-likes', 'bomb-ass-dee', 'bomb-ass-dee-pt-2',
+    'coomer', 'dropbox', 'meatsenpaii', 'x-likes-long', 'x-likes-short',
+    'gifs', 'images', 'sandf', 'show-off', 'tumblr'
+  ];
+  var dupesLoaded = false;
+
+  // Parse a data file the way the engines do, without executing it as script:
+  // take only lines that are a whole entry, so the header comment's sample URL
+  // is never mistaken for content.
+  function urlsIn(src) {
+    var out = [];
+    src.split('\n').forEach(function (line) {
+      var t = line.trim();
+      if (!t || t.indexOf('//') === 0) return;
+      if (!/^(\{.*\}|"[^"]*")\s*,?$/.test(t)) return;
+      var m = t.match(/"(https?:\/\/[^"]+)"/);
+      if (m) out.push(m[1]);
+    });
+    return out;
+  }
+
+  function loadDupes(tabBtn) {
+    if (dupesLoaded) return;
+    dupesLoaded = true;
+    var host = document.getElementById('hz-dupes');
+    host.innerHTML = '<p class="hz-loading">Reading every collection…</p>';
+
+    Promise.all(SLUGS.map(function (s) {
+      return text('/data/' + s + '.js').then(function (t) { return { slug: s, urls: urlsIn(t) }; });
+    })).then(function (files) {
+      var seen = {};   // url -> [slug, ...] with repeats
+      var hosts = {};
+      var total = 0;
+      files.forEach(function (f) {
+        f.urls.forEach(function (u) {
+          total++;
+          (seen[u] = seen[u] || []).push(f.slug);
+          var h;
+          try { h = new URL(u).hostname.replace(/^www\./, ''); } catch (e) { h = '?'; }
+          hosts[h] = (hosts[h] || 0) + 1;
+        });
+      });
+
+      var dupes = Object.keys(seen).filter(function (u) { return seen[u].length > 1; })
+        .map(function (u) {
+          var where = seen[u];
+          var uniq = where.filter(function (s, i) { return where.indexOf(s) === i; });
+          return { url: u, count: where.length, slugs: uniq, cross: uniq.length > 1 };
+        })
+        .sort(function (a, b) { return (b.cross - a.cross) || (b.count - a.count); });
+
+      var topHosts = Object.keys(hosts).sort(function (a, b) { return hosts[b] - hosts[a]; }).slice(0, 12);
+      if (tabBtn) tabBtn.querySelector('.n').textContent = dupes.length;
+
+      host.innerHTML = '<p class="hz-note">'
+        + total.toLocaleString() + ' links across ' + files.length + ' collections. '
+        + dupes.length + ' appear more than once — '
+        + dupes.filter(function (d) { return d.cross; }).length
+        + ' of those span more than one collection.</p>'
+        + '<div class="hz-hosts">' + topHosts.map(function (h) {
+            return '<span class="hz-badge">' + esc(h) + ' <b>' + hosts[h] + '</b></span>';
+          }).join('') + '</div>';
+
+      var box = document.createElement('div');
+      host.appendChild(box);
+      paginate(box, dupes, function (d) {
+        return '<div class="hz-row"><div><div class="hz-url">' + esc(d.url) + '</div>'
+          + '<div class="hz-meta">'
+          + '<span class="hz-badge ' + (d.cross ? 'warn' : '') + '">'
+          + esc(d.count) + '×</span>'
+          + d.slugs.map(function (s) { return '<span class="hz-badge">' + esc(s) + '</span>'; }).join('')
+          + '</div></div></div>';
+      }, 'No duplicates anywhere. Every link is unique.');
     });
   }
 

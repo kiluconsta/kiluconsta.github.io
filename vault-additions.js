@@ -62,7 +62,11 @@
     + 'font-size:.8rem;color:#fff;background:rgba(255,255,255,.07);'
     + 'border:1px solid rgba(255,255,255,.14);white-space:nowrap;}'
     + '.va-row-tight button:hover{background:rgba(255,255,255,.16);}'
-    + '.va-nosec{flex:1;font-size:.86rem;color:rgba(255,255,255,.35);}';
+    + '.va-nosec{flex:1;font-size:.86rem;color:rgba(255,255,255,.35);}'
+    + '.va-badlines{margin:8px 0 4px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;'
+    + 'font-size:.72rem;color:rgba(255,255,255,.55);max-height:110px;overflow-y:auto;}'
+    + '.va-badlines div{display:flex;gap:8px;padding:2px 0;word-break:break-all;}'
+    + '.va-badlines span{flex:0 0 22px;text-align:right;color:#ff4d5e;}';
   var style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
@@ -197,6 +201,37 @@
     msg.className = cls || '';
   }
 
+  function showBadLines(bad, good) {
+    msg.className = 'va-err';
+    msg.textContent = bad.length === 1
+      ? 'Line ' + bad[0].n + ' is not a valid http(s) URL.'
+      : bad.length + ' lines are not valid http(s) URLs.';
+    var list = document.createElement('div');
+    list.className = 'va-badlines';
+    list.innerHTML = bad.slice(0, 8).map(function (b) {
+      return '<div><span>' + b.n + '</span>' + esc(b.u.slice(0, 70)) + '</div>';
+    }).join('') + (bad.length > 8 ? '<div><span></span>…and ' + (bad.length - 8) + ' more</div>' : '');
+    msg.appendChild(list);
+    if (good.length) {
+      var drop = document.createElement('button');
+      drop.type = 'button';
+      drop.className = 'va-undo';
+      drop.textContent = 'Drop them and add the other ' + good.length;
+      drop.addEventListener('click', function () {
+        urlIn.value = good.join('\n');
+        refresh();
+        say('');
+        saveBtn.click();
+      });
+      msg.appendChild(drop);
+    }
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
   // A wrong paste otherwise means hand-editing the data file. Undo removes
   // exactly the URLs the worker reported adding — not a blind revert, so a bot
   // commit landing in between is harmless.
@@ -301,11 +336,16 @@
   saveBtn.addEventListener('click', function () {
     var urls = urlList();
     if (!urls.length) { say('Enter at least one URL.', 'va-err'); return; }
-    for (var i = 0; i < urls.length; i++) {
-      if (!/^https?:\/\/\S+$/i.test(urls[i])) {
-        say('Line ' + (i + 1) + ' is not a valid http(s) URL.', 'va-err');
-        return;
-      }
+    // Report every bad line at once, and offer to drop them rather than making
+    // one typo block a paste of fifty.
+    var bad = [];
+    urls.forEach(function (u, i) {
+      if (!/^https?:\/\/\S+$/i.test(u)) bad.push({ n: i + 1, u: u });
+    });
+    if (bad.length) {
+      var good = urls.filter(function (u) { return /^https?:\/\/\S+$/i.test(u); });
+      showBadLines(bad, good);
+      return;
     }
     var key = keyIn.value.trim();
     if (!key) { say('Vault key required.', 'va-err'); return; }

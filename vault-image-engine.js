@@ -69,14 +69,29 @@
     + '.cs-filter input:focus{outline:none;border-color:rgba(255,255,255,.4);}'
     + '.cs-count{font-size:.78rem;color:rgba(255,255,255,.4);white-space:nowrap;'
     + 'font-variant-numeric:tabular-nums;}'
-    + '.cs-none{color:rgba(255,255,255,.45);font-size:.9rem;padding:22px 0;}';
+    + '.cs-none{color:rgba(255,255,255,.45);font-size:.9rem;padding:22px 0;}'
+    + '.cs-density{display:flex;gap:3px;flex:0 0 auto;}'
+    + '.cs-density button{padding:6px 8px;border-radius:7px;cursor:pointer;font:inherit;'
+    + 'font-size:.8rem;line-height:1;color:rgba(255,255,255,.45);'
+    + 'background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}'
+    + '.cs-density button.on{color:#000;background:#fff;border-color:#fff;}'
+    + '.cs-d-lg .is-body{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))!important;}'
+    + '.cs-d-md .is-body{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important;}'
+    + '.cs-d-sm .is-body{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))!important;}'
+    + '.is-divider{position:sticky;top:0;z-index:3;'
+    + 'background:var(--v-bg,#07070a);padding-top:10px;padding-bottom:6px;}';
   document.head.appendChild(filterStyle);
 
   var bar = document.createElement('div');
   bar.className = 'cs-filter';
   bar.innerHTML = '<input type="search" id="cs-q" placeholder="Filter this collection…" '
     + 'autocomplete="off" spellcheck="false" aria-label="Filter this collection">'
-    + '<span class="cs-count" id="cs-count"></span>';
+    + '<span class="cs-count" id="cs-count"></span>'
+    + '<div class="cs-density" role="group" aria-label="Tile size">'
+    + '<button type="button" data-d="lg" title="Large tiles">▢</button>'
+    + '<button type="button" data-d="md" title="Medium tiles">▦</button>'
+    + '<button type="button" data-d="sm" title="Small tiles">▩</button>'
+    + '</div>';
   var noneMsg = document.createElement('div');
   noneMsg.className = 'cs-none cs-hidden';
   noneMsg.textContent = 'Nothing here matches that.';
@@ -104,6 +119,23 @@
   qInput.addEventListener('input', function () {
     query = qInput.value.trim().toLowerCase();
     applyFilter();
+  });
+
+  var D_KEY = 'vault-density';
+  function setDensity(d) {
+    var root = document.documentElement;
+    root.classList.remove('cs-d-lg', 'cs-d-md', 'cs-d-sm');
+    root.classList.add('cs-d-' + d);
+    bar.querySelectorAll('.cs-density button').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.d === d);
+    });
+    try { localStorage.setItem(D_KEY, d); } catch (e) {}
+  }
+  var startD = 'md';
+  try { startD = localStorage.getItem(D_KEY) || 'md'; } catch (e) {}
+  setDensity(startD);
+  bar.querySelectorAll('.cs-density button').forEach(function (b) {
+    b.addEventListener('click', function () { setDensity(b.dataset.d); });
   });
 
   var scroller = window.VaultScroll ? VaultScroll.init(slug) : null;

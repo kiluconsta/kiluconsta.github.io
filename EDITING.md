@@ -232,6 +232,29 @@ never shown stale.
 To ship an update, bump `VERSION` at the top of `sw.js` — old caches are dropped
 on activation.
 
+## Reordering, importing, duplicates
+
+- **Move an entry** without editing the file: the worker takes a `move` action
+  with `where` set to `top`, `bottom` or `section` (plus a section index). The
+  entry line is lifted verbatim, so a trimmed clip keeps its start and end.
+- **Import from a page**: the worker's `scan` action fetches a source page and
+  returns the media links it finds, which you can then paste into the **+** box.
+  It only fetches, and only returns, hosts already listed in `PROXY_HOSTS` —
+  letting it fetch anything would turn the worker into an open proxy into
+  Cloudflare's own internal endpoints. Private and loopback addresses are
+  refused outright.
+- **Duplicates** tab on the health page reads every data file on demand and
+  reports links that appear more than once, flagging those that span more than
+  one collection, plus a per-host count of the whole library.
+
+## Grid controls
+
+- **Tile size** — three buttons beside the filter box, remembered per device.
+  Columns are driven by a minimum tile width, so it stays responsive.
+- **Section headings stick** to the top while you scroll past them.
+- **Filmstrip** in the video lightbox shows neighbouring thumbnails; click one
+  to jump. It windows to 25 either side, so a 1,900-item collection stays cheap.
+
 ## Small things
 
 - **`?`** anywhere opens the keyboard shortcut list. It ignores the key while
@@ -239,6 +262,10 @@ on activation.
 - **Unfavouriting shows an Undo** for six seconds, and puts the entry back in
   its original position.
 - Tiles shimmer while their poster loads instead of sitting blank.
+- **Favourites** can be grouped by collection or by type, or left in the order
+  you added them. The choice is remembered.
+- The add box reports **every** bad line at once with its line number, and
+  offers to drop them and add the rest rather than blocking the whole paste.
 
 **What still needs a rebuild (send the source zip to Claude):**
 adding a whole new collection, renaming one, or any design/layout change.

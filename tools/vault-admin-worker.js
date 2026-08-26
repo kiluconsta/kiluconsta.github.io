@@ -176,6 +176,54 @@ export function renameSection(text, index, label) {
   return lines.join('\n');
 }
 
+/**
+ * Move one entry to another position: to the end of a section, or to the very
+ * top or bottom of the array. The entry line is lifted verbatim, so a trimmed
+ * clip keeps its start/end.
+ *   where: 'section' (needs sectionIndex) | 'top' | 'bottom'
+ */
+export function moveUrl(text, varName, url, where, sectionIndex) {
+  const lines = text.split('\n');
+  const openRe = new RegExp('var\\s+' + varName + '\\s*=\\s*\\[');
+  const open = lines.findIndex((l) => openRe.test(l));
+  if (open === -1) throw new Error('could not find `var ' + varName + ' = [`');
+  let close = -1;
+  for (let i = open + 1; i < lines.length; i++) {
+    if (/^\s*\];\s*$/.test(lines[i])) { close = i; break; }
+  }
+  if (close === -1) throw new Error('could not find the closing `];`');
+
+  const from = lines.findIndex((l, i) => i > open && i < close && entryUrl(l) === url);
+  if (from === -1) throw new Error('that link is not in this collection');
+  const [moved] = lines.splice(from, 1);
+  close -= 1; // the array just got one line shorter
+
+  let at;
+  if (where === 'top') {
+    // After a leading section break, if the array opens with one.
+    at = /^\s*null\s*,?\s*$/.test(lines[open + 1]) ? open + 2 : open + 1;
+  } else if (where === 'bottom') {
+    at = close;
+  } else {
+    const nulls = [];
+    for (let i = open + 1; i < close; i++) {
+      if (/^\s*null\s*,?\s*$/.test(lines[i])) nulls.push(i);
+    }
+    if (sectionIndex == null || sectionIndex < 0 || sectionIndex >= nulls.length) {
+      throw new Error('section ' + sectionIndex + ' does not exist');
+    }
+    at = sectionIndex + 1 < nulls.length ? nulls[sectionIndex + 1] : close;
+  }
+
+  let indent = '  ';
+  for (let i = at - 1; i > open; i--) {
+    const m = lines[i].match(/^(\s+)\S/);
+    if (m) { indent = m[1]; break; }
+  }
+  lines.splice(at, 0, indent + moved.trim());
+  return lines.join('\n');
+}
+
 /** Every URL currently present as an entry, in file order. */
 export function listUrls(text) {
   const out = [];
@@ -202,6 +250,60 @@ export function removeUrls(text, urls) {
   }
   if (!removed) throw new Error('none of those URLs are in this collection');
   return { text: kept.join('\n'), removed };
+}
+
+// ── Scraping a source page ───────────────────────────────────────────────
+// Fetching a URL the caller supplies would make this worker a general-purpose
+// proxy: an SSRF hole reachable by anyone holding the key, including into
+// Cloudflare's own metadata endpoints. So both the page fetched and the links
+// extracted are restricted to hosts the site already deals with.
+const PROXY_HOSTS = [
+  'twimg.com', 'video.twimg.com', 'coomer.st', 'redgifs.com',
+  'tumblr.com', 'lpsg.com', 'rule34.xxx', 'cartoonsworld.vip',
+  'monstercockland.com', 'gayforfuns.com', 'gff.network',
+  'dropbox.com', 'dropboxusercontent.com', 'googleusercontent.com',
+  'bsky.network', 'video.bsky.app', 'bsky.social', 'bsky.app'
+];
+const MEDIA_RE = /\.(mp4|m4v|webm|m3u8|mov|jpe?g|png|gifv?|webp|avif)(\?|#|$)/i;
+
+function hostAllowed(u) {
+  try {
+    const url = new URL(u);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return false;
+    const h = url.hostname.toLowerCase();
+    // Reject anything that resolves inward regardless of the allowlist.
+    if (/^(localhost|\[|\d+\.\d+\.\d+\.\d+$)/.test(h)) {
+      if (!/^\d+\.\d+\.\d+\.\d+$/.test(h)) return false;
+      const p = h.split('.').map(Number);
+      if (p[0] === 10 || p[0] === 127 || p[0] === 0 ||
+          (p[0] === 172 && p[1] >= 16 && p[1] <= 31) ||
+          (p[0] === 192 && p[1] === 168) ||
+          (p[0] === 169 && p[1] === 254)) return false;
+      return false; // no bare-IP sources are expected at all
+    }
+    return PROXY_HOSTS.some((allowed) => h === allowed || h.endsWith('.' + allowed));
+  } catch (e) { return false; }
+}
+
+export function extractMedia(html, baseUrl) {
+  const found = new Set();
+  const push = (raw) => {
+    if (!raw) return;
+    let u = raw.replace(/&amp;/g, '&').trim();
+    try { u = new URL(u, baseUrl).toString(); } catch (e) { return; }
+    if (!MEDIA_RE.test(u)) return;
+    if (!hostAllowed(u)) return;
+    found.add(u);
+  };
+  // src/href/content attributes, plus bare URLs inside inline JSON blobs.
+  const attrRe = /(?:src|href|content|data-src|data-video|poster)\s*=\s*["']([^"']+)["']/gi;
+  let m;
+  while ((m = attrRe.exec(html)) !== null) push(m[1]);
+  // Backslashes are allowed through and stripped below: inline JSON writes
+  // URLs as https:\/\/host\/path, and stopping at the first one loses the path.
+  const bareRe = /https?:\\?\/\\?\/[^\s"'<>]+/gi;
+  while ((m = bareRe.exec(html)) !== null) push(m[0].replace(/\\/g, ''));
+  return [...found];
 }
 
 // ── Rate limiting ────────────────────────────────────────────────────────
@@ -367,9 +469,40 @@ export default {
     if (!isVideo && !isImage) return json({ error: 'unknown collection: ' + slug }, 400, origin);
 
     // All actions share the sha-guarded read/write loop below.
-    const ACTIONS = ['add', 'remove', 'add-section', 'rename-section'];
+    const ACTIONS = ['add', 'remove', 'add-section', 'rename-section', 'move', 'scan'];
     const action = ACTIONS.includes(body.action) ? body.action : 'add';
     const isSectionOp = action === 'add-section' || action === 'rename-section';
+    const needsNoUrls = isSectionOp;
+
+    // 'scan' reads a page and returns what it found. It writes nothing, so it
+    // returns before any of the commit machinery below.
+    if (action === 'scan') {
+      const page = String(body.page || '').trim();
+      if (!hostAllowed(page)) {
+        return json({
+          error: 'that host is not one this vault fetches from',
+          allowed: PROXY_HOSTS
+        }, 400, origin);
+      }
+      let html;
+      try {
+        const r = await fetch(page, {
+          headers: { 'User-Agent': 'Mozilla/5.0 vault-admin' },
+          redirect: 'follow'
+        });
+        if (!r.ok) return json({ error: 'source page returned ' + r.status }, 502, origin);
+        const type = r.headers.get('Content-Type') || '';
+        if (!/text\/html|application\/json|text\/plain/i.test(type)) {
+          return json({ error: 'source page is not a document (' + type + ')' }, 415, origin);
+        }
+        html = (await r.text()).slice(0, 3000000);
+      } catch (e) {
+        return json({ error: 'could not fetch that page' }, 502, origin);
+      }
+      const urls = extractMedia(html, page);
+      audit(request, { action: 'scan', host: new URL(page).hostname, found: urls.length });
+      return json({ ok: true, found: urls.length, urls: urls.slice(0, 200) }, 200, origin);
+    }
 
     let label = '';
     if (isSectionOp) {
@@ -453,7 +586,10 @@ export default {
       let updated, lines = newLines, addedUrls = [];
       removed = 0; skipped = [];
       try {
-        if (action === 'add-section') {
+        if (action === 'move') {
+          const where = ['top', 'bottom', 'section'].includes(body.where) ? body.where : 'section';
+          updated = moveUrl(current, isVideo ? 'SOURCES' : 'IMGS', urls[0], where, section);
+        } else if (action === 'add-section') {
           updated = addSection(current, isVideo ? 'SOURCES' : 'IMGS', label);
         } else if (action === 'rename-section') {
           updated = renameSection(current, section == null ? -1 : section, label);
@@ -494,7 +630,9 @@ export default {
         method: 'PUT',
         headers: { ...gh, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: action === 'add-section'
+          message: action === 'move'
+            ? `data: reorder link in ${slug}`
+            : action === 'add-section'
             ? `data: add section "${label}" to ${slug}`
             : action === 'rename-section'
             ? `data: rename section in ${slug}`
@@ -522,7 +660,7 @@ export default {
         });
         return json({
           ok: true, commit: sha, path,
-          added: (action === 'remove' || isSectionOp) ? 0 : lines.length,
+          added: (action === 'remove' || action === 'move' || isSectionOp) ? 0 : lines.length,
           // Exactly what went in, so the site can offer a precise undo.
           addedUrls,
           removed, skipped: skipped.length, retries: attempt

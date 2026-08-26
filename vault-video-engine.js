@@ -106,7 +106,20 @@
     + '.vs-tile.cs-dead{opacity:.4;}'
     + '.vs-dead-badge{position:absolute;left:6px;bottom:6px;z-index:2;padding:2px 6px;'
     + 'border-radius:5px;font-size:10px;letter-spacing:.04em;text-transform:uppercase;'
-    + 'color:#ff8d97;background:rgba(255,77,94,.18);pointer-events:none;}';
+    + 'color:#ff8d97;background:rgba(255,77,94,.18);pointer-events:none;}'
+    // UI-06 density
+    + '.cs-density{display:flex;gap:3px;flex:0 0 auto;}'
+    + '.cs-density button{padding:6px 8px;border-radius:7px;cursor:pointer;font:inherit;'
+    + 'font-size:.8rem;line-height:1;color:rgba(255,255,255,.45);'
+    + 'background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}'
+    + '.cs-density button.on{color:#000;background:#fff;border-color:#fff;}'
+    // Grid columns are driven by a min tile width, so this stays responsive.
+    + '.cs-d-lg .vs-body,.cs-d-lg .is-body{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))!important;}'
+    + '.cs-d-md .vs-body,.cs-d-md .is-body{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important;}'
+    + '.cs-d-sm .vs-body,.cs-d-sm .is-body{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))!important;}'
+    // UI-04 sticky section heading
+    + '.vs-divider,.is-divider{position:sticky;top:0;z-index:3;'
+    + 'background:var(--v-bg,#07070a);padding-top:10px;padding-bottom:6px;}';
   document.head.appendChild(filterStyle);
 
   // ── Known-dead links ─────────────────────────────────────
@@ -142,7 +155,12 @@
   bar.className = 'cs-filter';
   bar.innerHTML = '<input type="search" id="cs-q" placeholder="Filter this collection…" '
     + 'autocomplete="off" spellcheck="false" aria-label="Filter this collection">'
-    + '<span class="cs-count" id="cs-count"></span>';
+    + '<span class="cs-count" id="cs-count"></span>'
+    + '<div class="cs-density" role="group" aria-label="Tile size">'
+    + '<button type="button" data-d="lg" title="Large tiles">▢</button>'
+    + '<button type="button" data-d="md" title="Medium tiles">▦</button>'
+    + '<button type="button" data-d="sm" title="Small tiles">▩</button>'
+    + '</div>';
   var noneMsg = document.createElement('div');
   noneMsg.className = 'cs-none cs-hidden';
   noneMsg.textContent = 'Nothing here matches that.';
@@ -173,6 +191,84 @@
     query = qInput.value.trim().toLowerCase();
     applyFilter();
   });
+
+  // ── Tile density ─────────────────────────────────────────
+  // One fixed tile size suits a phone or a desktop, not both.
+  var D_KEY = 'vault-density';
+  function setDensity(d) {
+    var root = document.documentElement;
+    root.classList.remove('cs-d-lg', 'cs-d-md', 'cs-d-sm');
+    root.classList.add('cs-d-' + d);
+    bar.querySelectorAll('.cs-density button').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.d === d);
+    });
+    try { localStorage.setItem(D_KEY, d); } catch (e) {}
+  }
+  var startD = 'md';
+  try { startD = localStorage.getItem(D_KEY) || 'md'; } catch (e) {}
+  setDensity(startD);
+  bar.querySelectorAll('.cs-density button').forEach(function (b) {
+    b.addEventListener('click', function () { setDensity(b.dataset.d); });
+  });
+
+  // ── Filmstrip (UI-08) ────────────────────────────────────
+  // Stepping one at a time was the only way to move around inside the lightbox.
+  // Reuses the poster each tile already generated, so it costs no new decoding.
+  var stripStyle = document.createElement('style');
+  stripStyle.textContent =
+    '.vs-strip{position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;gap:6px;'
+    + 'padding:10px 12px;overflow-x:auto;scrollbar-width:none;'
+    + 'background:linear-gradient(to top,rgba(0,0,0,.82),rgba(0,0,0,0));}'
+    + '.vs-strip::-webkit-scrollbar{display:none;}'
+    + '.vs-strip img{height:52px;width:auto;min-width:34px;border-radius:5px;cursor:pointer;'
+    + 'object-fit:cover;opacity:.45;transition:opacity .15s ease,outline-color .15s ease;'
+    + 'outline:2px solid transparent;outline-offset:-2px;background:rgba(255,255,255,.07);}'
+    + '.vs-strip img:hover{opacity:.8;}'
+    + '.vs-strip img.on{opacity:1;outline-color:#fff;}'
+    + '@media (max-width:600px){.vs-strip img{height:40px;}}';
+  document.head.appendChild(stripStyle);
+
+  var strip = document.createElement('div');
+  strip.className = 'vs-strip';
+  var stripBuilt = false;
+  if (videoWrapEl()) videoWrapEl().appendChild(strip);
+
+  function videoWrapEl() { return mount.querySelector('.vs-lb-video-wrap'); }
+
+  function paintStrip(idx) {
+    if (!strip.isConnected) {
+      var w = videoWrapEl();
+      if (!w) return;
+      w.appendChild(strip);
+    }
+    // Build once, lazily — a 1,900-item strip would be absurd, so window it.
+    var RADIUS = 25;
+    var from = Math.max(0, idx - RADIUS);
+    var to = Math.min(items.length, idx + RADIUS + 1);
+    if (!stripBuilt || strip.dataset.from != from || strip.dataset.to != to) {
+      strip.dataset.from = from; strip.dataset.to = to;
+      strip.innerHTML = '';
+      for (var i = from; i < to; i++) {
+        (function (n) {
+          var tile = body.querySelector('.vs-tile[data-vi="' + n + '"]');
+          var src = tile && tile.querySelector('img') && tile.querySelector('img').src;
+          var im = document.createElement('img');
+          im.alt = '';
+          im.loading = 'lazy';
+          if (src && src.indexOf('data:') === 0) im.src = src;
+          im.dataset.n = n;
+          im.addEventListener('click', function (e) { e.stopPropagation(); openLightbox(n); });
+          strip.appendChild(im);
+        })(i);
+      }
+      stripBuilt = true;
+    }
+    strip.querySelectorAll('img').forEach(function (im) {
+      var on = Number(im.dataset.n) === idx;
+      im.classList.toggle('on', on);
+      if (on) im.scrollIntoView({ block: 'nearest', inline: 'center' });
+    });
+  }
 
   function onGridComplete() {
     VaultLB.initJumpNav([].slice.call(body.querySelectorAll('.vs-divider')));
@@ -296,6 +392,7 @@
     lightbox.style.display = 'flex';
     VaultLB.lock(true);
     counter.textContent = (idx + 1) + ' / ' + items.length;
+    paintStrip(idx);
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'video', start: it.start, end: it.end });
     resetAdv(); // 12s budget starts counting once the video is actually playing
   }
