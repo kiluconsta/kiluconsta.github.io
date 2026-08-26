@@ -229,8 +229,13 @@ are fetched fresh when possible and fall back to the cached copy; media is never
 cached (far too large). The health logs are deliberately excluded so they are
 never shown stale.
 
-To ship an update, bump `VERSION` at the top of `sw.js` — old caches are dropped
-on activation.
+Scripts, styles and markup are fetched network-first, so a deploy reaches the
+browser on the very next load; the cache only answers when the network does not.
+Icons and fonts are still served from cache and refreshed behind you.
+
+Bump `VERSION` at the top of `sw.js` when you change the worker itself — old
+caches are dropped on activation. If a browser ever seems stuck on old code,
+that is the lever.
 
 ## Reordering, importing, duplicates
 

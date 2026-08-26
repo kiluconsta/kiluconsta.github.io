@@ -3,11 +3,12 @@
 // copy opened offline was simply blank.
 //
 // Strategy by resource:
-//   app shell + scripts   stale-while-revalidate — instant, updates in background
+//   scripts/styles/html   network-first — a stale script is a broken site
+//   icons, fonts          stale-while-revalidate — instant, refreshed after
 //   data/*.js             network-first — a stale media list is worse than a wait
 //   thumbs/*.jpg          cache-first — content-addressed, so never stale
 //   media + proxy         never cached — far too large, and not ours to hold
-const VERSION = 'vault-v1';
+const VERSION = 'vault-v2';
 const SHELL = VERSION + '-shell';
 const DATA = VERSION + '-data';
 const THUMBS = VERSION + '-thumbs';
@@ -43,7 +44,7 @@ self.addEventListener('activate', (e) => {
 function staleWhileRevalidate(req, cacheName) {
   return caches.open(cacheName).then((cache) =>
     cache.match(req).then((hit) => {
-      const net = fetch(req).then((res) => {
+      const net = fetch(req, { cache: 'no-cache' }).then((res) => {
         if (res && res.ok) cache.put(req, res.clone());
         return res;
       }).catch(() => hit);
@@ -54,7 +55,7 @@ function staleWhileRevalidate(req, cacheName) {
 
 function networkFirst(req, cacheName) {
   return caches.open(cacheName).then((cache) =>
-    fetch(req).then((res) => {
+    fetch(req, { cache: 'no-cache' }).then((res) => {
       if (res && res.ok) cache.put(req, res.clone());
       return res;
     }).catch(() => cache.match(req))
@@ -92,5 +93,14 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
+  // Scripts, styles and markup go network-first. Stale-while-revalidate meant a
+  // deploy did not reach the browser until the load *after* next — long enough
+  // to look like the fix never shipped. The cache still answers when offline.
+  if (/\.(js|css|html|json)$/i.test(url.pathname)) {
+    e.respondWith(networkFirst(req, SHELL));
+    return;
+  }
+
+  // Everything else (icons, fonts) is fine served instantly and refreshed after.
   e.respondWith(staleWhileRevalidate(req, SHELL));
 });
