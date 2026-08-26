@@ -225,12 +225,33 @@
     + 'outline:2px solid transparent;outline-offset:-2px;background:rgba(255,255,255,.07);}'
     + '.vs-strip img:hover{opacity:.8;}'
     + '.vs-strip img.on{opacity:1;outline-color:#fff;}'
-    + '@media (max-width:600px){.vs-strip img{height:40px;}}';
+    + '@media (max-width:600px){.vs-strip img{height:40px;}}'
+    // Idles away when the pointer stops, so it never sits over the video.
+    + '.vs-strip{opacity:0;pointer-events:none;transition:opacity .25s ease;}'
+    + '.vs-strip.vs-strip-on{opacity:1;pointer-events:auto;}'
+    + '@media (prefers-reduced-motion:reduce){.vs-strip{transition:none;}}';
   document.head.appendChild(stripStyle);
 
   var strip = document.createElement('div');
   strip.className = 'vs-strip';
   var stripBuilt = false;
+
+  // Show on movement, hide after 2.6s of stillness. Hovering the strip itself
+  // keeps it up — otherwise it vanishes from under the cursor mid-reach.
+  var STRIP_IDLE_MS = 2600;
+  var stripTimer = null, stripHover = false;
+  function stripWake() {
+    strip.classList.add('vs-strip-on');
+    clearTimeout(stripTimer);
+    stripTimer = setTimeout(function () {
+      if (!stripHover) strip.classList.remove('vs-strip-on');
+    }, STRIP_IDLE_MS);
+  }
+  function stripSleep() { clearTimeout(stripTimer); strip.classList.remove('vs-strip-on'); }
+  strip.addEventListener('pointerenter', function () { stripHover = true; stripWake(); });
+  strip.addEventListener('pointerleave', function () { stripHover = false; stripWake(); });
+  lightbox.addEventListener('pointermove', stripWake);
+  lightbox.addEventListener('pointerdown', stripWake);
   if (videoWrapEl()) videoWrapEl().appendChild(strip);
 
   function videoWrapEl() { return mount.querySelector('.vs-lb-video-wrap'); }
@@ -250,15 +271,27 @@
       strip.innerHTML = '';
       for (var i = from; i < to; i++) {
         (function (n) {
-          var tile = body.querySelector('.vs-tile[data-vi="' + n + '"]');
-          var src = tile && tile.querySelector('img') && tile.querySelector('img').src;
           var im = document.createElement('img');
           im.alt = '';
-          im.loading = 'lazy';
-          if (src && src.indexOf('data:') === 0) im.src = src;
+          // Not lazy: the strip is hidden until the pointer moves, and a lazy
+          // image inside a hidden element never loads — it would reveal blank.
+          // These are ~50 small pre-generated jpgs, so eager is the right call.
           im.dataset.n = n;
           im.addEventListener('click', function (e) { e.stopPropagation(); openLightbox(n); });
           strip.appendChild(im);
+
+          // Prefer a poster the grid already resolved; most neighbours have
+          // never been scrolled into view though, so fall back to the
+          // pre-generated thumbnail. thumbFor is a manifest lookup — no video
+          // decoding — so filling 50 of these costs nothing.
+          var tile = body.querySelector('.vs-tile[data-vi="' + n + '"]');
+          var img = tile && tile.querySelector('img');
+          if (img && img.src) { im.src = img.src; return; }
+          if (window.VaultPosters && VaultPosters.thumbFor) {
+            VaultPosters.thumbFor(items[n].url, posterTime(items[n])).then(function (src) {
+              if (src && im.isConnected) im.src = src;
+            }).catch(function () {});
+          }
         })(i);
       }
       stripBuilt = true;
@@ -393,10 +426,12 @@
     VaultLB.lock(true);
     counter.textContent = (idx + 1) + ' / ' + items.length;
     paintStrip(idx);
+    stripWake();
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'video', start: it.start, end: it.end });
     resetAdv(); // 12s budget starts counting once the video is actually playing
   }
   function closeLightbox() {
+    stripSleep();
     lightbox.style.display = 'none';
     VaultLB.lock(false);
     clearAdv();

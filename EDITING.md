@@ -275,6 +275,10 @@ it. The collection is hidden from the home page while it is empty.
 - **Section headings stick** to the top while you scroll past them.
 - **Filmstrip** in the video lightbox shows neighbouring thumbnails; click one
   to jump. It windows to 25 either side, so a 1,900-item collection stays cheap.
+  Thumbnails come from the pre-generated `thumbs/` files, so neighbours you have
+  never scrolled past still show a picture. It fades in whenever the pointer
+  moves and fades out after 2.6 seconds of stillness, staying put while the
+  pointer is over it.
 
 ## Small things
 
