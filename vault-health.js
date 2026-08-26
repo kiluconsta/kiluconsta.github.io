@@ -46,7 +46,10 @@
     + '.hz-note{color:rgba(255,255,255,.4);font-size:.82rem;margin:0 0 14px;}'
     + '.hz-more{margin-top:16px;}'
     + '.hz-hosts{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px;font-size:.72rem;}'
-    + '.hz-hosts .hz-badge b{color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums;}';
+    + '.hz-hosts .hz-badge b{color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums;}'
+    + '.hz-h{font-size:.95rem;font-weight:600;margin:26px 0 8px;color:#fff;}'
+    + '.hz-h:first-of-type{margin-top:8px;}'
+    + '#hz-clean-log{margin-top:14px;min-height:1.2em;}';
   var style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
@@ -109,11 +112,13 @@
       + tab('strikes', 'On strike', strikes.length, false)
       + tab('thumbs', 'No thumbnail', failures.length, false)
       + tab('dupes', 'Duplicates', '·', false)
+      + tab('clean', 'Cleanup', '·', false)
       + '</div>'
       + '<div class="hz-panel on" id="hz-removed"></div>'
       + '<div class="hz-panel" id="hz-strikes"></div>'
       + '<div class="hz-panel" id="hz-thumbs"></div>'
-      + '<div class="hz-panel" id="hz-dupes"></div>';
+      + '<div class="hz-panel" id="hz-dupes"></div>'
+      + '<div class="hz-panel" id="hz-clean"></div>';
 
     root.querySelectorAll('.hz-tab').forEach(function (t) {
       t.addEventListener('click', function () {
@@ -122,6 +127,7 @@
         t.classList.add('on');
         document.getElementById('hz-' + t.dataset.k).classList.add('on');
         if (t.dataset.k === 'dupes') loadDupes(t);
+        if (t.dataset.k === 'clean') loadCleanup(t, strikes);
       });
     });
 
@@ -217,7 +223,8 @@
   var SLUGS = [
     'animations', 'bluesky-likes', 'bomb-ass-dee', 'bomb-ass-dee-pt-2',
     'coomer', 'dropbox', 'meatsenpaii', 'x-likes-long', 'x-likes-short',
-    'gifs', 'images', 'sandf', 'show-off', 'tumblr'
+    'gifs', 'images', 'sandf', 'show-off', 'tumblr',
+    'tragic-dee'
   ];
   var dupesLoaded = false;
 
@@ -288,6 +295,240 @@
           + d.slugs.map(function (s) { return '<span class="hz-badge">' + esc(s) + '</span>'; }).join('')
           + '</div></div></div>';
       }, 'No duplicates anywhere. Every link is unique.');
+    });
+  }
+
+  // ── Cleanup ──────────────────────────────────────────────
+  // Two destructive operations, both preview-then-confirm because they rewrite
+  // hand-curated data files.
+  //
+  //   Dedupe   drop repeats of the same URL inside one collection, keeping
+  //            the first occurrence.
+  //   Salvage  when dead links leave a section with 3 or fewer survivors, move
+  //            those survivors into "Tragic Dee", grouped by host.
+  //
+  // "Dead" means the weekly checker's verdict — link-strikes.json — NOT the
+  // thumbnail-failure log. Those links still play; treating them as dead would
+  // delete working videos.
+  var SALVAGE_SLUG = 'tragic-dee';
+  var SALVAGE_MAX = 3;
+  var cleanLoaded = false;
+
+  // Sections of a data file, as arrays of entry URLs.
+  function sectionsIn(src) {
+    var secs = [], cur = [], started = false, labels = [];
+    var lm = src.match(/var\s+DIV_LABELS\s*=\s*\[(.*)\];/);
+    if (lm) labels = (lm[1].match(/"(?:[^"\\]|\\.)*"/g) || []).map(function (s) {
+      try { return JSON.parse(s); } catch (e) { return s; }
+    });
+    src.split('\n').forEach(function (line) {
+      if (!started) { if (/var\s+(SOURCES|IMGS)\s*=\s*\[/.test(line)) started = true; return; }
+      if (/^\s*\];\s*$/.test(line)) { started = false; return; }
+      if (/^\s*null\s*,?\s*$/.test(line)) { secs.push(cur); cur = []; return; }
+      var u = entryUrlOf(line);
+      if (u) cur.push(u);
+    });
+    secs.push(cur);
+    return { sections: secs, labels: labels };
+  }
+  function entryUrlOf(line) {
+    var t = line.trim();
+    if (!t || t.indexOf('//') === 0) return null;
+    if (!/^(\{.*\}|"[^"]*")\s*,?$/.test(t)) return null;
+    var m = t.match(/"(https?:\/\/[^"]+)"/);
+    return m ? m[1] : null;
+  }
+  function hostOf(u) {
+    try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return 'unknown'; }
+  }
+
+  function loadCleanup(tabBtn, strikes) {
+    if (cleanLoaded) return;
+    cleanLoaded = true;
+    var host = document.getElementById('hz-clean');
+    host.innerHTML = '<p class="hz-loading">Reading every collection…</p>';
+    var dead = {};
+    (strikes || []).forEach(function (s) { dead[s.url] = true; });
+
+    Promise.all(SLUGS.map(function (s) {
+      return text('/data/' + s + '.js').then(function (t) { return { slug: s, src: t }; });
+    })).then(function (files) {
+      var dupPlan = [], salvagePlan = [];
+      files.forEach(function (f) {
+        if (f.slug === SALVAGE_SLUG) return;
+        var parsed = sectionsIn(f.src);
+        // duplicates across the whole collection
+        var seen = {}, dups = 0;
+        parsed.sections.forEach(function (sec) {
+          sec.forEach(function (u) {
+            if (seen[u]) dups++; else seen[u] = true;
+          });
+        });
+        if (dups) dupPlan.push({ slug: f.slug, dups: dups, total: Object.keys(seen).length + dups });
+        // gutted sections
+        parsed.sections.forEach(function (sec, i) {
+          if (!sec.length) return;
+          var alive = sec.filter(function (u) { return !dead[u]; });
+          var deadCount = sec.length - alive.length;
+          if (alive.length > 0 && alive.length <= SALVAGE_MAX && deadCount > 0) {
+            salvagePlan.push({
+              slug: f.slug, section: i,
+              label: parsed.labels[i] || ('Part ' + (i + 1)),
+              survivors: alive, deadCount: deadCount
+            });
+          }
+        });
+      });
+
+      var totalDups = dupPlan.reduce(function (a, d) { return a + d.dups; }, 0);
+      if (tabBtn) tabBtn.querySelector('.n').textContent = totalDups;
+      paintCleanup(host, dupPlan, totalDups, salvagePlan, Object.keys(dead).length);
+    });
+  }
+
+  function paintCleanup(host, dupPlan, totalDups, salvagePlan, deadCount) {
+    host.innerHTML =
+      '<p class="hz-note">Both actions rewrite data files and commit. Nothing runs '
+      + 'until you confirm. <b>Dead</b> here means the weekly checker\'s verdict ('
+      + deadCount + ' link' + (deadCount === 1 ? '' : 's') + ' on strike) — not the '
+      + 'thumbnail-failure list, whose links still play.</p>'
+
+      + '<h3 class="hz-h">Duplicates within a collection</h3>'
+      + (totalDups
+          ? '<p class="hz-note">' + totalDups + ' repeated link'
+            + (totalDups === 1 ? '' : 's') + ' across ' + dupPlan.length
+            + ' collection' + (dupPlan.length === 1 ? '' : 's') + '. The first copy is kept.</p>'
+            + '<div id="hz-dup-plan">' + dupPlan.map(function (d) {
+                return '<div class="hz-row" data-slug="' + esc(d.slug) + '">'
+                  + '<div><div class="hz-url">' + esc(d.slug) + '</div>'
+                  + '<div class="hz-meta"><span class="hz-badge warn">' + d.dups
+                  + ' duplicate' + (d.dups === 1 ? '' : 's') + '</span>'
+                  + '<span>of ' + d.total + ' entries</span></div></div>'
+                  + '<button type="button" class="hz-btn hz-dedupe">Remove</button></div>';
+              }).join('') + '</div>'
+            + '<button type="button" class="hz-btn hz-more" id="hz-dedupe-all">Remove all '
+            + totalDups + ' duplicates</button>'
+          : '<p class="hz-empty">No collection repeats a link.</p>')
+
+      + '<h3 class="hz-h">Gutted sections → Tragic Dee</h3>'
+      + (salvagePlan.length
+          ? '<p class="hz-note">' + salvagePlan.length + ' section'
+            + (salvagePlan.length === 1 ? '' : 's') + ' left with ' + SALVAGE_MAX
+            + ' or fewer working links. Survivors move to <b>Tragic Dee</b>, '
+            + 'in sections named after their host.</p>'
+            + '<div id="hz-salv-plan">' + salvagePlan.map(function (p, i) {
+                var hosts = {};
+                p.survivors.forEach(function (u) { hosts[hostOf(u)] = true; });
+                return '<div class="hz-row" data-i="' + i + '">'
+                  + '<div><div class="hz-url">' + esc(p.slug) + ' · ' + esc(p.label) + '</div>'
+                  + '<div class="hz-meta">'
+                  + '<span class="hz-badge warn">' + p.survivors.length + ' left</span>'
+                  + '<span class="hz-badge bad">' + p.deadCount + ' dead</span>'
+                  + '<span>→ ' + esc(Object.keys(hosts).join(', ')) + '</span>'
+                  + '</div></div>'
+                  + '<button type="button" class="hz-btn hz-salvage">Move</button></div>';
+              }).join('') + '</div>'
+          : '<p class="hz-empty">Nothing is gutted. Every section still has more than '
+            + SALVAGE_MAX + ' working links, so there is nothing to salvage.</p>')
+      + '<div id="hz-clean-log" class="hz-note"></div>';
+
+    var log = host.querySelector('#hz-clean-log');
+    function say(m) { log.textContent = m; }
+
+    host.querySelectorAll('.hz-dedupe').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var slug = b.closest('.hz-row').dataset.slug;
+        if (!confirm('Remove duplicate links from ' + slug + '?\n\nThe first copy of each is kept.')) return;
+        runDedupe(slug, b, say);
+      });
+    });
+    var all = host.querySelector('#hz-dedupe-all');
+    if (all) all.addEventListener('click', function () {
+      if (!confirm('Remove all ' + totalDups + ' duplicates across '
+        + dupPlan.length + ' collections?\n\nEach collection commits separately.')) return;
+      all.disabled = true;
+      var queue = dupPlan.slice();
+      (function next() {
+        if (!queue.length) { say('Done. All collections deduplicated.'); return; }
+        var d = queue.shift();
+        var btn = host.querySelector('.hz-row[data-slug="' + d.slug + '"] .hz-dedupe');
+        runDedupe(d.slug, btn, say, next);
+      })();
+    });
+
+    host.querySelectorAll('.hz-salvage').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var p = salvagePlan[Number(b.closest('.hz-row').dataset.i)];
+        if (!confirm('Move ' + p.survivors.length + ' link'
+          + (p.survivors.length === 1 ? '' : 's') + ' from ' + p.slug + ' · ' + p.label
+          + ' into Tragic Dee?')) return;
+        runSalvage(p, b, say);
+      });
+    });
+  }
+
+  function post(payload) {
+    var key;
+    try { key = localStorage.getItem(KEY_STORE) || ''; } catch (e) { key = ''; }
+    if (!key) return Promise.reject(new Error('Add a link from a collection page once so the vault key is saved.'));
+    return fetch(ADMIN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Vault-Key': key },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      return r.json().then(function (d) {
+        if (!r.ok) throw new Error(d.error || ('failed (' + r.status + ')'));
+        return d;
+      });
+    });
+  }
+
+  function runDedupe(slug, btn, say, done) {
+    if (btn) { btn.disabled = true; btn.textContent = 'Removing…'; }
+    say('Deduplicating ' + slug + '…');
+    post({ slug: slug, action: 'dedupe' }).then(function (d) {
+      if (btn) btn.textContent = d.removed ? 'Removed ' + d.removed : 'None';
+      say(slug + ': removed ' + (d.removed || 0) + '.');
+      if (done) setTimeout(done, 700); // stay clear of the worker's rate limit
+    }).catch(function (e) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Remove'; }
+      say(slug + ': ' + e.message);
+      if (done) setTimeout(done, 700);
+    });
+  }
+
+  // Add to Tragic Dee first, remove from the source second. If the run dies in
+  // between you get a duplicate, not a hole — the safe direction to fail.
+  function runSalvage(p, btn, say) {
+    btn.disabled = true; btn.textContent = 'Moving…';
+    var byHost = {};
+    p.survivors.forEach(function (u) { (byHost[hostOf(u)] = byHost[hostOf(u)] || []).push(u); });
+    var hosts = Object.keys(byHost);
+
+    text('/data/' + SALVAGE_SLUG + '.js').then(function (src) {
+      var existing = src ? (sectionsIn(src).labels || []) : [];
+      var chain = Promise.resolve();
+      hosts.forEach(function (h) {
+        chain = chain.then(function () {
+          var idx = existing.indexOf(h);
+          if (idx !== -1) return idx;
+          say('Creating section ' + h + '…');
+          return post({ slug: SALVAGE_SLUG, action: 'add-section', label: h })
+            .then(function () { existing.push(h); return existing.length - 1; });
+        }).then(function (idx) {
+          say('Moving ' + byHost[h].length + ' from ' + h + '…');
+          return post({ slug: SALVAGE_SLUG, urls: byHost[h], section: idx });
+        }).then(function () {
+          return post({ slug: p.slug, action: 'remove', urls: byHost[h] });
+        });
+      });
+      return chain;
+    }).then(function () {
+      btn.textContent = 'Moved';
+      say('Moved ' + p.survivors.length + ' link(s) into Tragic Dee.');
+    }).catch(function (e) {
+      btn.disabled = false; btn.textContent = 'Move';
+      say('Failed: ' + e.message);
     });
   }
 

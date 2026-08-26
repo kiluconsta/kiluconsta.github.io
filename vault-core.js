@@ -125,6 +125,13 @@ var COLLECTION_META = {
     "type": "video",
     "count": 71
   },
+  "tragic-dee": {
+    "label": "Tragic Dee",
+    "icon": "🩹",
+    "accent": "#8b6f8b",
+    "type": "video",
+    "count": 0
+  },
   "dropbox": {
     "label": "Dropbox",
     "icon": "📥",

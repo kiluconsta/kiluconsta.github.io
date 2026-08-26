@@ -44,6 +44,21 @@
     return tile;
   }
 
+  // ── Wrap the shelves into a grid ─────────────────────────
+  // Collections used to sit in a horizontal scroller, so most of them were off
+  // screen behind chevrons. There are only fourteen — they all fit.
+  var gridStyle = document.createElement('style');
+  gridStyle.textContent =
+    '.shelf-scroller{display:grid!important;overflow-x:visible!important;'
+    + 'grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;}'
+    + '.shelf-scroller > *{width:auto!important;min-width:0!important;max-width:none!important;'
+    + 'flex:none!important;}'
+    // The chevrons only make sense for a scroller.
+    + '.shelf-nav{display:none!important;}'
+    + '@media (max-width:520px){.shelf-scroller{'
+    + 'grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}}';
+  document.head.appendChild(gridStyle);
+
   var CHEV_L = '<svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5.5 8 10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var CHEV_R = '<svg viewBox="0 0 16 16" fill="none"><path d="M6 3l4.5 5L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -66,8 +81,16 @@
 
   var videoShelf = buildShelf('Videos');
   var imageShelf = buildShelf('Images');
+  // Live counts self-heal into localStorage as pages are visited; prefer them.
+  var liveCounts = {};
+  try { liveCounts = JSON.parse(localStorage.getItem('vault-counts') || '{}'); } catch (e) {}
+
   Object.keys(META).forEach(function (slug) {
     var m = META[slug];
+    // An empty collection is noise on the home page. Tragic Dee starts empty
+    // and only earns a card once something has been salvaged into it.
+    var n = liveCounts[slug] !== undefined ? liveCounts[slug] : (m.count || 0);
+    if (!n) return;
     var target = m.type === 'image' ? imageShelf : videoShelf;
     target.scroller.appendChild(buildCard(slug, m));
   });

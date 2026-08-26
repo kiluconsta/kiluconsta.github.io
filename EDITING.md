@@ -247,6 +247,27 @@ on activation.
   reports links that appear more than once, flagging those that span more than
   one collection, plus a per-host count of the whole library.
 
+## Cleanup (health page)
+
+Two destructive operations, both preview-then-confirm, each collection
+committing separately so anything can be reverted.
+
+**Duplicates within a collection** — drops repeats of the same URL, keeping the
+first copy. Remove them one collection at a time or all at once.
+
+**Gutted sections → Tragic Dee** — when dead links leave a section with **3 or
+fewer** working links, the survivors move into a collection called *Tragic Dee*,
+into sections named after the host they came from. Links are added to Tragic Dee
+*before* being removed from the source, so an interrupted run leaves a duplicate
+rather than losing something.
+
+"Dead" here means the weekly checker's verdict — `link-strikes.json` — **not**
+the thumbnail-failure list. Those links still play, and treating them as dead
+would delete working videos.
+
+`data/tragic-dee.js` does not exist until the first salvage; the worker creates
+it. The collection is hidden from the home page while it is empty.
+
 ## Grid controls
 
 - **Tile size** — three buttons beside the filter box, remembered per device.

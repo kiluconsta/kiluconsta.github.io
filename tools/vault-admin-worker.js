@@ -26,8 +26,19 @@ const COMMIT_IDENTITY = {
 // Only these files can ever be written, and only in this shape.
 const VIDEO_SLUGS = [
   'animations', 'bluesky-likes', 'bomb-ass-dee', 'bomb-ass-dee-pt-2',
-  'coomer', 'dropbox', 'meatsenpaii', 'x-likes-long', 'x-likes-short'
+  'coomer', 'dropbox', 'meatsenpaii', 'x-likes-long', 'x-likes-short',
+  // Salvage target: survivors of sections that dead links gutted. Its data
+  // file is created on first write rather than shipped empty.
+  'tragic-dee'
 ];
+const CREATABLE = ['tragic-dee'];
+const NEW_FILE = '// ═══════════════════════════════════════════════════════════════\n'
+  + '// Tragic Dee — salvaged links\n'
+  + '//\n'
+  + '// Machine-written by the health page when a section is gutted by dead\n'
+  + '// links. Sections are named after the host the links came from.\n'
+  + '// ═══════════════════════════════════════════════════════════════\n'
+  + 'var DIV_LABELS = [];\n\nvar SOURCES = [\n];\n';
 const IMAGE_SLUGS = ['gifs', 'images', 'sandf', 'show-off', 'tumblr'];
 
 function cors(origin) {
@@ -469,10 +480,10 @@ export default {
     if (!isVideo && !isImage) return json({ error: 'unknown collection: ' + slug }, 400, origin);
 
     // All actions share the sha-guarded read/write loop below.
-    const ACTIONS = ['add', 'remove', 'add-section', 'rename-section', 'move', 'scan'];
+    const ACTIONS = ['add', 'remove', 'add-section', 'rename-section', 'move', 'scan', 'dedupe'];
     const action = ACTIONS.includes(body.action) ? body.action : 'add';
     const isSectionOp = action === 'add-section' || action === 'rename-section';
-    const needsNoUrls = isSectionOp;
+    const needsNoUrls = isSectionOp || action === 'dedupe';
 
     // 'scan' reads a page and returns what it found. It writes nothing, so it
     // returns before any of the commit machinery below.
@@ -518,7 +529,7 @@ export default {
       ? body.urls
       : (body.url == null ? [] : [body.url]);
     const urls = rawUrls.map((u) => String(u == null ? '' : u).trim()).filter(Boolean);
-    if (!isSectionOp && !urls.length) return json({ error: 'no urls given' }, 400, origin);
+    if (!needsNoUrls && !urls.length) return json({ error: 'no urls given' }, 400, origin);
     if (urls.length > 200) return json({ error: 'too many urls at once (max 200)' }, 400, origin);
     for (const u of urls) {
       if (!/^https?:\/\/\S+$/i.test(u) || u.length > 2000) {
@@ -575,18 +586,40 @@ export default {
 
     for (let attempt = 0; attempt < 3; attempt++) {
       const getRes = await fetch(`${api}?ref=${BRANCH}`, { headers: gh });
-      if (!getRes.ok) {
+      let file = null, current;
+      if (getRes.ok) {
+        file = await getRes.json();
+        current = new TextDecoder().decode(
+          Uint8Array.from(atob(file.content.replace(/\n/g, '')), (c) => c.charCodeAt(0))
+        );
+      } else if (getRes.status === 404 && CREATABLE.includes(slug) && action === 'add') {
+        // First salvage into this collection: start the file rather than fail.
+        current = NEW_FILE;
+      } else {
         return json({ error: 'could not read ' + path, status: getRes.status }, 502, origin);
       }
-      const file = await getRes.json();
-      const current = new TextDecoder().decode(
-        Uint8Array.from(atob(file.content.replace(/\n/g, '')), (c) => c.charCodeAt(0))
-      );
 
       let updated, lines = newLines, addedUrls = [];
       removed = 0; skipped = [];
       try {
-        if (action === 'move') {
+        if (action === 'dedupe') {
+          // Keep the first occurrence of each URL, drop later repeats.
+          const seenU = new Set();
+          const kept = [];
+          current.split('\n').forEach(function (line) {
+            const u = entryUrl(line);
+            if (u) {
+              if (seenU.has(u)) { removed++; return; }
+              seenU.add(u);
+            }
+            kept.push(line);
+          });
+          if (!removed) {
+            return json({ ok: true, commit: null, path, added: 0, removed: 0,
+              note: 'no duplicates in this collection' }, 200, origin);
+          }
+          updated = kept.join('\n');
+        } else if (action === 'move') {
           const where = ['top', 'bottom', 'section'].includes(body.where) ? body.where : 'section';
           updated = moveUrl(current, isVideo ? 'SOURCES' : 'IMGS', urls[0], where, section);
         } else if (action === 'add-section') {
@@ -630,7 +663,9 @@ export default {
         method: 'PUT',
         headers: { ...gh, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: action === 'move'
+          message: action === 'dedupe'
+            ? `data: remove ${removed} duplicate links from ${slug}`
+            : action === 'move'
             ? `data: reorder link in ${slug}`
             : action === 'add-section'
             ? `data: add section "${label}" to ${slug}`
@@ -644,7 +679,7 @@ export default {
                 ? `data: add link to ${slug}`
                 : `data: add ${lines.length} links to ${slug}`),
           content: toBase64(updated),
-          sha: file.sha,
+          ...(file ? { sha: file.sha } : {}),
           branch: BRANCH,
           author: COMMIT_IDENTITY,
           committer: COMMIT_IDENTITY
@@ -660,7 +695,8 @@ export default {
         });
         return json({
           ok: true, commit: sha, path,
-          added: (action === 'remove' || action === 'move' || isSectionOp) ? 0 : lines.length,
+          added: (action === 'remove' || action === 'move' || action === 'dedupe' || isSectionOp)
+            ? 0 : lines.length,
           // Exactly what went in, so the site can offer a precise undo.
           addedUrls,
           removed, skipped: skipped.length, retries: attempt
