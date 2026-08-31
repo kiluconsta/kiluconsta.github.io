@@ -8,7 +8,6 @@
 // ═══════════════════════════════════════════════════════════════
 var IMGS = [
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:3djoqvqmlv62ypemq6l5nkaw/bafkreigbn6gvxxtn2kjgjrpyyu6irmzsovauewtdzf3uwrva7sopcvhez4",
-  "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:v6qcrttanao2sme7ebjbuj4d/bafkreigpcet2oe2zhhi6qcodfjtzs56cagjegap55ev47qe5mjz5e3pxka",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pd6lhsozytmjjfovivwk3qct/bafkreiereqxwxor7uhoarb67jxuuw2osydhvb54yndtny4so4isms6ursy",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pd6lhsozytmjjfovivwk3qct/bafkreihwxvm2a3b6r35zp2qkmp2qzmokfahk4x4jdlriryth3oudjgmrt4",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:xb7rhqx72kk5rg4pofg6wvl6/bafkreihr5hmtk7ye6b2h2otbgskkag577oz3pqthn7uyjxty27tybe6ii4",
