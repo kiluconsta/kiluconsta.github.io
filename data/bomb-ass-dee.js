@@ -107,7 +107,6 @@ var SOURCES = [
   "https://video.twimg.com/ext_tw_video/1533432727013363712/pu/vid/720x1280/KMTpi1TFylrsofJf.mp4",
   "https://video.twimg.com/ext_tw_video/1536977313782542336/pu/vid/720x820/7tnl_DY6BmPSHZlQ.mp4",
   "https://video.twimg.com/ext_tw_video/1545492044411535361/pu/vid/720x1244/0muhRU7TA3VCsZp7.mp4",
-  "https://video.twimg.com/ext_tw_video/1544147689922871297/pu/vid/1280x720/FeVKQTGVWJA1ce4m.mp4",
   "https://video.twimg.com/ext_tw_video/1543396235335303169/pu/vid/720x1280/78JpvQjJzEAhD5-e.mp4",
   "https://video.twimg.com/ext_tw_video/1303570553995956224/pu/vid/720x1280/Eg3XPS5YmrbW1C49.mp4",
   "https://video.twimg.com/ext_tw_video/1344005881307017223/pu/vid/720x1280/u07KnGxQEsiMj4Wl.mp4",
