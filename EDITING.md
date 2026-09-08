@@ -252,6 +252,16 @@ that is the lever.
   reports links that appear more than once, flagging those that span more than
   one collection, plus a per-host count of the whole library.
 
+## Favourites
+
+A favourite records the collection it came from. That metadata is fixed at the
+moment you save it — the favourites page never re-derives it from the URL, which
+it used to do, quietly rewriting every re-favourited record's collection to
+"favourites" and its type to "mixed".
+
+Playback everywhere goes through one path (`VaultMedia` in `vault-core.js`), so
+`.m3u8` favourites play the same way they do inside a collection.
+
 ## Cleanup (health page)
 
 Two destructive operations, both preview-then-confirm, each collection

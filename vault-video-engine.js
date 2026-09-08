@@ -35,27 +35,6 @@
   var btnTimer = mount.querySelector('.vs-btn-timer');
   var btnFullscreen = mount.querySelector('.vs-btn-fullscreen');
 
-  function attachVideoSrc(videoEl, url) {
-    if (videoEl.__hls) { try { videoEl.__hls.destroy(); } catch (e) {} videoEl.__hls = null; }
-    var isHls = /\.m3u8(\?|$)/i.test(url);
-    if (!isHls) { videoEl.src = url; return; }
-    if (videoEl.canPlayType('application/vnd.apple.mpegurl')) { videoEl.src = url; return; }
-    if (window.Hls && window.Hls.isSupported()) {
-      var hls = new window.Hls({ maxBufferLength: 30, maxMaxBufferLength: 60 });
-      hls.on(window.Hls.Events.ERROR, function (evt, data) {
-        if (!data.fatal) return;
-        if (data.type === window.Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
-        else if (data.type === window.Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
-        else { try { hls.destroy(); } catch (e) {} videoEl.__hls = null; }
-      });
-      hls.loadSource(url);
-      hls.attachMedia(videoEl);
-      videoEl.__hls = hls;
-    } else {
-      videoEl.src = url;
-    }
-  }
-
   // ── Poster capture at the 1.3s mark (trim-aware) ───────────
   function posterTime(it) { return (it.start || 0) + 1.3; }
 
@@ -71,6 +50,8 @@
       var it = items[idx];
       var img = tile.querySelector('img');
       VaultPosters.load(it.url, posterTime(it), function (dataUrl) {
+        // The capture is async; the tile may be gone by the time it lands.
+        if (!tile.isConnected) return;
         if (dataUrl) { img.src = dataUrl; img.style.display = 'block'; }
         tile.classList.remove('loading');
       });
@@ -419,7 +400,7 @@
     current = idx;
     var it = items[idx];
     VaultLB.loading(videoWrap, true);
-    attachVideoSrc(lbVideo, proxyUrl(it.url));
+    VaultMedia.attach(lbVideo, it.url);
     lbVideo.currentTime = it.start || 0;
     lbVideo.play().catch(function () {});
     lightbox.style.display = 'flex';
@@ -432,6 +413,7 @@
   }
   function closeLightbox() {
     stripSleep();
+    VaultMedia.detach(lbVideo);
     lightbox.style.display = 'none';
     VaultLB.lock(false);
     clearAdv();

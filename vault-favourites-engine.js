@@ -76,12 +76,15 @@
     if (entry.type === 'video') {
       lbImg.style.display = 'none'; lbImg.removeAttribute('src');
       lbVideo.style.display = 'block';
-      lbVideo.src = proxyUrl(entry.url);
+      if (window.VaultMedia) VaultMedia.attach(lbVideo, entry.url);
+      else lbVideo.src = proxyUrl(entry.url);
       lbVideo.currentTime = Number(entry.start) || 0;
       lbVideo.muted = false;
       lbVideo.play().catch(function () {});
     } else {
-      lbVideo.pause(); lbVideo.removeAttribute('src'); lbVideo.style.display = 'none';
+      if (window.VaultMedia) VaultMedia.detach(lbVideo);
+      else { lbVideo.pause(); lbVideo.removeAttribute('src'); }
+      lbVideo.style.display = 'none';
       lbImg.style.display = 'block';
       lbImg.src = proxyUrl(entry.url);
     }
@@ -92,7 +95,8 @@
     lightbox.style.display = 'none';
     VaultLB.lock(false);
     clearAdv();
-    lbVideo.pause(); lbVideo.removeAttribute('src'); lbVideo.load();
+    if (window.VaultMedia) VaultMedia.detach(lbVideo);
+    else { lbVideo.pause(); lbVideo.removeAttribute('src'); lbVideo.load(); }
     lbImg.removeAttribute('src');
   }
   function step(delta) {
@@ -294,12 +298,30 @@
       card.appendChild(tag);
 
       card.addEventListener('click', function () { openLightbox(idx); });
+      attachHeart(card, entry);
       grid.appendChild(card);
     });
 
-    window.Favourites.initSection(document.body, { type: 'mixed' });
   }
 
+  // Hearts are bound to the entry they were built from. initSection() infers the
+  // slug from location.pathname — here that is "favourites" — so using it on this
+  // page rewrote each record's slug and type on every toggle.
+  function attachHeart(card, entry) {
+    if (!window.Favourites) return;
+    card.appendChild(window.Favourites.makeHeart(function () {
+      return {
+        url: entry.url,
+        slug: entry.slug,
+        type: entry.type,
+        start: entry.start != null ? Number(entry.start) : null,
+        end: entry.end != null ? Number(entry.end) : null
+      };
+    }, { variant: 'tile' }));
+  }
+
+  // Same for the lightbox: its current item is already known, so nothing needs
+  // to be guessed from the URL.
   var favApi = window.Favourites
     ? window.Favourites.initSection(lightbox, { type: 'mixed', platterEl: platter })
     : null;

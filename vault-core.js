@@ -438,6 +438,46 @@ var VaultPosters = (function () {
   return { load: load, thumbFor: tryStaticThumb };
 })();
 
+// ── Media attachment ───────────────────────────────────────
+// One playback path for every surface. The favourites lightbox used to set
+// video.src directly, so any .m3u8 favourite simply never played outside
+// Safari — and there were two divergent implementations to keep in step.
+var VaultMedia = (function () {
+  function detach(video) {
+    if (!video) return;
+    if (video.__hls) { try { video.__hls.destroy(); } catch (e) {} video.__hls = null; }
+    try { video.pause(); } catch (e) {}
+    video.removeAttribute('src');
+    try { video.load(); } catch (e) {}
+  }
+
+  function attach(video, rawUrl) {
+    detach(video);
+    var src = proxyUrl(rawUrl);
+    // Test the original url: the proxied form is ?url=<encoded>, where the
+    // extension survives encoding but is not reliably at the end.
+    var isHls = /\.m3u8(\?|$)/i.test(rawUrl);
+    if (!isHls) { video.src = src; return; }
+    if (video.canPlayType('application/vnd.apple.mpegurl')) { video.src = src; return; }
+    if (window.Hls && window.Hls.isSupported()) {
+      var hls = new window.Hls({ maxBufferLength: 30, maxMaxBufferLength: 60 });
+      hls.on(window.Hls.Events.ERROR, function (evt, data) {
+        if (!data.fatal) return;
+        if (data.type === window.Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
+        else if (data.type === window.Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+        else { try { hls.destroy(); } catch (e) {} video.__hls = null; }
+      });
+      hls.loadSource(src);
+      hls.attachMedia(video);
+      video.__hls = hls;
+      return;
+    }
+    video.src = src;
+  }
+
+  return { attach: attach, detach: detach };
+})();
+
 // ── Offline support ────────────────────────────────────────
 // Registered after load so it never competes with the first paint.
 if ('serviceWorker' in navigator) {

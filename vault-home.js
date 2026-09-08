@@ -4,15 +4,16 @@
   var META = window.COLLECTION_META;
 
   function fmtCount(n) { return n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : String(n); }
-  function go(slug) { if (slug) window.location.href = '/pages/' + slug + '/'; }
 
   var favCount = window.Favourites ? window.Favourites.count() : 0;
-  var hero = document.createElement('section');
+  // A real anchor, not a div pretending to be one: keyboard navigation,
+  // middle-click, open-in-new-tab, copy-link and screen-reader semantics all
+  // come free, and none of them worked before.
+  var hero = document.createElement('a');
   hero.className = 'home-hero';
+  hero.href = '/pages/favourites/';
   hero.dataset.slug = 'favourites';
   hero.dataset.label = 'favourites';
-  hero.tabIndex = 0;
-  hero.setAttribute('role', 'link');
   hero.setAttribute('aria-label', 'Favourites');
   hero.innerHTML =
     '<div class="hero-icon">\u2764\ufe0f</div>' +
@@ -25,14 +26,13 @@
   root.appendChild(hero);
 
   function buildCard(slug, m) {
-    var tile = document.createElement('div');
+    var tile = document.createElement('a');
     tile.className = 'home-tile';
+    tile.href = '/pages/' + slug + '/';
     tile.dataset.slug = slug;
     tile.dataset.type = m.type || '';
     tile.dataset.label = (m.label || '').toLowerCase();
     tile.style.setProperty('--accent', m.accent || '#d8622f');
-    tile.tabIndex = 0;
-    tile.setAttribute('role', 'link');
     tile.setAttribute('aria-label', m.label);
     tile.innerHTML =
       '<div class="tile-art"><span class="tile-icon">' + (m.icon || '') + '</span></div>' +
@@ -55,6 +55,7 @@
     + 'flex:none!important;}'
     // The chevrons only make sense for a scroller.
     + '.shelf-nav{display:none!important;}'
+    + '.home-tile,.home-hero{text-decoration:none;color:inherit;display:block;}'
     + '@media (max-width:520px){.shelf-scroller{'
     + 'grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}}';
   document.head.appendChild(gridStyle);
@@ -100,16 +101,6 @@
 
   root.querySelectorAll('.shelf-scroller').forEach(function (sc) {
     Array.prototype.forEach.call(sc.children, function (c, i) { c.style.animationDelay = Math.min(i * 0.03, 0.3) + 's'; });
-  });
-
-  root.addEventListener('click', function (e) {
-    var t = e.target.closest('.home-tile, .home-hero');
-    if (t) go(t.dataset.slug);
-  });
-  root.addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    var t = e.target.closest('.home-tile, .home-hero');
-    if (t) { e.preventDefault(); go(t.dataset.slug); }
   });
 
   var searchInput = document.getElementById('vault-search');

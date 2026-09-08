@@ -41,9 +41,21 @@ const NEW_FILE = '// ═══════════════════�
   + 'var DIV_LABELS = [];\n\nvar SOURCES = [\n];\n';
 const IMAGE_SLUGS = ['gifs', 'images', 'sandf', 'show-off', 'tumblr'];
 
+// Only these origins get CORS headers back. Previously any origin was echoed,
+// which let any site read this worker's responses. The key is still the real
+// authentication — this is a second, cheap barrier.
+const ALLOWED_ORIGINS = [
+  'https://kiluconsta.github.io'
+];
+function originAllowed(origin) {
+  if (!origin) return true;                 // curl / non-browser: key still required
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  return /^https?:\/\/localhost(:\d+)?$/.test(origin);   // local testing
+}
+
 function cors(origin) {
   return {
-    'Access-Control-Allow-Origin': origin || '*',
+    'Access-Control-Allow-Origin': originAllowed(origin) ? (origin || '*') : 'null',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-Vault-Key',
     'Access-Control-Max-Age': '86400'
@@ -450,6 +462,15 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(origin) });
     if (request.method !== 'POST') return json({ error: 'POST only' }, 405, origin);
 
+    // A browser always sends Origin on a cross-origin POST, so an unexpected
+    // one means the request did not come from this site.
+    if (!originAllowed(origin)) return json({ error: 'origin not allowed' }, 403, origin);
+
+    // Cap the body before parsing so a huge payload cannot be buffered.
+    const MAX_BODY = 256 * 1024;
+    const declared = Number(request.headers.get('Content-Length') || 0);
+    if (declared > MAX_BODY) return json({ error: 'request too large' }, 413, origin);
+
     if (!env.VAULT_KEY) {
       return json({ error: 'worker is missing VAULT_KEY' }, 500, origin);
     }
@@ -458,7 +479,11 @@ export default {
     }
 
     let body;
-    try { body = await request.json(); } catch { return json({ error: 'bad JSON' }, 400, origin); }
+    try {
+      const raw = await request.text();
+      if (raw.length > MAX_BODY) return json({ error: 'request too large' }, 413, origin);
+      body = JSON.parse(raw);
+    } catch { return json({ error: 'bad JSON' }, 400, origin); }
 
     // Favourites sync is a different resource from the data files.
     if (new URL(request.url).pathname.replace(/\/+$/, '') === '/sync') {

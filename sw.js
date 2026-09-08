@@ -15,10 +15,10 @@ const THUMBS = VERSION + '-thumbs';
 
 const SHELL_URLS = [
   '/', '/index.html', '/manifest.json',
-  '/vault-core.js', '/vault-home.js', '/vault.js',
+  '/vault-core.js', '/vault-home.js',
   '/vault-lock.js', '/vault-additions.js',
   '/vault-video-engine.js', '/vault-image-engine.js',
-  '/vault-favourites-engine.js',
+  '/vault-favourites-engine.js', '/vault-health.js',
   '/vendor/hls.min.js',
   '/assets/favicon.svg', '/assets/favicon.png'
 ];
