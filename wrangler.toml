@@ -1,0 +1,43 @@
+# Cloudflare Workers config for the vault-admin worker.
+#
+# This exists so Cloudflare can deploy the worker straight from the repo
+# instead of you pasting the file into the dashboard. Pasting is how the two
+# worst incidents happened: once into the wrong worker (which took the whole
+# media proxy down), and once from a stale copy (so the site called an action
+# the deployed build did not have).
+#
+# IMPORTANT — this file configures ONE worker only: vault-admin.
+# The media proxy (young-truth-052a) is a separate worker whose source is not
+# in this repo. Never point this config at it.
+
+# Must match the existing worker EXACTLY. A different name silently creates a
+# second worker at a different URL, and the site keeps calling the old one.
+name = "vault-admin"
+
+main = "tools/vault-admin-worker.js"
+compatibility_date = "2026-08-01"
+
+# Persist the audit lines the worker writes (one JSON line per write: what
+# changed, never the key or the URLs) so they outlive the live-tail window.
+[observability]
+enabled = true
+
+# ── Secrets ────────────────────────────────────────────────────────────────
+# NOT declared here, deliberately. Secrets live in the dashboard and survive
+# deploys; putting them in this file would commit them to a public repo.
+#   GITHUB_TOKEN  fine-grained PAT, this repo only, Contents: Read and write
+#   VAULT_KEY     the key the site sends as X-Vault-Key
+#   GIST_TOKEN    classic PAT, gist scope only (favourites sync)
+#   GIST_ID       optional, skips gist discovery
+
+# ── Optional KV rate limiting ──────────────────────────────────────────────
+# The write cap works without this, but the count is kept per isolate, so it is
+# best-effort. Bind a namespace for a limit that holds across isolates.
+#
+# WARNING: bindings are owned by THIS file, not the dashboard. If you add the
+# binding in the dashboard and leave it out here, the next deploy REMOVES it.
+# Uncomment both lines and fill in the id if you create the namespace.
+#
+# [[kv_namespaces]]
+# binding = "RATE_KV"
+# id = "<namespace id from the dashboard>"

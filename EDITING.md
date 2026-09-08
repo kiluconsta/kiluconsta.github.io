@@ -120,6 +120,21 @@ section breaks and comments untouched.
 the links that add put in — not a blind revert — so a bot commit landing in
 between does not matter.
 
+### Deploying the worker
+
+`wrangler.toml` connects this repo to the **vault-admin** worker, so pushing
+deploys it. Nothing is pasted by hand any more, and what is deployed is by
+definition what is committed.
+
+Two things to keep in mind:
+
+- **Bindings are owned by `wrangler.toml`, not the dashboard.** If you bind a KV
+  namespace (or add a variable) in the dashboard and do not add it to this file,
+  the next deploy removes it. Secrets are the exception — those persist.
+- **Only `vault-admin` is connected.** The media proxy `young-truth-052a` is a
+  separate worker whose source is not in this repo. Never point the Git
+  integration at it.
+
 Setup, once:
 
 1. Deploy `tools/vault-admin-worker.js` as a **new** Cloudflare Worker. Keep it
