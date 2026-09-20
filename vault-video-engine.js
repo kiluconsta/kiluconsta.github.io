@@ -348,6 +348,12 @@
       posterObserver.observe(tile);
     }
     body.insertBefore(frag, lightbox);
+    // Hearts are attached by scanning for [data-fav-url]. The grid builds in
+    // chunks, so a single scan at startup only ever reached the first chunk —
+    // every later tile came up without a heart. initSection marks what it has
+    // already decorated, so re-running it per chunk is cheap and idempotent.
+    // No platterEl here: that would append a second heart to the lightbox bar.
+    if (window.Favourites) Favourites.initSection(mount, { type: 'video' });
     // Tiles can arrive while a filter is already typed.
     if (query) applyFilter();
     markDead();

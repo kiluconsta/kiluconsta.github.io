@@ -165,6 +165,8 @@
       })(items[idx], idx);
     }
     body.insertBefore(frag, lightbox);
+    // See the video engine: one startup scan only decorated the first chunk.
+    if (window.Favourites) Favourites.initSection(mount, { type: 'image' });
     if (query) applyFilter();
     if (scroller) scroller.reachedTarget();
     // setTimeout, not requestAnimationFrame: rAF stops firing in a background
