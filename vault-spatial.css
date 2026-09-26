@@ -1,0 +1,861 @@
+/* ════════════════════════════════════════════════════════════
+   THE VAULT — "Spatial" theme
+   Layered OVER /_astro/Layout.*.css, never instead of it. The
+   Astro sheet is build output; this file is hand-written, so the
+   two must not be merged. Every rule here is scoped to
+   `html.sp`, which outranks the generated sheet's bare
+   element/class/id selectors on specificity alone — so nothing
+   needs !important and load order does not matter. Removing
+   class="sp" from a page returns it to the old look intact.
+
+   WHERE THE GLASS IS, AND WHY IT IS NOT EVERYWHERE
+   The big panels (the sheet, the tiles) sit on a STATIC radial
+   gradient. Blurring a smooth static gradient yields almost the
+   same pixels as not blurring it, so they get gradient + rim
+   light + shadow and no backdrop-filter — the look without the
+   compositing cost. Real backdrop-filter is spent only on the
+   five small layers that actually overlap moving content: the
+   rail, the ornament bar, the lightbox and its platter, and the
+   back button. This matters because /pages/dropbox renders
+   1,918 tiles; per-tile blur would make that page unscrollable.
+   ════════════════════════════════════════════════════════════ */
+
+html.sp {
+  /* Ground */
+  --sp-void: #030305;
+
+  /* Fake glass — large panels over the static gradient (no blur) */
+  --sp-sheet: rgba(255, 255, 255, 0.065);
+  --sp-sheet-line: rgba(255, 255, 255, 0.15);
+  --sp-pane: linear-gradient(145deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.028));
+  --sp-pane-line: rgba(255, 255, 255, 0.16);
+
+  /* Real glass — small floating chrome over content (blurred) */
+  --sp-glass: rgba(255, 255, 255, 0.10);
+  --sp-glass-line: rgba(255, 255, 255, 0.19);
+  --sp-blur: blur(38px) saturate(1.8);
+
+  /* Recessed wells inside glass */
+  --sp-well: rgba(0, 0, 0, 0.26);
+  --sp-well-line: rgba(255, 255, 255, 0.12);
+
+  /* Rim light: the top specular edge and the bottom contact shadow */
+  --sp-rim: inset 0 1.5px 0 rgba(255, 255, 255, 0.30), inset 0 -1.5px 0 rgba(0, 0, 0, 0.28);
+  --sp-rim-soft: inset 0 1.5px 0 rgba(255, 255, 255, 0.20);
+
+  /* Depth */
+  --sp-lift-1: 0 8px 20px rgba(0, 0, 0, 0.46);
+  --sp-lift-2: 0 18px 40px rgba(0, 0, 0, 0.66);
+  --sp-lift-3: 0 40px 90px rgba(0, 0, 0, 0.76);
+
+  /* Text — kept at or above 0.68 alpha for contrast on glass */
+  --sp-text: rgba(255, 255, 255, 0.97);
+  --sp-text-2: rgba(255, 255, 255, 0.74);
+  --sp-text-3: rgba(255, 255, 255, 0.56);
+
+  --sp-accent: #f6a366;
+
+  /* Radii — concentric: a child's radius is the parent's minus its inset */
+  --sp-r-sheet: 42px;
+  --sp-r-pane: 26px;
+  --sp-r-tile: 16px;
+
+  --sp-rail-w: 64px;
+  --sp-gutter: 24px;
+
+  --sp-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+             Roboto, Helvetica, Arial, system-ui, sans-serif;
+}
+
+/* ── Ground ──────────────────────────────────────────────────
+   One fixed element, painted once. No animation, no noise
+   layer: the previous design's continuous transform was the
+   single biggest idle GPU cost on the site. */
+html.sp,
+html.sp body { background: var(--sp-void); }
+html.sp body { font-family: var(--sp-font); color: var(--sp-text); }
+
+html.sp body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -8%, rgba(120, 140, 190, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 44% 38% at 12% 30%, rgba(216, 98, 47, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 44% 40% at 90% 84%, rgba(150, 60, 240, 0.16) 0%, transparent 62%),
+    var(--sp-void);
+}
+/* The old ground element would paint on top of ours. */
+html.sp .bg-liquid { display: none; }
+
+/* ════════════════════════════════════════════════════════════
+   THE SHEET — one floating slab holding the page
+   ════════════════════════════════════════════════════════════ */
+html.sp #home,
+html.sp .content-section,
+html.sp .sp-sheet {
+  box-sizing: border-box;
+  margin: var(--sp-gutter) var(--sp-gutter) var(--sp-gutter)
+          calc(var(--sp-rail-w) + var(--sp-gutter) * 2);
+  padding: 30px 34px 34px;
+  max-width: none;
+  min-height: calc(100vh - var(--sp-gutter) * 2);
+  border-radius: var(--sp-r-sheet);
+  background: var(--sp-sheet);
+  border: 1px solid var(--sp-sheet-line);
+  box-shadow: var(--sp-rim), var(--sp-lift-3);
+}
+/* Room for the ornament bar so the last row is never trapped under it. */
+html.sp #home,
+html.sp .content-section { padding-bottom: 104px; }
+
+/* ── Sheet header: brand, title, count ───────────────────── */
+html.sp .home-topbar,
+html.sp .sp-head {
+  gap: 14px;
+  padding: 0 0 22px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+html.sp .home-brand,
+html.sp .sp-brand {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--sp-text);
+  white-space: nowrap;
+}
+html.sp .home-brand em,
+html.sp .sp-brand em { color: var(--sp-accent); font-style: normal; }
+
+html.sp .sp-title {
+  margin: 0 0 0 10px;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.024em;
+  color: var(--sp-text);
+}
+html.sp .home-stat,
+html.sp .sp-count {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--sp-text-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ORNAMENT RAIL — the floating navigation pill (real glass)
+   ════════════════════════════════════════════════════════════ */
+html.sp .sp-rail {
+  position: fixed;
+  left: var(--sp-gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 600;
+  box-sizing: border-box;
+  width: var(--sp-rail-w);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 32px;
+  background: var(--sp-glass);
+  border: 1px solid var(--sp-glass-line);
+  -webkit-backdrop-filter: var(--sp-blur);
+  backdrop-filter: var(--sp-blur);
+  box-shadow: var(--sp-rim), var(--sp-lift-2);
+  transition: opacity 0.22s ease;
+}
+html.sp .sp-rail-btn {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+html.sp .sp-rail-btn svg { width: 19px; height: 19px; }
+html.sp .sp-rail-btn:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+html.sp .sp-rail-btn[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a0a0d;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.40);
+}
+html.sp .sp-rail-btn.sp-fav { color: #ff6b86; }
+html.sp .sp-rail-btn.sp-fav[aria-current="page"] { color: #b3123a; }
+
+/* ════════════════════════════════════════════════════════════
+   ORNAMENT BAR — search + filters, detached below the sheet
+   ════════════════════════════════════════════════════════════ */
+html.sp .sp-orn {
+  position: fixed;
+  left: calc(var(--sp-rail-w) + var(--sp-gutter) * 2);
+  right: var(--sp-gutter);
+  bottom: calc(var(--sp-gutter) + env(safe-area-inset-bottom));
+  z-index: 550;
+  margin: 0 auto;
+  width: max-content;
+  max-width: calc(100% - var(--sp-gutter) * 2);
+  box-sizing: border-box;
+  height: 60px;
+  padding: 0 10px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.21);
+  -webkit-backdrop-filter: blur(40px) saturate(1.9);
+  backdrop-filter: blur(40px) saturate(1.9);
+  box-shadow: var(--sp-rim), var(--sp-lift-2);
+  transition: opacity 0.22s ease;
+}
+html.sp .sp-orn:empty { display: none; }
+
+/* Search field — a recessed well inside the glass */
+html.sp .sp-orn .home-search,
+html.sp .sp-orn .cs-filter input,
+html.sp .sp-orn input[type="search"],
+html.sp .sp-orn input[type="text"] {
+  box-sizing: border-box;
+  height: 40px;
+  min-width: 0;
+  padding: 0 14px;
+  border-radius: 20px;
+  background: var(--sp-well);
+  border: 1px solid var(--sp-well-line);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.40);
+  color: var(--sp-text);
+  font: inherit;
+  font-size: 13px;
+}
+html.sp .sp-orn .home-search { width: 250px; gap: 9px; padding: 0 14px; }
+html.sp .sp-orn .cs-filter input,
+html.sp .sp-orn input[type="search"] { width: 250px; }
+html.sp .sp-orn input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.34);
+}
+html.sp .sp-orn .home-search-icon { color: var(--sp-text-3); }
+html.sp .sp-orn .home-search-input { background: transparent; border: 0; }
+html.sp .sp-orn .home-search-kbd {
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: var(--sp-text-3);
+  font-size: 11px;
+}
+
+/* The ornament bar owns the filter bar's own box, not the reverse. */
+html.sp .sp-orn .cs-filter {
+  margin: 0;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Segmented control — type filter and tile density share one shape */
+html.sp .sp-orn .home-filter,
+html.sp .sp-orn .cs-density {
+  gap: 3px;
+  padding: 4px;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+html.sp .sp-orn .home-filter-btn,
+html.sp .sp-orn .cs-density button {
+  height: 34px;
+  min-width: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 17px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  font: inherit;
+  font-size: 12.5px;
+  line-height: 1;
+  cursor: pointer;
+}
+html.sp .sp-orn .cs-density button { padding: 0 10px; }
+html.sp .sp-orn .home-filter-btn.active,
+html.sp .sp-orn .cs-density button.on {
+  background: rgba(255, 255, 255, 0.94);
+  color: #0a0a0d;
+  font-weight: 600;
+}
+html.sp .sp-orn .cs-count {
+  font-size: 11.5px;
+  color: var(--sp-text-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Rail and ornament bar are page furniture — the lightbox is a
+   different surface, so they withdraw while it is open. */
+html.sp body:has(.vs-lightbox[style*="flex"]) .sp-rail,
+html.sp body:has(.vs-lightbox[style*="flex"]) .sp-orn,
+html.sp body:has(.vs-lightbox[style*="flex"]) #va-fab,
+html.sp body:has(.is-lightbox[style*="flex"]) .sp-rail,
+html.sp body:has(.is-lightbox[style*="flex"]) .sp-orn,
+html.sp body:has(.is-lightbox[style*="flex"]) #va-fab {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+   HOME — shelves of collection panes
+   ════════════════════════════════════════════════════════════ */
+html.sp .home-grid { gap: 26px; }
+html.sp .shelf-title {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--sp-text-3);
+}
+html.sp .shelf-scroller { gap: 18px; }
+
+html.sp .home-tile,
+html.sp .home-hero {
+  border-radius: var(--sp-r-pane);
+  background: var(--sp-pane);
+  border: 1px solid var(--sp-pane-line);
+  box-shadow: var(--sp-rim-soft), var(--sp-lift-1);
+  transition: transform 0.22s cubic-bezier(.22, 1, .36, 1),
+              border-color 0.22s ease, box-shadow 0.22s ease;
+}
+/* visionOS lifts what you point at toward you, rather than tinting it. */
+html.sp .home-tile:hover,
+html.sp .home-tile:focus-visible,
+html.sp .home-hero:hover,
+html.sp .home-hero:focus-visible {
+  transform: translateY(-4px) scale(1.014);
+  border-color: rgba(255, 255, 255, 0.30);
+  box-shadow: var(--sp-rim-soft), var(--sp-lift-2);
+  outline: none;
+}
+/* The generated sheet gives tile art a 16:10 box sized for artwork.
+   Spatial puts a 52px disc there instead, so the box is sized to the
+   disc — a square would leave ~170px of empty glass under it. */
+html.sp .tile-art {
+  aspect-ratio: auto;
+  height: 96px;
+  background: none;
+  padding: 18px 0 0;
+}
+/* The collection's emoji sits in its own glass disc, tinted by --accent. */
+html.sp .tile-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  background: color-mix(in srgb, var(--accent) 26%, rgba(255, 255, 255, 0.07));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+html.sp .tile-label {
+  padding: 0 14px;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.014em;
+  text-align: center;
+  color: var(--sp-text);
+}
+html.sp .tile-meta {
+  padding: 2px 14px 16px;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--sp-text-2);
+  font-variant-numeric: tabular-nums;
+}
+html.sp .tile-type,
+html.sp .tile-count { background: none; border: 0; padding: 0; color: inherit; }
+/* Stripped of their chips these two collide ("VIDEO 636"). */
+html.sp .tile-count::before { content: "\00b7"; margin-right: 6px; color: var(--sp-text-3); }
+
+html.sp .home-hero { padding: 0 22px; }
+html.sp .hero-title { letter-spacing: -0.024em; }
+html.sp .hero-eyebrow { color: var(--sp-text-2); }
+html.sp .hero-meta { color: var(--sp-text-2); }
+html.sp .hero-btn {
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 0;
+  color: #0a0a0d;
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+html.sp .home-foot { margin-top: 30px; }
+html.sp .home-foot a { color: var(--sp-text-3); }
+html.sp .home-foot a:hover { color: var(--sp-text-2); }
+html.sp .home-empty-icon { opacity: 0.6; }
+
+/* ════════════════════════════════════════════════════════════
+   COLLECTIONS — grid, dividers, tiles
+   ════════════════════════════════════════════════════════════ */
+
+/* Section dividers become floating chips. Deliberately unblurred:
+   a long collection has dozens of these in the DOM at once. */
+html.sp .vs-divider,
+html.sp .is-divider {
+  box-sizing: border-box;
+  height: 30px;
+  margin: 22px 0 8px;
+  padding: 0 14px;
+  width: max-content;
+  max-width: 100%;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.11);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), 0 8px 20px rgba(0, 0, 0, 0.44);
+  color: var(--sp-text);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* The engine's sticky rule needs an opaque-enough backing to sit on. */
+  background-color: rgba(30, 30, 38, 0.86);
+}
+/* The old trailing hairline does not belong on a chip. */
+html.sp .vs-divider::after,
+html.sp .is-divider::after { display: none; }
+
+html.sp .vs-tile,
+html.sp .is-tile,
+html.sp .fav-card {
+  border-radius: var(--sp-r-tile);
+  background: var(--sp-pane);
+  border: 1px solid var(--sp-pane-line);
+  box-shadow: var(--sp-rim-soft), var(--sp-lift-1);
+  transition: transform 0.18s cubic-bezier(.22, 1, .36, 1), box-shadow 0.18s ease;
+}
+html.sp .vs-tile:hover,
+html.sp .is-tile:hover,
+html.sp .fav-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--sp-rim-soft), var(--sp-lift-2);
+  z-index: 2;
+}
+html.sp .vs-tile.loading::after {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.10), transparent 55%);
+}
+html.sp .vs-clip-badge {
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.58);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-variant-numeric: tabular-nums;
+}
+html.sp .vs-dead-badge {
+  border-radius: 6px;
+  background: rgba(255, 107, 107, 0.92);
+  color: #2a0505;
+  font-weight: 700;
+}
+html.sp .cs-none { color: var(--sp-text-2); }
+
+/* ── Floating controls ───────────────────────────────────── */
+/* Every .back-btn on the site points at "/", which is exactly what
+   the rail's Home button does — and it would sit on top of the
+   sheet header. The rail replaces it rather than duplicating it.
+   Drop class="sp" and the original button comes back untouched. */
+html.sp .back-btn { display: none; }
+
+html.sp .scroll-top,
+html.sp .vs-jump-nav button {
+  border-radius: 50%;
+  background: var(--sp-glass);
+  border: 1px solid var(--sp-glass-line);
+  -webkit-backdrop-filter: var(--sp-blur);
+  backdrop-filter: var(--sp-blur);
+  box-shadow: var(--sp-rim), var(--sp-lift-1);
+  color: var(--sp-text);
+}
+html.sp .scroll-top { bottom: calc(var(--sp-gutter) + 76px); right: var(--sp-gutter); }
+html.sp .scroll-top:hover { border-color: rgba(255, 255, 255, 0.34); }
+
+html.sp .vs-jump-nav {
+  right: var(--sp-gutter);
+  gap: 7px;
+  padding: 8px;
+  border-radius: 26px;
+  background: var(--sp-glass);
+  border: 1px solid var(--sp-glass-line);
+  -webkit-backdrop-filter: var(--sp-blur);
+  backdrop-filter: var(--sp-blur);
+  box-shadow: var(--sp-rim), var(--sp-lift-2);
+}
+html.sp .vs-jump-nav button {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+html.sp .vs-jump-nav button:hover { background: rgba(255, 255, 255, 0.16); }
+
+/* ── Favourites and Health keep their own controls in the
+      sheet rather than the ornament bar, so they are given the
+      same segmented/pill shapes used everywhere else. ─────── */
+html.sp .fav-view,
+html.sp .hz-tabs {
+  gap: 3px;
+  padding: 4px;
+  width: max-content;
+  max-width: 100%;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+html.sp .fav-view button,
+html.sp .hz-tabs button {
+  height: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 17px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+html.sp .fav-view button.on,
+html.sp .fav-view button.active,
+html.sp .hz-tabs button.on,
+html.sp .hz-tabs button.active {
+  background: rgba(255, 255, 255, 0.94);
+  color: #0a0a0d;
+  font-weight: 600;
+}
+html.sp .fav-group,
+html.sp .hz-panel,
+html.sp .hz-hosts,
+html.sp .hz-keyrow {
+  border-radius: var(--sp-r-pane);
+  background: var(--sp-pane);
+  border: 1px solid var(--sp-pane-line);
+  box-shadow: var(--sp-rim-soft), var(--sp-lift-1);
+}
+html.sp .hz-row { border-color: rgba(255, 255, 255, 0.10); }
+html.sp .hz-btn {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid var(--sp-glass-line);
+  color: var(--sp-text);
+  cursor: pointer;
+}
+html.sp .hz-btn:hover { background: rgba(255, 255, 255, 0.18); }
+html.sp .hz-keyrow input,
+html.sp .hz-filter input {
+  border-radius: 12px;
+  background: var(--sp-well);
+  border: 1px solid var(--sp-well-line);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.40);
+  color: var(--sp-text);
+}
+html.sp .fav-empty,
+html.sp .hz-empty,
+html.sp .hz-note,
+html.sp .hz-meta { color: var(--sp-text-2); }
+
+/* ── Add-link control (vault-additions.js) ───────────────── */
+html.sp #va-fab {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background: var(--sp-glass);
+  border: 1px solid var(--sp-glass-line);
+  -webkit-backdrop-filter: var(--sp-blur);
+  backdrop-filter: var(--sp-blur);
+  box-shadow: var(--sp-rim), var(--sp-lift-2);
+  color: var(--sp-text);
+}
+html.sp #va-fab:hover { background: rgba(255, 255, 255, 0.20); }
+html.sp #va-modal {
+  background: rgba(3, 3, 5, 0.66);
+  -webkit-backdrop-filter: blur(30px) saturate(1.3);
+  backdrop-filter: blur(30px) saturate(1.3);
+}
+html.sp #va-card {
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.075);
+  border: 1px solid var(--sp-glass-line);
+  -webkit-backdrop-filter: blur(46px) saturate(1.7);
+  backdrop-filter: blur(46px) saturate(1.7);
+  box-shadow: var(--sp-rim), var(--sp-lift-3);
+}
+html.sp #va-card input,
+html.sp #va-card select,
+html.sp #va-card textarea {
+  border-radius: 12px;
+  background: var(--sp-well);
+  border: 1px solid var(--sp-well-line);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.40);
+  color: var(--sp-text);
+}
+
+/* ════════════════════════════════════════════════════════════
+   LIGHTBOX — a floating slab, controls detached below it
+   ════════════════════════════════════════════════════════════ */
+html.sp .vs-lightbox,
+html.sp .is-lightbox {
+  background: rgba(3, 3, 5, 0.66);
+  -webkit-backdrop-filter: blur(30px) saturate(1.3);
+  backdrop-filter: blur(30px) saturate(1.3);
+}
+html.sp .vs-lb-video-wrap,
+html.sp .is-lb-img-wrap {
+  padding: 10px;
+  border-radius: var(--sp-r-pane);
+  background: rgba(255, 255, 255, 0.075);
+  border: 1px solid var(--sp-glass-line);
+  box-shadow: var(--sp-rim), var(--sp-lift-3);
+}
+html.sp .vs-lb-video,
+html.sp .is-lb-img { border-radius: 17px; display: block; }
+
+html.sp .vs-lb-platter,
+html.sp .is-lb-controls {
+  position: fixed;
+  top: auto;
+  bottom: calc(var(--sp-gutter) + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  height: 52px;
+  padding: 0 12px;
+  gap: 7px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.21);
+  -webkit-backdrop-filter: blur(40px) saturate(1.9);
+  backdrop-filter: blur(40px) saturate(1.9);
+  box-shadow: var(--sp-rim), var(--sp-lift-2);
+}
+html.sp .vs-lb-platter button,
+html.sp .is-lb-controls button {
+  width: 34px;
+  height: 34px;
+  border-radius: 17px;
+  color: rgba(255, 255, 255, 0.94);
+}
+html.sp .vs-lb-platter button:hover,
+html.sp .is-lb-controls button:hover { background: rgba(255, 255, 255, 0.18); color: #fff; }
+html.sp .vs-lb-platter button.vs-toggled,
+html.sp .is-lb-controls button.vs-toggled {
+  background: rgba(255, 255, 255, 0.94);
+  color: #0a0a0d;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.44);
+}
+html.sp .vs-lb-counter,
+html.sp .is-ss-status {
+  color: var(--sp-text-2);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+html.sp .platter-sep { background: rgba(255, 255, 255, 0.20); }
+
+html.sp .vs-lb-close,
+html.sp .is-lb-close,
+html.sp .vs-lb-prev,
+html.sp .is-lb-prev,
+html.sp .vs-lb-next,
+html.sp .is-lb-next {
+  border-radius: 50%;
+  background: var(--sp-glass);
+  border: 1px solid var(--sp-glass-line);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow: var(--sp-rim), var(--sp-lift-1);
+  color: var(--sp-text);
+}
+
+/* Filmstrip thumbnails gain depth instead of a flat outline. */
+html.sp .vs-strip { padding: 12px 14px 14px; }
+html.sp .vs-strip img {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.48);
+  outline: none;
+}
+html.sp .vs-strip img.on {
+  border-color: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.40), 0 12px 26px rgba(0, 0, 0, 0.62);
+  transform: scale(1.08);
+}
+
+/* ════════════════════════════════════════════════════════════
+   PATTERN LOCK — the first surface, so it sets the tone
+   vault-lock.js injects its own <style> at runtime; html.sp
+   outranks its bare ids, so these win without !important.
+   ════════════════════════════════════════════════════════════ */
+html.sp #vault-lock {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -8%, rgba(120, 140, 190, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 44% 38% at 12% 30%, rgba(216, 98, 47, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 44% 40% at 90% 84%, rgba(150, 60, 240, 0.16) 0%, transparent 62%),
+    var(--sp-void);
+}
+/* A glass slab behind the pattern, drawn as a pseudo-element so
+   vault-lock.js's markup does not need a wrapper. */
+html.sp #vault-lock::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 40px));
+  height: 470px;
+  border-radius: 46px;
+  background: rgba(255, 255, 255, 0.075);
+  border: 1px solid var(--sp-glass-line);
+  -webkit-backdrop-filter: blur(46px) saturate(1.7);
+  backdrop-filter: blur(46px) saturate(1.7);
+  box-shadow: var(--sp-rim), var(--sp-lift-3);
+}
+html.sp #vl-label,
+html.sp #vl-title,
+html.sp #vl-hint,
+html.sp #vl-grid { position: relative; z-index: 1; }
+html.sp #vl-label { color: var(--sp-text-3); }
+html.sp #vl-title { font-size: 1.2rem; letter-spacing: -0.01em; }
+html.sp #vl-hint { color: var(--sp-text-2); margin-bottom: 1.5rem; }
+html.sp .vl-dot {
+  background: rgba(255, 255, 255, 0.20);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+html.sp .vl-dot.vl-on {
+  background: #fff;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.55);
+}
+html.sp #vl-foot { color: var(--sp-text-3); }
+html.sp #vl-foot a { color: var(--sp-text-2); }
+
+/* ════════════════════════════════════════════════════════════
+   NARROW SCREENS — the rail lies down under the ornament bar
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  html.sp { --sp-gutter: 14px; --sp-r-sheet: 30px; }
+
+  html.sp #home,
+  html.sp .content-section,
+  html.sp .sp-sheet {
+    margin: var(--sp-gutter);
+    padding: 22px 16px 150px;
+    min-height: calc(100vh - var(--sp-gutter) * 2);
+  }
+  html.sp .sp-rail {
+    left: 50%;
+    top: auto;
+    bottom: calc(var(--sp-gutter) + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    width: max-content;
+    flex-direction: row;
+    border-radius: 30px;
+  }
+  html.sp .sp-orn {
+    left: var(--sp-gutter);
+    right: var(--sp-gutter);
+    bottom: calc(var(--sp-gutter) + 76px + env(safe-area-inset-bottom));
+    width: auto;
+    max-width: none;
+    height: auto;
+    padding: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 26px;
+  }
+  html.sp .sp-orn .home-search,
+  html.sp .sp-orn .cs-filter input,
+  html.sp .sp-orn input[type="search"] { width: 100%; flex: 1 1 180px; }
+  html.sp .sp-orn .cs-filter { flex-wrap: wrap; justify-content: center; width: 100%; }
+
+  html.sp .scroll-top { bottom: calc(var(--sp-gutter) + 150px); right: var(--sp-gutter); }
+  html.sp .vs-lb-platter,
+  html.sp .is-lb-controls { bottom: calc(var(--sp-gutter) + env(safe-area-inset-bottom)); }
+  html.sp .sp-title { font-size: 20px; margin-left: 0; }
+  html.sp .home-topbar,
+  html.sp .sp-head { flex-wrap: wrap; padding-bottom: 16px; }
+}
+
+@media (max-width: 560px) {
+  html.sp #vault-lock::before { height: 430px; border-radius: 36px; }
+  html.sp .tile-icon { width: 44px; height: 44px; border-radius: 22px; font-size: 21px; }
+  html.sp .sp-rail-btn { width: 44px; height: 44px; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ACCESSIBILITY AND POWER
+   ════════════════════════════════════════════════════════════ */
+
+/* Some people get motion sick from depth cues, and some machines
+   cannot afford them. Both get flat, opaque surfaces. */
+@media (prefers-reduced-transparency: reduce) {
+  html.sp .sp-rail,
+  html.sp .sp-orn,
+  html.sp .back-btn,
+  html.sp .scroll-top,
+  html.sp .vs-jump-nav,
+  html.sp .vs-lb-platter,
+  html.sp .is-lb-controls,
+  html.sp #vault-lock::before,
+  html.sp .vs-lightbox,
+  html.sp .is-lightbox,
+  html.sp .vs-lb-video-wrap,
+  html.sp .is-lb-img-wrap {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #16161d;
+  }
+  html.sp .vs-lightbox,
+  html.sp .is-lightbox { background: #06060a; }
+  html.sp body::before { background: var(--sp-void); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.sp .home-tile,
+  html.sp .home-hero,
+  html.sp .vs-tile,
+  html.sp .is-tile,
+  html.sp .fav-card,
+  html.sp .vs-strip img { transition: none; }
+  html.sp .home-tile:hover,
+  html.sp .home-hero:hover,
+  html.sp .vs-tile:hover,
+  html.sp .is-tile:hover,
+  html.sp .fav-card:hover,
+  html.sp .vs-strip img.on { transform: none; }
+}
+
+/* Keyboard focus must stay visible on glass, where a faint ring
+   disappears into the blur. */
+html.sp .sp-rail-btn:focus-visible,
+html.sp .home-tile:focus-visible,
+html.sp .home-hero:focus-visible,
+html.sp .sp-orn button:focus-visible,
+html.sp .sp-orn input:focus-visible,
+html.sp .vs-lb-platter button:focus-visible,
+html.sp .is-lb-controls button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}

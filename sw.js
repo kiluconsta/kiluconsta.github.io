@@ -8,7 +8,7 @@
 //   data/*.js             network-first — a stale media list is worse than a wait
 //   thumbs/*.jpg          cache-first — content-addressed, so never stale
 //   media + proxy         never cached — far too large, and not ours to hold
-const VERSION = 'vault-v2';
+const VERSION = 'vault-v3';
 const SHELL = VERSION + '-shell';
 const DATA = VERSION + '-data';
 const THUMBS = VERSION + '-thumbs';
@@ -19,6 +19,7 @@ const SHELL_URLS = [
   '/vault-lock.js', '/vault-additions.js',
   '/vault-video-engine.js', '/vault-image-engine.js',
   '/vault-favourites-engine.js', '/vault-health.js',
+  '/vault-spatial.css', '/vault-spatial.js',
   '/vendor/hls.min.js',
   '/assets/favicon.svg', '/assets/favicon.png'
 ];
