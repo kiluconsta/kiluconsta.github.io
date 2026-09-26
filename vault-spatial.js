@@ -68,7 +68,66 @@
     document.body.appendChild(orn);
   }
 
-  // ── 3. A header for collection pages ──────────────────────
+  // ── 3. Collapsible search on narrow screens ───────────────
+  // The bar carries a search field plus two segmented controls. On a
+  // phone that wraps to two rows and eats the bottom of the grid, so
+  // below 900px it shrinks to a single round button until asked for.
+  var orn = document.querySelector('.sp-orn');
+  if (orn) {
+    var MOBILE = window.matchMedia('(max-width: 900px)');
+    var field = orn.querySelector('input');
+    if (!orn.id) orn.id = 'sp-orn';
+
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'sp-orn-toggle';
+    toggle.setAttribute('aria-controls', orn.id);
+    toggle.innerHTML =
+      '<svg class="sp-i-search" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
+      + '<circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>'
+      + '<path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>'
+      + '<svg class="sp-i-close" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
+      + '<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>';
+    orn.insertBefore(toggle, orn.firstChild);
+
+    // A typed filter is still being applied to the grid, so the bar
+    // must never hide itself while one is active.
+    var filtering = function () { return !!(field && field.value.trim()); };
+
+    var setOpen = function (open) {
+      orn.classList.toggle('sp-collapsed', !open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label',
+        open ? 'Hide search and filters' : 'Show search and filters');
+    };
+    // Above 900px the CSS hides the toggle and the bar is always open.
+    var sync = function () { setOpen(!MOBILE.matches || filtering()); };
+    sync();
+    if (MOBILE.addEventListener) MOBILE.addEventListener('change', sync);
+
+    toggle.addEventListener('click', function () {
+      var opening = orn.classList.contains('sp-collapsed');
+      setOpen(opening);
+      if (opening && field) field.focus();
+    });
+
+    if (field) field.addEventListener('input', function () {
+      orn.classList.toggle('sp-has-query', filtering());
+    });
+
+    document.addEventListener('pointerdown', function (e) {
+      if (!MOBILE.matches || orn.classList.contains('sp-collapsed')) return;
+      if (orn.contains(e.target) || filtering()) return;
+      setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || !MOBILE.matches) return;
+      if (orn.classList.contains('sp-collapsed') || filtering()) return;
+      setOpen(false);
+    });
+  }
+
+  // ── 4. A header for collection pages ──────────────────────
   // The built output gives a collection page no title at all — only
   // a back button and the document title. The sheet needs one.
   var section = document.querySelector('[data-vault-video], [data-vault-image]');

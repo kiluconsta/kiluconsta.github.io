@@ -8,7 +8,7 @@
 //   data/*.js             network-first — a stale media list is worse than a wait
 //   thumbs/*.jpg          cache-first — content-addressed, so never stale
 //   media + proxy         never cached — far too large, and not ours to hold
-const VERSION = 'vault-v3';
+const VERSION = 'vault-v4';
 const SHELL = VERSION + '-shell';
 const DATA = VERSION + '-data';
 const THUMBS = VERSION + '-thumbs';

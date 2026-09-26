@@ -208,7 +208,7 @@ html.sp .sp-orn {
   max-width: calc(100% - var(--sp-gutter) * 2);
   box-sizing: border-box;
   height: 60px;
-  padding: 0 10px 0 12px;
+  padding: 0 10px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -222,11 +222,14 @@ html.sp .sp-orn {
 }
 html.sp .sp-orn:empty { display: none; }
 
-/* Search field — a recessed well inside the glass */
+/* Search field — a recessed well inside the glass.
+   .home-search is the WELL; .home-search-input lives inside it and
+   must stay bare. Matching input[type=text] here too would give the
+   inner field its own background, radius, inset shadow and 14px
+   indent — a well inside a well, double-indented. */
 html.sp .sp-orn .home-search,
 html.sp .sp-orn .cs-filter input,
-html.sp .sp-orn input[type="search"],
-html.sp .sp-orn input[type="text"] {
+html.sp .sp-orn input[type="search"] {
   box-sizing: border-box;
   height: 40px;
   min-width: 0;
@@ -239,23 +242,59 @@ html.sp .sp-orn input[type="text"] {
   font: inherit;
   font-size: 13px;
 }
-html.sp .sp-orn .home-search { width: 250px; gap: 9px; padding: 0 14px; }
+html.sp .sp-orn .home-search { width: 250px; gap: 9px; }
 html.sp .sp-orn .cs-filter input,
 html.sp .sp-orn input[type="search"] { width: 250px; }
+html.sp .sp-orn .home-search:focus-within,
 html.sp .sp-orn input:focus {
   outline: none;
   border-color: rgba(255, 255, 255, 0.34);
 }
-html.sp .sp-orn .home-search-icon { color: var(--sp-text-3); }
-html.sp .sp-orn .home-search-input { background: transparent; border: 0; }
+html.sp .sp-orn .home-search-icon { flex-shrink: 0; color: var(--sp-text-3); }
+html.sp .sp-orn .home-search-input {
+  flex-grow: 1;
+  min-width: 0;
+  height: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--sp-text);
+  font: inherit;
+  font-size: 13px;
+}
 html.sp .sp-orn .home-search-kbd {
-  padding: 2px 7px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.09);
   border: 1px solid rgba(255, 255, 255, 0.10);
   color: var(--sp-text-3);
   font-size: 11px;
+  line-height: 1;
 }
+/* Astro toggles this one's `display` to reveal it, so set every
+   box property EXCEPT display — otherwise it is always visible. */
+html.sp .sp-orn .home-search-clear {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--sp-text);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+}
+html.sp .sp-orn .home-search-clear:hover { background: rgba(255, 255, 255, 0.22); }
 
 /* The ornament bar owns the filter bar's own box, not the reverse. */
 html.sp .sp-orn .cs-filter {
@@ -264,32 +303,56 @@ html.sp .sp-orn .cs-filter {
   align-items: center;
 }
 
-/* Segmented control — type filter and tile density share one shape */
+/* Segmented control — type filter and tile density share one shape.
+   Sized so the group lands on exactly 40px to match the search
+   field beside it: 32 button + 3+3 padding + 1+1 border. Setting a
+   height instead would break when the group wraps on a phone. */
 html.sp .sp-orn .home-filter,
-html.sp .sp-orn .cs-density {
+html.sp .sp-orn .cs-density,
+html.sp .fav-view,
+html.sp .hz-tabs {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
   gap: 3px;
-  padding: 4px;
-  border-radius: 22px;
+  padding: 3px;
+  border-radius: 20px;
   background: rgba(0, 0, 0, 0.24);
   border: 1px solid rgba(255, 255, 255, 0.10);
 }
+/* Buttons default to display:block, which leaves their label sitting
+   at the top of the box rather than in the middle of it. */
 html.sp .sp-orn .home-filter-btn,
-html.sp .sp-orn .cs-density button {
-  height: 34px;
-  min-width: 34px;
-  padding: 0 16px;
+html.sp .sp-orn .cs-density button,
+html.sp .fav-view button,
+html.sp .hz-tabs button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* These labels are followed by a count badge. Flex collapses the
+     whitespace that used to separate them ("Removed145"). */
+  gap: 6px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 14px;
   border: 0;
-  border-radius: 17px;
+  border-radius: 16px;
   background: transparent;
   color: rgba(255, 255, 255, 0.82);
   font: inherit;
   font-size: 12.5px;
   line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
 }
 html.sp .sp-orn .cs-density button { padding: 0 10px; }
 html.sp .sp-orn .home-filter-btn.active,
-html.sp .sp-orn .cs-density button.on {
+html.sp .sp-orn .cs-density button.on,
+html.sp .fav-view button.on,
+html.sp .fav-view button.active,
+html.sp .hz-tabs button.on,
+html.sp .hz-tabs button.active {
   background: rgba(255, 255, 255, 0.94);
   color: #0a0a0d;
   font-weight: 600;
@@ -300,6 +363,10 @@ html.sp .sp-orn .cs-count {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+
+/* The collapse toggle exists only below 900px; see the narrow-screen
+   block at the end of the file for its collapsed shape. */
+html.sp .sp-orn-toggle { display: none; }
 
 /* Rail and ornament bar are page furniture — the lightbox is a
    different surface, so they withdraw while it is open. */
@@ -389,16 +456,59 @@ html.sp .tile-count { background: none; border: 0; padding: 0; color: inherit; }
 /* Stripped of their chips these two collide ("VIDEO 636"). */
 html.sp .tile-count::before { content: "\00b7"; margin-right: 6px; color: var(--sp-text-3); }
 
-html.sp .home-hero { padding: 0 22px; }
-html.sp .hero-title { letter-spacing: -0.024em; }
+/* vault-home.js forces display:block on .home-hero, which left the
+   icon as a full-width block above the text instead of a disc beside
+   it. Restore the row, and give the icon a real glass disc. */
+html.sp .home-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 22px;
+}
+html.sp .hero-icon {
+  flex: 0 0 auto;
+  width: 62px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  line-height: 1;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+html.sp .hero-text {
+  flex-grow: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+html.sp .hero-title { margin: 0; letter-spacing: -0.024em; }
 html.sp .hero-eyebrow { color: var(--sp-text-2); }
 html.sp .hero-meta { color: var(--sp-text-2); }
+/* The button is nested inside .hero-text, so it is pulled out to the
+   far right rather than left stacked under the item count. */
 html.sp .hero-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 22px;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.94);
   border: 0;
   color: #0a0a0d;
+  font-size: 14px;
   font-weight: 600;
+  line-height: 1;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
@@ -411,20 +521,29 @@ html.sp .home-empty-icon { opacity: 0.6; }
    COLLECTIONS — grid, dividers, tiles
    ════════════════════════════════════════════════════════════ */
 
-/* Section dividers become floating chips. Deliberately unblurred:
-   a long collection has dozens of these in the DOM at once. */
+/* Section dividers. Both engines pin these with position:sticky;top:0,
+   and every divider's containing block is the whole grid — so each one
+   you scroll past STAYS pinned, and they pile up on each other. The
+   old full-width opaque bars hid that; a narrow chip does not, and two
+   labels render overlapping. So these stay full-width and near-opaque:
+   the topmost covers the stack exactly. Deliberately unblurred too — a
+   long collection holds dozens of them at once. */
 html.sp .vs-divider,
 html.sp .is-divider {
   box-sizing: border-box;
-  height: 30px;
+  display: flex;
+  align-items: center;
+  height: 34px;
   margin: 22px 0 8px;
   padding: 0 14px;
-  width: max-content;
-  max-width: 100%;
-  border-radius: 15px;
-  background: rgba(255, 255, 255, 0.11);
-  border: 1px solid rgba(255, 255, 255, 0.20);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), 0 8px 20px rgba(0, 0, 0, 0.44);
+  width: 100%;
+  border-radius: 14px;
+  /* Fully opaque, not merely near-opaque: stacked dividers sit on the
+     exact same rect, so any alpha at all lets the label underneath
+     read through the one on top. */
+  background: #15161c;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 6px 16px rgba(0, 0, 0, 0.40);
   color: var(--sp-text);
   font-size: 11.5px;
   font-weight: 600;
@@ -433,8 +552,6 @@ html.sp .is-divider {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  /* The engine's sticky rule needs an opaque-enough backing to sit on. */
-  background-color: rgba(30, 30, 38, 0.86);
 }
 /* The old trailing hairline does not belong on a chip. */
 html.sp .vs-divider::after,
@@ -482,8 +599,30 @@ html.sp .cs-none { color: var(--sp-text-2); }
    Drop class="sp" and the original button comes back untouched. */
 html.sp .back-btn { display: none; }
 
+/* Every round icon button: a <button> is display:block with the UA's
+   1px/6px padding, so its glyph lands off-centre and a non-square
+   box turns border-radius:50% into an ellipse. Size them squarely
+   and centre the contents explicitly. */
 html.sp .scroll-top,
-html.sp .vs-jump-nav button {
+html.sp .vs-jump-nav button,
+html.sp #va-fab,
+html.sp .vs-lb-close,
+html.sp .is-lb-close,
+html.sp .vs-lb-platter button,
+html.sp .is-lb-controls button,
+html.sp .fav-heart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+html.sp .scroll-top {
+  width: 44px;
+  height: 44px;
+  font-size: 17px;
   border-radius: 50%;
   background: var(--sp-glass);
   border: 1px solid var(--sp-glass-line);
@@ -491,13 +630,14 @@ html.sp .vs-jump-nav button {
   backdrop-filter: var(--sp-blur);
   box-shadow: var(--sp-rim), var(--sp-lift-1);
   color: var(--sp-text);
+  bottom: calc(var(--sp-gutter) + 76px);
+  right: var(--sp-gutter);
 }
-html.sp .scroll-top { bottom: calc(var(--sp-gutter) + 76px); right: var(--sp-gutter); }
 html.sp .scroll-top:hover { border-color: rgba(255, 255, 255, 0.34); }
 
 html.sp .vs-jump-nav {
   right: var(--sp-gutter);
-  gap: 7px;
+  gap: 6px;
   padding: 8px;
   border-radius: 26px;
   background: var(--sp-glass);
@@ -506,47 +646,33 @@ html.sp .vs-jump-nav {
   backdrop-filter: var(--sp-blur);
   box-shadow: var(--sp-rim), var(--sp-lift-2);
 }
+/* Without an explicit size these collapse to their label — measured
+   12x8px, far under a usable target. 26+8+8+2 keeps the outer
+   radius concentric with the 18px inner one. */
 html.sp .vs-jump-nav button {
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  font-size: 12px;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   background: transparent;
   border: 0;
   box-shadow: none;
+  color: var(--sp-text);
 }
 html.sp .vs-jump-nav button:hover { background: rgba(255, 255, 255, 0.16); }
 
 /* ── Favourites and Health keep their own controls in the
       sheet rather than the ornament bar, so they are given the
       same segmented/pill shapes used everywhere else. ─────── */
+/* Shape and sizing are shared with the ornament bar's segmented
+   controls, above; these two only need to wrap on a narrow sheet. */
 html.sp .fav-view,
 html.sp .hz-tabs {
-  gap: 3px;
-  padding: 4px;
+  flex-wrap: wrap;
   width: max-content;
   max-width: 100%;
-  border-radius: 22px;
-  background: rgba(0, 0, 0, 0.24);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-}
-html.sp .fav-view button,
-html.sp .hz-tabs button {
-  height: 34px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 17px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.82);
-  font: inherit;
-  font-size: 12.5px;
-  cursor: pointer;
-}
-html.sp .fav-view button.on,
-html.sp .fav-view button.active,
-html.sp .hz-tabs button.on,
-html.sp .hz-tabs button.active {
-  background: rgba(255, 255, 255, 0.94);
-  color: #0a0a0d;
-  font-weight: 600;
 }
 html.sp .fav-group,
 html.sp .hz-panel,
@@ -654,9 +780,9 @@ html.sp .is-lb-controls {
 }
 html.sp .vs-lb-platter button,
 html.sp .is-lb-controls button {
-  width: 34px;
-  height: 34px;
-  border-radius: 17px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
   color: rgba(255, 255, 255, 0.94);
 }
 html.sp .vs-lb-platter button:hover,
@@ -681,6 +807,8 @@ html.sp .vs-lb-prev,
 html.sp .is-lb-prev,
 html.sp .vs-lb-next,
 html.sp .is-lb-next {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--sp-glass);
   border: 1px solid var(--sp-glass-line);
@@ -689,6 +817,10 @@ html.sp .is-lb-next {
   box-shadow: var(--sp-rim), var(--sp-lift-1);
   color: var(--sp-text);
 }
+/* The close glyph is a 28px "×"; centred in a 44px box it needs its
+   own optical sizing, and the box must be square or 50% is an oval. */
+html.sp .vs-lb-close,
+html.sp .is-lb-close { font-size: 24px; }
 
 /* Filmstrip thumbnails gain depth instead of a flat outline. */
 html.sp .vs-strip { padding: 12px 14px 14px; }
@@ -790,7 +922,70 @@ html.sp #vl-foot a { color: var(--sp-text-2); }
   html.sp .sp-orn input[type="search"] { width: 100%; flex: 1 1 180px; }
   html.sp .sp-orn .cs-filter { flex-wrap: wrap; justify-content: center; width: 100%; }
 
+  /* ── Collapsed search ──────────────────────────────────── */
+  html.sp .sp-orn-toggle {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--sp-text);
+    cursor: pointer;
+  }
+  html.sp .sp-orn-toggle:hover { background: rgba(255, 255, 255, 0.20); }
+  html.sp .sp-orn-toggle svg { width: 19px; height: 19px; }
+  html.sp .sp-orn-toggle .sp-i-close { display: none; }
+  html.sp .sp-orn:not(.sp-collapsed) .sp-orn-toggle .sp-i-search { display: none; }
+  html.sp .sp-orn:not(.sp-collapsed) .sp-orn-toggle .sp-i-close { display: block; }
+
+  /* Collapsed it sits bottom-right, level with the rail and the +
+      button. 28 outer radius - 6 padding = 22 inner, so the toggle
+      stays concentric inside it. */
+  html.sp .sp-orn.sp-collapsed {
+    left: auto;
+    right: var(--sp-gutter);
+    bottom: calc(var(--sp-gutter) + env(safe-area-inset-bottom));
+    width: 56px;
+    height: 56px;
+    padding: 6px;
+    border-radius: 28px;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+  html.sp .sp-orn.sp-collapsed > *:not(.sp-orn-toggle) { display: none; }
+
+  /* A filter left running while collapsed would otherwise be
+     invisible — the grid would look wrong for no stated reason. */
+  html.sp .sp-orn.sp-has-query .sp-orn-toggle::after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 9px;
+    height: 9px;
+    border-radius: 5px;
+    background: var(--sp-accent);
+    border: 1.5px solid #15151b;
+  }
+
   html.sp .scroll-top { bottom: calc(var(--sp-gutter) + 150px); right: var(--sp-gutter); }
+
+  /* Bottom row: + on the left, rail centred, search on the right.
+     All three sit on the gutter at a matching 56px so the row reads
+     as one band rather than three stray buttons. */
+  html.sp #va-fab {
+    left: var(--sp-gutter);
+    bottom: calc(var(--sp-gutter) + env(safe-area-inset-bottom));
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+  }
   html.sp .vs-lb-platter,
   html.sp .is-lb-controls { bottom: calc(var(--sp-gutter) + env(safe-area-inset-bottom)); }
   html.sp .sp-title { font-size: 20px; margin-left: 0; }
