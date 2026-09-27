@@ -28,11 +28,14 @@ jobs:
       - name: Prune thumbnails for removed links
         run: node tools/generate-thumbs.mjs
 
+      - name: Count collection entries (home page)
+        run: node tools/count-entries.mjs
+
       - name: Commit results
         run: |
           git config user.name "vault-health[bot]"
           git config user.email "actions@github.com"
-          git add -A data/ health/ thumbs/
+          git add -A data/ health/ thumbs/ counts.json
           if git diff --cached --quiet; then
             echo "All links healthy — nothing to commit."
           else

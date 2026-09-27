@@ -5,6 +5,8 @@ on:
     paths:
       - 'data/*.js'
       - 'tools/generate-thumbs.mjs'
+      - 'tools/count-entries.mjs'
+      - '.github/workflows/thumbnails.yml'
   workflow_dispatch: {}   # manual "Run workflow" button, for the first run
 
 permissions:
@@ -21,6 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Count collection entries (home page)
+        run: node tools/count-entries.mjs
+
       - name: Generate missing thumbnails
         run: node tools/generate-thumbs.mjs
 
@@ -28,7 +33,7 @@ jobs:
         run: |
           git config user.name "vault-thumbs[bot]"
           git config user.email "actions@github.com"
-          git add -A thumbs/ health/
+          git add -A thumbs/ health/ counts.json
           if git diff --cached --quiet; then
             echo "No thumbnail changes."
           else
