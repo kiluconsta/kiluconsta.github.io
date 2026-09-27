@@ -25,7 +25,7 @@
     '</div>';
   root.appendChild(hero);
 
-  function buildCard(slug, m) {
+  function buildCard(slug, m, n) {
     var tile = document.createElement('a');
     tile.className = 'home-tile';
     tile.href = '/pages/' + slug + '/';
@@ -39,7 +39,7 @@
       '<div class="tile-label">' + m.label + '</div>' +
       '<div class="tile-meta">' +
         (m.type ? '<span class="tile-type">' + (m.type === 'video' ? 'Video' : 'Image') + '</span>' : '') +
-        '<span class="tile-count">' + fmtCount(m.count || 0) + '</span>' +
+        '<span class="tile-count">' + fmtCount(n) + '</span>' +
       '</div>';
     return tile;
   }
@@ -77,31 +77,65 @@
     return { shelf: shelf, scroller: scroller };
   }
 
-  var totalItems = 0;
-  Object.keys(META).forEach(function (slug) { totalItems += META[slug].count || 0; });
-
   var videoShelf = buildShelf('Videos');
   var imageShelf = buildShelf('Images');
-  // Live counts self-heal into localStorage as pages are visited; prefer them.
-  var liveCounts = {};
-  try { liveCounts = JSON.parse(localStorage.getItem('vault-counts') || '{}'); } catch (e) {}
-
-  Object.keys(META).forEach(function (slug) {
-    var m = META[slug];
-    // An empty collection is noise on the home page. Tragic Dee starts empty
-    // and only earns a card once something has been salvaged into it.
-    var n = liveCounts[slug] !== undefined ? liveCounts[slug] : (m.count || 0);
-    if (!n) return;
-    var target = m.type === 'image' ? imageShelf : videoShelf;
-    target.scroller.appendChild(buildCard(slug, m));
-  });
-
   var stat = document.getElementById('home-stat');
-  if (stat) stat.textContent = Object.keys(META).length + ' collections \u00b7 ' + fmtCount(totalItems) + ' items';
 
-  root.querySelectorAll('.shelf-scroller').forEach(function (sc) {
-    Array.prototype.forEach.call(sc.children, function (c, i) { c.style.animationDelay = Math.min(i * 0.03, 0.3) + 's'; });
-  });
+  // ── How many items each collection holds ─────────────────
+  // COLLECTION_META's counts are baked in when the site is built and drift
+  // (Bomb Ass Dee Pt.2 read 1,113 while its data file held 772). The real
+  // numbers come from /counts.json, which the Actions workflows regenerate
+  // whenever a data file changes. Until it answers, show the copy from the
+  // last visit, so the page does not flicker from wrong to right.
+  function readJSON(key) {
+    try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; }
+  }
+  var BUILT_KEY = 'vault-counts-json';
+  var built = (readJSON(BUILT_KEY) || {}).counts || null;
+  var live = readJSON('vault-counts') || {};          // written as collections are opened / edited
+  var pending = readJSON('vault-pending-edits') || {}; // Select-mode edits not yet on Pages
+
+  function countFor(slug) {
+    // An edit made on this device that the published files may not show yet:
+    // this device's own count is the newest thing anyone knows.
+    if (pending[slug] && typeof live[slug] === 'number') return live[slug];
+    if (built && typeof built[slug] === 'number') return built[slug];
+    if (typeof live[slug] === 'number') return live[slug];
+    return META[slug].count || 0;
+  }
+
+  function fillShelves() {
+    videoShelf.scroller.innerHTML = '';
+    imageShelf.scroller.innerHTML = '';
+    var total = 0, shown = 0;
+    Object.keys(META).forEach(function (slug) {
+      var m = META[slug];
+      var n = countFor(slug);
+      // An empty collection is noise on the home page. Tragic Dee starts empty
+      // and only earns a card once something has been salvaged into it.
+      if (!n) return;
+      total += n; shown++;
+      (m.type === 'image' ? imageShelf : videoShelf).scroller.appendChild(buildCard(slug, m, n));
+    });
+    if (stat) stat.textContent = shown + (shown === 1 ? ' collection' : ' collections') + ' \u00b7 ' + fmtCount(total) + ' items';
+    root.querySelectorAll('.shelf-scroller').forEach(function (sc) {
+      Array.prototype.forEach.call(sc.children, function (c, i) { c.style.animationDelay = Math.min(i * 0.03, 0.3) + 's'; });
+    });
+  }
+  fillShelves();
+
+  fetch('/counts.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (doc) {
+      if (!doc || !doc.counts) return;
+      var changed = JSON.stringify(doc.counts) !== JSON.stringify(built);
+      built = doc.counts;
+      try { localStorage.setItem(BUILT_KEY, JSON.stringify({ counts: built })); } catch (e) {}
+      if (!changed) return;
+      fillShelves();
+      applyFilter();   // keep any search / type filter the visitor has already set
+    })
+    .catch(function () {});
 
   var searchInput = document.getElementById('vault-search');
   var searchWrap = document.getElementById('home-search');
