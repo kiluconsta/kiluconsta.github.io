@@ -134,10 +134,10 @@
 
   var bar = document.createElement('div');
   bar.className = 'cs-filter';
-  bar.innerHTML = '<input type="search" id="cs-q" placeholder="Filter this collection…" '
-    + 'autocomplete="off" spellcheck="false" aria-label="Filter this collection">'
-    + '<span class="cs-count" id="cs-count"></span>'
-    + '<div class="cs-density" role="group" aria-label="Tile size">'
+  // No text filter: tiles carry no labels, only media URLs, so there was
+  // nothing meaningful to type. The bar keeps the tile-size control, and the
+  // filter plumbing below stays inert (query is always empty).
+  bar.innerHTML = '<div class="cs-density" role="group" aria-label="Tile size">'
     + '<button type="button" data-d="lg" title="Large tiles">▢</button>'
     + '<button type="button" data-d="md" title="Medium tiles">▦</button>'
     + '<button type="button" data-d="sm" title="Small tiles">▩</button>'
@@ -165,10 +165,10 @@
     // Section headings are meaningless once the list is filtered.
     var divs = body.querySelectorAll('.vs-divider');
     for (var d = 0; d < divs.length; d++) divs[d].classList.toggle('cs-hidden', !!q);
-    countEl.textContent = q ? shown + ' of ' + tiles.length : '';
+    if (countEl) countEl.textContent = q ? shown + ' of ' + tiles.length : '';
     noneMsg.classList.toggle('cs-hidden', !(q && shown === 0));
   }
-  qInput.addEventListener('input', function () {
+  if (qInput) qInput.addEventListener('input', function () {
     query = qInput.value.trim().toLowerCase();
     applyFilter();
   });

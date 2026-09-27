@@ -57,27 +57,29 @@
   // lets the divider's ::after (hidden by the Spatial theme) show "Select
   // section" here without !important.
   var css = ''
-    + '.vsel-toggle{flex-shrink:0;height:34px;padding:0 16px;border-radius:17px;'
-    + 'border:1px solid rgba(255,255,255,.19);background:rgba(255,255,255,.10);color:rgba(255,255,255,.97);'
-    + 'font:inherit;font-size:13px;font-weight:600;line-height:1;cursor:pointer;'
-    + 'display:inline-flex;align-items:center;justify-content:center}'
-    + '.vsel-toggle:hover:not([disabled]){background:rgba(255,255,255,.18)}'
-    + '.vsel-toggle[aria-pressed="true"]{background:rgba(255,255,255,.94);color:#0a0a0d;border-color:transparent}'
-    + '.vsel-toggle[disabled]{opacity:.45;cursor:default}'
-    + '.vsel-toggle.vsel-fixed{position:fixed;top:18px;right:18px;z-index:620}'
-    + '.sp-head .vsel-toggle{margin-left:4px}'
-    // On a phone the header wraps, and the button fell to its own line on the
-    // left. Keep it top-right: the title truncates instead, and the item count
-    // takes the second line.
-    + '@media (max-width:900px){'
-    + 'html .sp-head .sp-title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + 'html .sp-head .vsel-toggle{order:2;margin-left:auto}'
-    + 'html .sp-head .sp-count{order:3;flex-basis:100%;margin-left:0}}'
+    // Select lives in the floating bar as a glyph, sized to the 40px controls
+    // beside it there.
+    + '.vsel-toggle{flex-shrink:0;box-sizing:border-box;width:40px;height:40px;padding:0;border-radius:20px;'
+    + 'border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.12);color:rgba(255,255,255,.97);'
+    + 'cursor:pointer;display:inline-flex;align-items:center;justify-content:center}'
+    + '.vsel-toggle svg{width:20px;height:20px}'
+    + '.vsel-toggle:hover:not([disabled]){background:rgba(255,255,255,.22)}'
+    + '.vsel-toggle[disabled]{opacity:.4;cursor:default}'
+    // Only when there is no floating bar to live in (theme switched off).
+    + '.vsel-toggle.vsel-fixed{position:fixed;right:18px;bottom:18px;z-index:620}'
 
     // Long-press is Select now, so the OS callout would only get in the way.
     + TILE + '{-webkit-touch-callout:none}'
     + 'html.vsel-on ' + TILE + '{cursor:pointer;-webkit-user-select:none;user-select:none}'
-    + 'html.vsel-on .fav-heart,html.vsel-on .vs-play-overlay{display:none}'
+    + 'html.vsel-on .vs-play-overlay{display:none}'
+    // Favourites stay readable while selecting, but a tap must select, not un-favourite.
+    + 'html.vsel-on ' + TILE + ' .fav-heart{opacity:.45;pointer-events:none}'
+    // A mouse drag on a tile's <img> started the browser's own image drag, which
+    // cancels the pointer stream — the reason dragging only worked on touch.
+    + 'html.vsel-on ' + TILE + ' img{-webkit-user-drag:none;user-drag:none}'
+    + 'html.vsel-placing ' + TILE + ',html.vsel-placing ' + DIV + '{cursor:copy}'
+    // Outranks html.vsel-on .vsel-bar{display:flex}, which comes later in this sheet.
+    + 'html.vsel-on.vsel-placing .vsel-bar{display:none}'
     + 'html.vsel-on ' + TILE + '::before{content:"";position:absolute;top:8px;left:8px;z-index:4;'
     + 'width:24px;height:24px;box-sizing:border-box;border-radius:12px;border:2px solid rgba(255,255,255,.92);'
     + 'background:rgba(0,0,0,.30);box-shadow:0 1px 5px rgba(0,0,0,.55);'
@@ -186,6 +188,7 @@
   function isEntry(t) { return t.url != null; }
   function buzz() { try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {} }
   var ICON = {
+    select: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8 12.4l2.8 2.8L16.2 9.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     move: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M12 3l-4 4M12 3l4 4M12 21l-4-4M12 21l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     trash: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
@@ -374,7 +377,7 @@
     indexGrid();
     replayPending();
     toggleBtn.disabled = false;
-    toggleBtn.removeAttribute('title');
+    toggleBtn.title = 'Select';
   }
   var mo = new MutationObserver(function () {
     checkReady(false);
@@ -387,12 +390,15 @@
   var toggleBtn = document.createElement('button');
   toggleBtn.type = 'button';
   toggleBtn.className = 'vsel-toggle';
-  toggleBtn.textContent = 'Select';
+  toggleBtn.innerHTML = ICON.select;
+  toggleBtn.setAttribute('aria-label', 'Select');
   toggleBtn.setAttribute('aria-pressed', 'false');
   toggleBtn.disabled = true;
   toggleBtn.title = 'Loading the collection…';
-  var head = document.querySelector('.sp-head');
-  if (head) head.appendChild(toggleBtn);
+  // In the Spatial theme's floating bar, beside the tile-size control. (While
+  // selecting, that bar gives way to the selection bar, which has Done.)
+  var ornBar = document.querySelector('.sp-orn');
+  if (ornBar) ornBar.appendChild(toggleBtn);
   else { toggleBtn.classList.add('vsel-fixed'); document.body.appendChild(toggleBtn); }
   toggleBtn.addEventListener('click', function () { if (on) exit(); else enter(); });
 
@@ -478,7 +484,6 @@
     if (on || !ready) return;
     on = true;
     root.classList.add('vsel-on');
-    toggleBtn.textContent = 'Done';
     toggleBtn.setAttribute('aria-pressed', 'true');
     refresh();
   }
@@ -490,8 +495,8 @@
     anchorUrl = null;
     Array.prototype.forEach.call(body.querySelectorAll(DIV), function (d) { d.classList.remove('vsel-sec-all'); });
     root.classList.remove('vsel-on');
-    toggleBtn.textContent = 'Select';
     toggleBtn.setAttribute('aria-pressed', 'false');
+    stopPlacing();
     closeSheet();
   }
 
@@ -509,6 +514,20 @@
   document.addEventListener('click', function (e) {
     if (Date.now() < swallowUntil) { swallowUntil = 0; e.preventDefault(); e.stopPropagation(); return; }
     if (!on || !e.target.closest) return;
+    if (placing) {
+      // Only clicks in the grid choose the spot; the Cancel button still works.
+      if (!body.contains(e.target)) return;
+      e.preventDefault(); e.stopPropagation();
+      var spot = targetAt(e.clientX, e.clientY, placing.urls);
+      if (!spot) {
+        if (e.target.closest(TILE)) toast('That one is being moved — pick a tile outside the selection.', 'Cancel', stopPlacing, false, 0);
+        return;
+      }
+      var urls = placing.urls;
+      stopPlacing();
+      move(urls, spot.to);
+      return;
+    }
     var t = e.target.closest(TILE);
     if (t && body.contains(t)) {
       e.preventDefault(); e.stopPropagation();
@@ -524,7 +543,7 @@
   document.addEventListener('pointerdown', function (e) {
     swallowArmed = false; swallowUntil = 0;  // only the click that ends THIS gesture is ours
     if (e.pointerType === 'mouse' && e.button !== 0) return;
-    if (!ready || busy || !e.target.closest) return;
+    if (!ready || busy || placing || !e.target.closest) return;
     var t = e.target.closest(TILE);
     if (!t || !body.contains(t)) return;
     if (!on) {
@@ -557,6 +576,7 @@
   document.addEventListener('pointermove', function (e) {
     // Touch jitter fires pointermove constantly, so only real travel cancels.
     if (press && e.pointerId === press.id && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) cancelPress();
+    if (placing && e.pointerType === 'mouse') { showSpot(targetAt(e.clientX, e.clientY, placing.urls)); return; }
     if (!drag || e.pointerId !== drag.id) return;
     drag.x = e.clientX; drag.y = e.clientY;
     if (!drag.active) {
@@ -582,6 +602,10 @@
   window.addEventListener('scroll', cancelPress, { passive: true, capture: true });
   // Once a drag is live, the page must not scroll under the finger.
   document.addEventListener('touchmove', function (e) { if (drag && drag.active) e.preventDefault(); }, { passive: false });
+  document.addEventListener('dragstart', function (e) {
+    var t = on && e.target.closest && e.target.closest(TILE);
+    if (t && body.contains(t)) e.preventDefault();
+  }, true);
   document.addEventListener('contextmenu', function (e) {
     var t = e.target.closest && e.target.closest(TILE);
     if (t && body.contains(t) && (on || press)) e.preventDefault();
@@ -591,6 +615,7 @@
   var ghost = null, marker = null, scrollRaf = 0, gridGap = 8;
 
   function startDrag() {
+    if (placing) stopPlacing();
     var u = drag.tile.dataset.favUrl;
     // Dragging a selected tile carries the whole selection; an unselected one
     // moves alone, and the selection is left exactly as it was.
@@ -598,7 +623,6 @@
     drag.active = true;
     root.classList.add('vsel-dragging');
     drag.urls.forEach(function (x) { var n = tileByUrl.get(x); if (n) n.classList.add('vsel-lifted'); });
-    gridGap = parseFloat(getComputedStyle(body).columnGap) || 8;
 
     ghost = document.createElement('div');
     ghost.className = 'vsel-ghost';
@@ -606,9 +630,8 @@
     var src = img && (img.currentSrc || img.src);
     ghost.innerHTML = '<i></i>' + (drag.urls.length > 1 ? '<b>' + drag.urls.length + '</b>' : '');
     if (src) ghost.firstChild.style.backgroundImage = 'url("' + src.replace(/"/g, '%22') + '")';
-    marker = document.createElement('div');
-    marker.className = 'vsel-marker';
-    document.body.append(ghost, marker);
+    document.body.appendChild(ghost);
+    ensureMarker();
     buzz();
     trackDrag();
     scrollRaf = requestAnimationFrame(autoScroll);
@@ -616,26 +639,62 @@
   function trackDrag() {
     if (!drag || !drag.active) return;
     ghost.style.transform = 'translate(' + (drag.x - 42) + 'px,' + (drag.y - 42) + 'px) rotate(-3deg)';
-    var el = document.elementFromPoint(drag.x, drag.y);
+    var spot = targetAt(drag.x, drag.y, drag.urls);
+    drag.target = spot && spot.to;
+    showSpot(spot);
+  }
+
+  // Where a drop (or a placing tap) at x,y would put the moving tiles: before or
+  // after the tile under it by which half it is in, or at the start of the
+  // section whose divider it is over. Null over the tiles being moved.
+  function targetAt(x, y, moving) {
+    var el = document.elementFromPoint(x, y);
     var t = el && el.closest && el.closest(TILE);
     var d = !t && el && el.closest && el.closest(DIV);
-    drag.target = null;
-    if (t && body.contains(t) && drag.urls.indexOf(t.dataset.favUrl) === -1) {
+    if (t && body.contains(t) && moving.indexOf(t.dataset.favUrl) === -1) {
       var r = t.getBoundingClientRect();
-      var before = drag.x < r.left + r.width / 2;
-      drag.target = { where: before ? 'before' : 'after', target: t.dataset.favUrl };
-      showMarker((before ? r.left - gridGap / 2 : r.right + gridGap / 2) - 2, r.top, 4, r.height);
-    } else if (d && body.contains(d) && secByDiv.has(d)) {
-      var dr = d.getBoundingClientRect();
-      drag.target = { where: 'section-start', section: secByDiv.get(d) };
-      showMarker(dr.left, dr.bottom + 3, dr.width, 4);
+      var before = x < r.left + r.width / 2;
+      return { to: { where: before ? 'before' : 'after', target: t.dataset.favUrl },
+               mark: [(before ? r.left - gridGap / 2 : r.right + gridGap / 2) - 2, r.top, 4, r.height] };
     }
-    if (!drag.target) marker.style.display = 'none';
+    if (d && body.contains(d) && secByDiv.has(d)) {
+      var dr = d.getBoundingClientRect();
+      return { to: { where: 'section-start', section: secByDiv.get(d) }, mark: [dr.left, dr.bottom + 3, dr.width, 4] };
+    }
+    return null;
   }
-  function showMarker(x, y, w, h) {
+  function ensureMarker() {
+    gridGap = parseFloat(getComputedStyle(body).columnGap) || 8;
+    if (marker) return;
+    marker = document.createElement('div');
+    marker.className = 'vsel-marker';
+    document.body.appendChild(marker);
+  }
+  function showSpot(spot) {
+    if (!marker) return;
+    if (!spot) { marker.style.display = 'none'; return; }
     marker.style.display = 'block';
-    marker.style.left = x + 'px'; marker.style.top = y + 'px';
-    marker.style.width = w + 'px'; marker.style.height = h + 'px';
+    marker.style.left = spot.mark[0] + 'px'; marker.style.top = spot.mark[1] + 'px';
+    marker.style.width = spot.mark[2] + 'px'; marker.style.height = spot.mark[3] + 'px';
+  }
+
+  // ── Placing: move the selection by tapping where it should go ─
+  // Dragging hundreds of tiles past a 1,900-tile grid is impractical, and a
+  // drag is fiddly on a phone; this puts the selection next to any tile.
+  var placing = null;
+  function startPlacing(urls) {
+    placing = { urls: urls };
+    root.classList.add('vsel-placing');
+    ensureMarker();
+    toast('Tap a tile to put the ' + plural(urls.length) + ' before or after it — or a divider for the start of its section.',
+      'Cancel', stopPlacing, false, 0);
+  }
+  function stopPlacing() {
+    if (!placing) return;
+    placing = null;
+    root.classList.remove('vsel-placing');
+    if (marker && !(drag && drag.active)) { marker.remove(); marker = null; }
+    dismissToast();
   }
   // Near the top or bottom edge the page scrolls, faster the closer you get.
   function autoScroll() {
@@ -668,6 +727,7 @@
       return;
     }
     if (!on || typing(e)) return;
+    if (placing && e.key === 'Escape') { stopPlacing(); e.preventDefault(); return; }
     if (e.key === 'Escape') { exit(); e.preventDefault(); }
     else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'a') { selectAll(true); e.preventDefault(); }
     else if ((e.key === 'Delete' || e.key === 'Backspace') && sel.size) { confirmDelete(); e.preventDefault(); }
@@ -893,6 +953,7 @@
     var urls = orderedSelection();
     if (!urls.length || busy) return;
     var rows = ''
+      + '<div class="vsel-move-row"><span>A spot in the grid</span><button type="button" data-to="pick">Choose…</button></div>'
       + '<div class="vsel-move-row"><span>Top of ' + esc(NAME) + '</span><button type="button" data-to="top">Move here</button></div>'
       + '<div class="vsel-move-row"><span>Bottom of ' + esc(NAME) + '</span><button type="button" data-to="bottom">Move here</button></div>';
     var n = sectionCount();
@@ -911,6 +972,7 @@
       s.querySelector('.vsel-cancel').addEventListener('click', closeSheet);
       Array.prototype.forEach.call(s.querySelectorAll('[data-to]'), function (b) {
         b.addEventListener('click', function () {
+          if (b.dataset.to === 'pick') { closeSheet(); startPlacing(urls); return; }
           var to = { where: b.dataset.to };
           if (b.dataset.k != null) to.section = Number(b.dataset.k);
           closeSheet();

@@ -678,12 +678,33 @@ html.sp .fav-group,
 html.sp .hz-panel,
 html.sp .hz-hosts,
 html.sp .hz-keyrow {
+  box-sizing: border-box;
   border-radius: var(--sp-r-pane);
   background: var(--sp-pane);
   border: 1px solid var(--sp-pane-line);
   box-shadow: var(--sp-rim-soft), var(--sp-lift-1);
 }
-html.sp .hz-row { border-color: rgba(255, 255, 255, 0.10); }
+/* A pane needs an inset, or its text and rows run into the rounded edge —
+   vault-health.js built these as bare blocks with vertical padding only. */
+html.sp .hz-panel { padding: 18px 20px 14px; }
+html.sp .fav-group { padding: 16px 18px; }
+html.sp .hz-hosts { padding: 12px 14px; }
+html.sp .hz-keyrow { padding: 12px 14px; }
+/* Nested inside a panel, these are sections of it, not panes of their own. */
+html.sp .hz-panel .hz-hosts,
+html.sp .hz-panel .hz-keyrow {
+  background: rgba(0, 0, 0, 0.18);
+  box-shadow: none;
+  border-radius: 16px;
+}
+html.sp .hz-row {
+  padding: 13px 2px;
+  border-color: rgba(255, 255, 255, 0.10);
+  align-items: center;
+}
+html.sp .hz-row .hz-btn { align-self: start; }
+html.sp .hz-note { margin: 0 2px 14px; line-height: 1.5; }
+html.sp .hz-h { margin-left: 2px; }
 html.sp .hz-btn {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.10);
@@ -693,7 +714,7 @@ html.sp .hz-btn {
 }
 html.sp .hz-btn:hover { background: rgba(255, 255, 255, 0.18); }
 html.sp .hz-keyrow input,
-html.sp .hz-filter input {
+html.sp .hz-filter {
   border-radius: 12px;
   background: var(--sp-well);
   border: 1px solid var(--sp-well-line);
@@ -744,22 +765,42 @@ html.sp #va-card textarea {
 /* ════════════════════════════════════════════════════════════
    LIGHTBOX — a floating slab, controls detached below it
    ════════════════════════════════════════════════════════════ */
+/* The slab is centred in what is left after reserving room for the close
+   button above, prev/next at the sides and the floating platter below.
+   The media was capped at 82vh while its slab was capped at 82vh PLUS 20px
+   of padding, so a tall video spilled out and the slab met the platter. */
 html.sp .vs-lightbox,
 html.sp .is-lightbox {
+  box-sizing: border-box;
+  padding: 72px 84px 112px;
   background: rgba(3, 3, 5, 0.66);
   -webkit-backdrop-filter: blur(30px) saturate(1.3);
   backdrop-filter: blur(30px) saturate(1.3);
 }
 html.sp .vs-lb-video-wrap,
 html.sp .is-lb-img-wrap {
+  box-sizing: border-box;
+  max-width: none;          /* the Astro sheet's 90vw/82vh cap is what overflowed */
+  max-height: none;
   padding: 10px;
   border-radius: var(--sp-r-pane);
   background: rgba(255, 255, 255, 0.075);
   border: 1px solid var(--sp-glass-line);
   box-shadow: var(--sp-rim), var(--sp-lift-3);
 }
+/* Sized from the reserved space above: 84+84 across and 72+112 down, plus
+   the slab's own 10px padding on each side. */
 html.sp .vs-lb-video,
-html.sp .is-lb-img { border-radius: 17px; display: block; }
+html.sp .is-lb-img {
+  display: block;
+  border-radius: 17px;
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 188px);
+  max-height: calc(100vh - 204px);
+  max-height: calc(100dvh - 204px);
+  object-fit: contain;
+}
 
 html.sp .vs-lb-platter,
 html.sp .is-lb-controls {
@@ -921,6 +962,29 @@ html.sp #vl-foot a { color: var(--sp-text-2); }
   html.sp .sp-orn .cs-filter input,
   html.sp .sp-orn input[type="search"] { width: 100%; flex: 1 1 180px; }
   html.sp .sp-orn .cs-filter { flex-wrap: wrap; justify-content: center; width: 100%; }
+
+  /* A collection page's bar holds only the tile-size control and Select:
+     it sits centred above the rail at its natural width, never collapsed. */
+  html.sp .sp-orn.sp-orn-compact {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: max-content;
+    height: 60px;
+    padding: 0 10px;
+    flex-wrap: nowrap;
+    border-radius: 30px;
+  }
+  html.sp .sp-orn.sp-orn-compact .cs-filter { width: auto; flex-wrap: nowrap; }
+
+  html.sp .vs-lightbox,
+  html.sp .is-lightbox { padding: 64px 12px 100px; }
+  html.sp .vs-lb-video,
+  html.sp .is-lb-img {
+    max-width: calc(100vw - 44px);
+    max-height: calc(100vh - 184px);
+    max-height: calc(100dvh - 184px);
+  }
 
   /* ── Collapsed search ──────────────────────────────────── */
   html.sp .sp-orn-toggle {

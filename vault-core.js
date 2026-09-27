@@ -492,7 +492,7 @@ if ('serviceWorker' in navigator) {
 (function () {
   var KEYS = [
     ['?', 'Show this list'],
-    ['/', 'Filter the collection'],
+    ['/', 'Search collections (home)'],
     ['Esc', 'Close the lightbox'],
     ['← →', 'Previous / next'],
     ['S', 'Shuffle'],
@@ -500,7 +500,8 @@ if ('serviceWorker' in navigator) {
     ['A', 'Auto-advance'],
     ['T', 'Advance after 12s'],
     ['F', 'Fullscreen'],
-    ['Alt-click', 'Remove a tile']
+    ['Long-press', 'Select tiles'],
+    ['\u2318A / Delete', 'Select all / delete (while selecting)']
   ];
   var panel = null;
 
@@ -769,20 +770,45 @@ var VaultLB = {
       pill.title = d.textContent;
       pill.setAttribute('aria-label', 'Jump to ' + d.textContent);
       pill.addEventListener('click', function () {
-        d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Dividers are position:sticky, and every one scrolled past stays
+        // pinned at the top — so scrollIntoView on it sees "already there" and
+        // does nothing, which made the nav forward-only. Aim at the section's
+        // first tile instead (never sticky), leaving room for the pinned divider.
+        var first = firstTileAfter(d);
+        if (!first) { d.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+        var y = first.getBoundingClientRect().top + window.scrollY - d.offsetHeight - 16;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       });
       nav.appendChild(pill);
     });
-    var obs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        var idx = dividerEls.indexOf(en.target);
-        nav.querySelectorAll('.vs-jump-pill').forEach(function (p, i) {
-          p.classList.toggle('active', i === idx);
-        });
-      });
-    }, { rootMargin: '-10% 0px -70% 0px' });
-    dividerEls.forEach(function (d) { obs.observe(d); });
+    function firstTileAfter(d) {
+      var n = d.nextElementSibling;
+      while (n && !n.matches('.vs-tile, .is-tile')) {
+        if (n.matches('.vs-divider, .is-divider')) return null;
+        n = n.nextElementSibling;
+      }
+      return n;
+    }
+    // Which section you are in, from where each section's first tile sits.
+    // (An IntersectionObserver on the dividers can't tell: the pinned ones
+    // all intersect the top of the screen at once.)
+    var pills = nav.querySelectorAll('.vs-jump-pill');
+    // Straight from the scroll event: browsers already deliver those at most
+    // once a frame, and at most 13 sections makes this trivially cheap.
+    function markCurrent() {
+      var line = window.innerHeight * 0.3, cur = 0;
+      // At the very bottom a short last section can never reach the line, so
+      // there the last section with anything on screen counts instead.
+      var atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atEnd) line = window.innerHeight;
+      for (var i = 0; i < dividerEls.length; i++) {
+        var f = dividerEls[i].isConnected && firstTileAfter(dividerEls[i]);
+        if (f && f.getBoundingClientRect().top <= line) cur = i;
+      }
+      for (var j = 0; j < pills.length; j++) pills[j].classList.toggle('active', j === cur);
+    }
+    window.addEventListener('scroll', markCurrent, { passive: true });
+    markCurrent();
   }
 };
 

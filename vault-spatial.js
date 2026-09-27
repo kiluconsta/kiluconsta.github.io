@@ -75,7 +75,11 @@
   // phone that wraps to two rows and eats the bottom of the grid, so
   // below 900px it shrinks to a single round button until asked for.
   var orn = document.querySelector('.sp-orn');
-  if (orn) {
+  // Only a bar with a search field is worth collapsing. On a collection page
+  // it holds just the tile-size control and Select, which fit as they are.
+  var hasField = !!(orn && orn.querySelector('input'));
+  if (orn && !hasField) orn.classList.add('sp-orn-compact');
+  if (orn && hasField) {
     var MOBILE = window.matchMedia('(max-width: 900px)');
     var field = orn.querySelector('input');
     if (!orn.id) orn.id = 'sp-orn';
