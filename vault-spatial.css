@@ -635,33 +635,46 @@ html.sp .scroll-top {
 }
 html.sp .scroll-top:hover { border-color: rgba(255, 255, 255, 0.34); }
 
+/* A slim vertical page indicator, 28px wide. Each pill keeps an 18px
+   hit area, but only an 8px dot is drawn inside it; the current
+   section stretches into an accent capsule. (Sizing the pills as
+   36px circles made the bar 54px wide, and its transparent
+   background also hid the original dots and the active colour.) */
 html.sp .vs-jump-nav {
   right: var(--sp-gutter);
-  gap: 6px;
-  padding: 8px;
-  border-radius: 26px;
+  gap: 2px;
+  padding: 5px 4px;
+  border-radius: 999px;
   background: var(--sp-glass);
   border: 1px solid var(--sp-glass-line);
   -webkit-backdrop-filter: var(--sp-blur);
   backdrop-filter: var(--sp-blur);
   box-shadow: var(--sp-rim), var(--sp-lift-2);
 }
-/* Without an explicit size these collapse to their label — measured
-   12x8px, far under a usable target. 26+8+8+2 keeps the outer
-   radius concentric with the 18px inner one. */
 html.sp .vs-jump-nav button {
-  width: 36px;
-  height: 36px;
-  border-radius: 18px;
-  font-size: 12px;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   background: transparent;
   border: 0;
   box-shadow: none;
-  color: var(--sp-text);
 }
-html.sp .vs-jump-nav button:hover { background: rgba(255, 255, 255, 0.16); }
+html.sp .vs-jump-nav button::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.40);
+  transition: height 0.2s cubic-bezier(.22, 1, .36, 1), background 0.2s ease;
+}
+html.sp .vs-jump-nav button:hover::before { background: rgba(255, 255, 255, 0.85); }
+html.sp .vs-jump-nav button.active::before {
+  height: 14px;
+  background: var(--sp-accent);
+}
+html.sp .vs-jump-nav button:focus-visible { outline: 2px solid #fff; outline-offset: 0; }
 
 /* ── Favourites and Health keep their own controls in the
       sheet rather than the ornament bar, so they are given the
