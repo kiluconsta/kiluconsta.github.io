@@ -8,8 +8,10 @@
 //
 // It moves nodes, never rebuilds them, so every listener the
 // engines attached keeps working. That is also why this script
-// must load LAST on the page — after vault-home.js and the video
-// and image engines have created and wired their own controls.
+// loads after vault-home.js and the video and image engines have
+// created and wired their own controls. vault-select.js loads
+// after THIS one, because its Select button goes into the header
+// built below.
 //
 // Nothing here is required for the site to function: if it does
 // not run, the CSS alone still themes the page and the controls

@@ -113,7 +113,7 @@
     // Section headings stop describing what is on screen once filtered.
     var divs = body.querySelectorAll('.is-divider');
     for (var d = 0; d < divs.length; d++) divs[d].classList.toggle('cs-hidden', !!q);
-    countEl.textContent = q ? shown + ' of ' + items.length : '';
+    countEl.textContent = q ? shown + ' of ' + tiles.length : '';
     noneMsg.classList.toggle('cs-hidden', !(q && shown === 0));
   }
   qInput.addEventListener('input', function () {
@@ -155,6 +155,7 @@
         var tile = document.createElement('div');
         tile.className = 'is-tile';
         tile.dataset.favUrl = it.url;
+        tile.dataset.vi = i;
         var img = document.createElement('img');
         img.loading = 'lazy';
         img.alt = '';
@@ -202,6 +203,22 @@
     if (ssTimer) stopSlideshow(); else startSlideshow();
   });
 
+  // The grid's order, which Select mode can change in place. `items` is fixed
+  // at load, so stepping by index would revisit deleted tiles.
+  function order() {
+    var tiles = body.querySelectorAll('.is-tile');
+    var out = new Array(tiles.length);
+    for (var i = 0; i < tiles.length; i++) out[i] = Number(tiles[i].dataset.vi);
+    return out;
+  }
+  function neighbour(idx, delta) {
+    var seq = order();
+    if (!seq.length) return idx;
+    var pos = seq.indexOf(idx);
+    if (pos === -1) return seq[delta > 0 ? 0 : seq.length - 1];
+    return seq[(pos + delta + seq.length) % seq.length];
+  }
+
   function openLightbox(idx) {
     current = idx;
     var it = items[idx];
@@ -211,15 +228,16 @@
     VaultLB.lock(true);
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'image' });
     // Preload the next image so advancing feels instant
-    if (items.length > 1) {
+    var nextIdx = neighbour(idx, 1);
+    if (nextIdx !== idx) {
       var nx = new Image();
-      nx.src = proxyUrl(items[(idx + 1) % items.length].url);
+      nx.src = proxyUrl(items[nextIdx].url);
     }
   }
   function closeLightbox() { stopSlideshow(); lightbox.style.display = 'none'; VaultLB.lock(false); lbImg.removeAttribute('src'); }
   function step(delta) {
     if (current < 0) return;
-    openLightbox((current + delta + items.length) % items.length);
+    openLightbox(neighbour(current, delta));
   }
 
   lbClose.addEventListener('click', closeLightbox);

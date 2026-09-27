@@ -165,7 +165,7 @@
     // Section headings are meaningless once the list is filtered.
     var divs = body.querySelectorAll('.vs-divider');
     for (var d = 0; d < divs.length; d++) divs[d].classList.toggle('cs-hidden', !!q);
-    countEl.textContent = q ? shown + ' of ' + items.length : '';
+    countEl.textContent = q ? shown + ' of ' + tiles.length : '';
     noneMsg.classList.toggle('cs-hidden', !(q && shown === 0));
   }
   qInput.addEventListener('input', function () {
@@ -244,13 +244,17 @@
       w.appendChild(strip);
     }
     // Build once, lazily — a 1,900-item strip would be absurd, so window it.
+    // Windowed over the grid's order, which Select mode can change in place.
     var RADIUS = 25;
-    var from = Math.max(0, idx - RADIUS);
-    var to = Math.min(items.length, idx + RADIUS + 1);
-    if (!stripBuilt || strip.dataset.from != from || strip.dataset.to != to) {
-      strip.dataset.from = from; strip.dataset.to = to;
+    var s = order();
+    var pos = Math.max(0, s.indexOf(idx));
+    var win = s.slice(Math.max(0, pos - RADIUS), Math.min(s.length, pos + RADIUS + 1));
+    var key = win.join(',');
+    if (!stripBuilt || strip.dataset.key !== key) {
+      strip.dataset.key = key;
       strip.innerHTML = '';
-      for (var i = from; i < to; i++) {
+      for (var w = 0; w < win.length; w++) {
+        var i = win[w];
         (function (n) {
           var im = document.createElement('img');
           im.alt = '';
@@ -402,6 +406,16 @@
 
   function setToggle(btn, on) { if (btn) btn.classList.toggle('vs-toggled', on); }
 
+  // What the viewer can see, in the order they see it. `items` is fixed at
+  // load, but Select mode deletes and re-orders tiles in place — stepping by
+  // item index would revisit deleted tiles and ignore every move.
+  function order() {
+    var tiles = body.querySelectorAll('.vs-tile');
+    var out = new Array(tiles.length);
+    for (var i = 0; i < tiles.length; i++) out[i] = Number(tiles[i].dataset.vi);
+    return out;
+  }
+
   function openLightbox(idx) {
     current = idx;
     var it = items[idx];
@@ -411,7 +425,8 @@
     lbVideo.play().catch(function () {});
     lightbox.style.display = 'flex';
     VaultLB.lock(true);
-    counter.textContent = (idx + 1) + ' / ' + items.length;
+    var seq = order();
+    counter.textContent = (seq.indexOf(idx) + 1) + ' / ' + seq.length;
     paintStrip(idx);
     stripWake();
     if (favApi) favApi.setCurrent({ url: it.url, slug: slug, type: 'video', start: it.start, end: it.end });
@@ -428,12 +443,17 @@
     lbVideo.removeAttribute('src'); lbVideo.load();
   }
   function nextIndex(delta) {
-    if (shuffleMode && items.length > 1) {
+    var seq = order();
+    if (!seq.length) return current;
+    if (shuffleMode && seq.length > 1) {
       var n;
-      do { n = Math.floor(Math.random() * items.length); } while (n === current);
+      do { n = seq[Math.floor(Math.random() * seq.length)]; } while (n === current);
       return n;
     }
-    return (current + delta + items.length) % items.length;
+    var pos = seq.indexOf(current);
+    // The current tile was deleted from under the lightbox: carry on from the top.
+    if (pos === -1) return seq[delta > 0 ? 0 : seq.length - 1];
+    return seq[(pos + delta + seq.length) % seq.length];
   }
   function step(delta) {
     if (current < 0) return;
