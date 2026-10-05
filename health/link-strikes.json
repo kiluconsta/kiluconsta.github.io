@@ -1,42 +1,42 @@
 {
-  "https://video.bsky.app/watch/did%3Aplc%3Aopsosud4y6zfhzjklmgprxhc/bafkreiefmz5p4aba67m5fvbvmsajpxx4ntivcdggr65tuzhs3eouv3y6ky/playlist.m3u8": {
-    "count": 2,
-    "last": "2026-09-28",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/ext_tw_video/1693353443560153088/pu/vid/720x980/WPZgnENTVv1-xfdI.mp4": {
-    "count": 2,
-    "last": "2026-09-28",
-    "reason": "dead:403"
-  },
-  "https://video-ft.twimg.com/ext_tw_video/1639710735679856640/pu/vid/1280x720/BN006ULE0LlkQ9yk.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-09-28",
-    "reason": "dead:404"
-  },
-  "https://video-ft.twimg.com/ext_tw_video/1639710735679856640/pu/vid/1280x720/BN006ULE0LlkQ9yk.mp4": {
-    "count": 2,
-    "last": "2026-09-28",
-    "reason": "dead:404"
-  },
-  "https://video-s.twimg.com/amplify_video/1894546385606762496/vid/avc1/1920x1080/McvBmfyFWGuAfCbu.mp4": {
-    "count": 2,
-    "last": "2026-09-28",
-    "reason": "dead:404"
-  },
-  "https://media.redgifs.com/NaughtyUtilizedSlothbear.mp4": {
-    "count": 2,
-    "last": "2026-09-28",
-    "reason": "dead:403"
-  },
   "https://video-s.twimg.com/amplify_video/1882316414402404352/vid/avc1/890x668/WFTP2CPhlvkzIzvs.mp4": {
-    "count": 1,
-    "last": "2026-09-28",
+    "count": 2,
+    "last": "2026-10-05",
     "reason": "dead:404"
   },
   "https://video-s.twimg.com/ext_tw_video/1467046054755459074/pu/vid/720x1280/IxPi2vC4QsVtlDhA.mp4": {
-    "count": 1,
-    "last": "2026-09-28",
+    "count": 2,
+    "last": "2026-10-05",
     "reason": "dead:403"
+  },
+  "https://video-s.twimg.com/ext_tw_video/1853522604633567233/pu/vid/avc1/720x1280/MUCIQV9IZPNmxMvK.mp4?tag=12": {
+    "count": 1,
+    "last": "2026-10-05",
+    "reason": "dead:404"
+  },
+  "https://video-s.twimg.com/ext_tw_video/1853522604633567233/pu/vid/avc1/720x1280/MUCIQV9IZPNmxMvK.mp4": {
+    "count": 1,
+    "last": "2026-10-05",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/amplify_video/1986531212115255299/vid/avc1/1080x1920/oBeVT3tmFRTLFKIy.mp4": {
+    "count": 1,
+    "last": "2026-10-05",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/amplify_video/1949234982850859008/vid/avc1/720x1228/EbdFARuTWk3-cpWj.mp4": {
+    "count": 1,
+    "last": "2026-10-05",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/amplify_video/1975635320084537344/vid/avc1/1568x886/iwXcrmP2-eZpb58a.mp4": {
+    "count": 1,
+    "last": "2026-10-05",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/ext_tw_video/2008221263890620416/pu/vid/avc1/720x1122/KhUNirWuXtwqAMCL.mp4": {
+    "count": 1,
+    "last": "2026-10-05",
+    "reason": "dead:404"
   }
 }

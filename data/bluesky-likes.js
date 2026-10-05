@@ -129,7 +129,6 @@ var SOURCES = [
   "https://video.bsky.app/watch/did%3Aplc%3Auvefipphiczr7fsfvidkvwjv/bafkreifcsvhaf4t6rltflj2iao2z5s3bvv4ngw2fzg2ie3mppr54okm2dm/playlist.m3u8",
   "https://video.bsky.app/watch/did%3Aplc%3Au2dhmjz7646c665jvzrl4znw/bafkreidwoowbunhgprcraof6wkiyuenjnpbxbn6j62mxvod5ttbmeziciu/playlist.m3u8",
   "https://video.bsky.app/watch/did%3Aplc%3Atdadfv3lrcwgyzygogyxne3c/bafkreig75klkkl2ru2ucw2edew6oa4k4obutp6khl4unwvwdq5mu3nohuy/playlist.m3u8",
-  "https://video.bsky.app/watch/did%3Aplc%3Aopsosud4y6zfhzjklmgprxhc/bafkreiefmz5p4aba67m5fvbvmsajpxx4ntivcdggr65tuzhs3eouv3y6ky/playlist.m3u8",
   "https://video.bsky.app/watch/did%3Aplc%3Afptusrfporiohbaxujz7uaa5/bafkreibobliop3tygifeufrk3c2fizb5mkduu6d2af3pvnygd4ih2tlnf4/playlist.m3u8",
   "https://video.bsky.app/watch/did%3Aplc%3Ae3tx2pwxsff3jxjn454b2ydp/bafkreiampmw5zkixigrnjlbfhm7tvjbobzcgziga6z4cqbkq2uocgn3xeu/playlist.m3u8",
   "https://video.bsky.app/watch/did%3Aplc%3Arzm7br4ynxey5sbynxbi4tzu/bafkreigm3rcayyvks4634b4onab6adns5336ogltkqg6uywzrznqwzrbyi/playlist.m3u8",
