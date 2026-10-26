@@ -1,28 +1,27 @@
-https://video.bsky.app/watch/did%3Aplc%3Av3pnwoonthpfzaxb2ka6e6pm/bafkreiasagukh5fq4fz5744o7ecprci4nnmh7vylrstbaiftakgui4ytpu/playlist.m3u8	spawn ffmpeg ENOENT
-https://n4.coomer.st/data/b3/7f/b37f86e09928e199b9a69a2c14b1147cc419ed20bbf933e2f3a0c2a0908356c4.mp4?f=0gr6nxyj4pafa4776n97e_source.mp4	spawn ffmpeg ENOENT
-https://n2.coomer.st/data/7a/4b/7a4be0acf265e42fde5a9be0ac2a942088836c95bf123c468d0272cf4b295c3d.mp4?f=0grior3h0x3o2av4m4s7a_source.mp4	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/2031533511769804800/pu/pl/INJuft3hkrfYmNsW.m3u8?variant_version=3&tag=12	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2035764863675572224/pl/y87QBfIGJKXxR4_w.m3u8?variant_version=3&tag=21	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047943320350121984/pl/7NX6HxoMFBn-VGuy.m3u8?tag=14&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1719460155819958272/pu/pl/fbSc98Pv2MEkZ-9z.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2047815252432338944/pl/8tz2Qf-Sn9flm2Pj.m3u8?tag=21&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1971723196467671040/pu/pl/pFfY9dhchYzss3E_.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2101024513743810560/pl/UsJS99KKr7w5ux3g.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1658345114664595457/pu/pl/s-7fVL_wDaoCu5Ay.m3u8?tag=12&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2104693788044320768/pl/YP3h7lYOHApkZ-8O.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2107094025081651201/pl/WwpCwrdgOY69638b.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2108925190566522880/pl/M8hWZM-ICyzCIsHe.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2095209467453534208/pl/eCqkUNxu_seIzk4V.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2075272599022792704/pl/-HeL1NJKGyfoDpN8.m3u8?tag=28&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2111645485312208896/pl/TulijA6_Rd4xsHgl.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2110229856848060416/pl/b3R5XVc6KyMYAyV8.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2110787666610376705/pl/fmxjeQvE3jWQB-3N.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2110430610158133248/pl/9pS2aPLGH4xhpKnj.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2106248286831292416/pl/iUUwj0PQL4JHJ-iv.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2112555346703343616/pl/AULL-F14gLDf8Pwv.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2112541937295142912/pl/wyLYA649iWe7e2HB.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2112482144371064832/pl/gygowVh8n0V4Q-Zs.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/ext_tw_video/1102454267867291649/pu/pl/6d90npm2XTt1SDL_.m3u8?tag=6&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2111280925266923520/pl/ciueGQEII1C_PPtK.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2110951830465171456/pl/FjhElEavnPu1-Oz-.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
-https://video.twimg.com/amplify_video/2112037963022393344/pl/VN6uHMotS13cU587.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
+https://video.twimg.com/ext_tw_video/2031533511769804800/pu/pl/INJuft3hkrfYmNsW.m3u8?variant_version=3&tag=12	empty output
+https://video.bsky.app/watch/did%3Aplc%3Av3pnwoonthpfzaxb2ka6e6pm/bafkreiasagukh5fq4fz5744o7ecprci4nnmh7vylrstbaiftakgui4ytpu/playlist.m3u8	empty output
+https://video.twimg.com/amplify_video/2035764863675572224/pl/y87QBfIGJKXxR4_w.m3u8?variant_version=3&tag=21	empty output
+https://video.twimg.com/amplify_video/2047943320350121984/pl/7NX6HxoMFBn-VGuy.m3u8?tag=14&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2047943320350121984%2Fpl%2F7NX6Hxo
+https://video.twimg.com/amplify_video/2047815252432338944/pl/8tz2Qf-Sn9flm2Pj.m3u8?tag=21&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2047815252432338944%2Fpl%2F8tz2Qf-
+https://video.twimg.com/ext_tw_video/1719460155819958272/pu/pl/fbSc98Pv2MEkZ-9z.m3u8?tag=12&variant_version=1	empty output
+https://video.twimg.com/ext_tw_video/1971723196467671040/pu/pl/pFfY9dhchYzss3E_.m3u8?tag=12&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Fext_tw_video%2F1971723196467671040%2Fpu%2Fpl%2FpFf
+https://video.twimg.com/amplify_video/2101024513743810560/pl/UsJS99KKr7w5ux3g.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2101024513743810560%2Fpl%2FUsJS99K
+https://video.twimg.com/amplify_video/2104693788044320768/pl/YP3h7lYOHApkZ-8O.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 4.8 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2104693788044320768%2Fpl%2FYP3h7lY
+https://video.twimg.com/ext_tw_video/1658345114664595457/pu/pl/s-7fVL_wDaoCu5Ay.m3u8?tag=12&variant_version=1	empty output
+https://video.twimg.com/amplify_video/2107094025081651201/pl/WwpCwrdgOY69638b.m3u8?tag=29&variant_version=1	empty output
+https://video.twimg.com/amplify_video/2108925190566522880/pl/M8hWZM-ICyzCIsHe.m3u8?tag=29&variant_version=1	empty output
+https://video.twimg.com/amplify_video/2095209467453534208/pl/eCqkUNxu_seIzk4V.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 11.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2095209467453534208%2Fpl%2FeCqkUN
+https://video.twimg.com/amplify_video/2075272599022792704/pl/-HeL1NJKGyfoDpN8.m3u8?tag=28&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 721.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2075272599022792704%2Fpl%2F-HeL1
+https://video.twimg.com/amplify_video/2111645485312208896/pl/TulijA6_Rd4xsHgl.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 27.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2111645485312208896%2Fpl%2FTulijA
+https://video.twimg.com/amplify_video/2110229856848060416/pl/b3R5XVc6KyMYAyV8.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 46.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2110229856848060416%2Fpl%2Fb3R5XV
+https://video.twimg.com/amplify_video/2110787666610376705/pl/fmxjeQvE3jWQB-3N.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2110787666610376705%2Fpl%2FfmxjeQv
+https://video.twimg.com/amplify_video/2106248286831292416/pl/iUUwj0PQL4JHJ-iv.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2106248286831292416%2Fpl%2FiUUwj0P
+https://video.twimg.com/amplify_video/2110430610158133248/pl/9pS2aPLGH4xhpKnj.m3u8?tag=29&variant_version=1	empty output
+https://video.twimg.com/amplify_video/2112541937295142912/pl/wyLYA649iWe7e2HB.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2112541937295142912%2Fpl%2FwyLYA64
+https://video.twimg.com/amplify_video/2112555346703343616/pl/AULL-F14gLDf8Pwv.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2112555346703343616%2Fpl%2FAULL-F1
+https://video.twimg.com/ext_tw_video/1102454267867291649/pu/pl/6d90npm2XTt1SDL_.m3u8?tag=6&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Fext_tw_video%2F1102454267867291649%2Fpu%2Fpl%2F6d9
+https://video.twimg.com/amplify_video/2111280925266923520/pl/ciueGQEII1C_PPtK.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2111280925266923520%2Fpl%2FciueGQE
+https://video.twimg.com/amplify_video/2110951830465171456/pl/FjhElEavnPu1-Oz-.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2110951830465171456%2Fpl%2FFjhElEa
+https://video.twimg.com/amplify_video/2112037963022393344/pl/VN6uHMotS13cU587.m3u8?tag=29&variant_version=1	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fvideo.twimg.com%2Famplify_video%2F2112037963022393344%2Fpl%2FVN6uHMo
+https://n4.coomer.st/data/b3/7f/b37f86e09928e199b9a69a2c14b1147cc419ed20bbf933e2f3a0c2a0908356c4.mp4?f=0gr6nxyj4pafa4776n97e_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn4.coomer.st%2Fdata%2Fb3%2F7f%2Fb37f86e09928e199b9a69a2c14b1147cc419
+https://n2.coomer.st/data/7a/4b/7a4be0acf265e42fde5a9be0ac2a942088836c95bf123c468d0272cf4b295c3d.mp4?f=0grior3h0x3o2av4m4s7a_source.mp4	Command failed: ffmpeg -hide_banner -loglevel error -y -ss 1.3 -i https://young-truth-052a.kiluconsta.workers.dev?url=https%3A%2F%2Fn2.coomer.st%2Fdata%2F7a%2F4b%2F7a4be0acf265e42fde5a9be0ac2a94208883

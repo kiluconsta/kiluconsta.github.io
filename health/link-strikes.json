@@ -1,142 +1,37 @@
 {
-  "https://video.bsky.app/watch/did%3Aplc%3A3djoqvqmlv62ypemq6l5nkaw/bafkreid37igi457tu2muttdlr2v3oalhrkignp75sl3bwfzajul2q3u6um/playlist.m3u8": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.bsky.app/watch/did%3Aplc%3A3djoqvqmlv62ypemq6l5nkaw/bafkreiaozmvcuygffeul5ufffymh4hdoaue6tgn7asokkdipn3lo4hzanm/playlist.m3u8": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.bsky.app/watch/did%3Aplc%3A3djoqvqmlv62ypemq6l5nkaw/bafkreieif266wcvux2o7c4rxj4ijvowi3osni46ln6ognrnqj7bqiozrwm/playlist.m3u8": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.bsky.app/watch/did%3Aplc%3A3djoqvqmlv62ypemq6l5nkaw/bafkreid3iuk5f4xzpodrar3ond4vqqwmv7lgjafdpty2flyritbzrvjwwa/playlist.m3u8": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.bsky.app/watch/did%3Aplc%3A3djoqvqmlv62ypemq6l5nkaw/bafkreigxe5rnwxhstxf7nejn26rncm3cb7pq4uyoayj4ebjrqhfergey4m/playlist.m3u8": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.bsky.app/watch/did%3Aplc%3A3djoqvqmlv62ypemq6l5nkaw/bafkreiaual2zibawsy6vftixla6wqz7hg5holvrvxdfgulb6y3jjwdzdce/playlist.m3u8": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.bsky.app/watch/did%3Aplc%3A3djoqvqmlv62ypemq6l5nkaw/bafkreibpm7zgyqxst5ikn4s4jvsk6mhnrwstghbzyytkssmj4hwyuhoj2e/playlist.m3u8": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/ext_tw_video/1695863445395030016/pu/vid/720x720/sqLL9aFNcZs_JHCo.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/ext_tw_video/1761371042877001729/pu/vid/avc1/1280x720/GxTUe7cOIZ-2C9Cq.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video-t-2.twimg.com/ext_tw_video/1701611883856572416/pu/vid/avc1/720x1280/GpD6ofsT80FgV7wK.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video-t-1.twimg.com/ext_tw_video/1729952927454806016/pu/vid/avc1/720x1280/BxKFhxbVhUbjJ4UB.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video-t-1.twimg.com/ext_tw_video/1729954558191800320/pu/vid/avc1/1280x720/faSuydUZOdCHLIdJ.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/ext_tw_video/1686143326582419457/pu/vid/480x852/f9tPvzvzYNizdS8i.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/ext_tw_video/1681096495620136961/pu/vid/720x1280/aRq9xkDsW45_RHY_.mp4?tag=12": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/ext_tw_video/1695863445395030016/pu/vid/720x720/sqLL9aFNcZs_JHCo.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/ext_tw_video/1761371042877001729/pu/vid/avc1/1280x720/GxTUe7cOIZ-2C9Cq.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video-t-2.twimg.com/ext_tw_video/1701611883856572416/pu/vid/avc1/720x1280/GpD6ofsT80FgV7wK.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video-t-1.twimg.com/ext_tw_video/1729952927454806016/pu/vid/avc1/720x1280/BxKFhxbVhUbjJ4UB.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video-t-1.twimg.com/ext_tw_video/1729954558191800320/pu/vid/avc1/1280x720/faSuydUZOdCHLIdJ.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video-s.twimg.com/amplify_video/1930268667238817792/vid/avc1/720x1280/RFDaHqJRVdu9ZNDH.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video-s.twimg.com/ext_tw_video/1891132794924883968/pu/vid/avc1/720x1138/ztXaS6Z3EyNCO2YG.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:403"
-  },
-  "https://video.twimg.com/ext_tw_video/1504472344680534022/pu/vid/720x1280/lcZ-nFcq2vpPvcB0.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/amplify_video/1786950926453882880/vid/avc1/720x1280/jHkazwglWMqalVV3.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/amplify_video/1778088752117633024/vid/avc1/720x1280/ou334YnGx-q0r9DY.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/amplify_video/1986596091307933696/vid/avc1/1080x1920/VmueIpG-9y3xhPZD.mp4": {
-    "count": 2,
-    "last": "2026-10-19",
-    "reason": "dead:404"
-  },
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:3djoqvqmlv62ypemq6l5nkaw/bafkreigbn6gvxxtn2kjgjrpyyu6irmzsovauewtdzf3uwrva7sopcvhez4": {
-    "count": 1,
-    "last": "2026-10-19",
+    "count": 2,
+    "last": "2026-10-26",
     "reason": "dead:404"
   },
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:3djoqvqmlv62ypemq6l5nkaw/bafkreifvhr42dhs5bxexcwrv5ehvsnw5gqfu7olxjxe4kip5nzguooqqry": {
-    "count": 1,
-    "last": "2026-10-19",
+    "count": 2,
+    "last": "2026-10-26",
     "reason": "dead:404"
   },
   "https://video.twimg.com/amplify_video/1671299336087670784/vid/1280x720/nQIih6AvzPysk3aA.mp4": {
+    "count": 2,
+    "last": "2026-10-26",
+    "reason": "dead:404"
+  },
+  "https://media.redgifs.com/ShoddyGruesomeBluet.mp4": {
     "count": 1,
-    "last": "2026-10-19",
+    "last": "2026-10-26",
+    "reason": "dead:404"
+  },
+  "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pvatfelmeu3tkpq72dnhkdkh/bafkreia5zzlekf2sm652advjlosbspeyawxu22kluz4gxhtz5uasmvt6ce": {
+    "count": 1,
+    "last": "2026-10-26",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/ext_tw_video/1936219409665658880/pu/pl/SXkyPvlYE6cQhIjN.m3u8?tag=12&variant_version=1": {
+    "count": 1,
+    "last": "2026-10-26",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/amplify_video/2106515677955899392/pl/tYjZZQbXy5kOTvG2.m3u8?tag=29&variant_version=1": {
+    "count": 1,
+    "last": "2026-10-26",
     "reason": "dead:404"
   }
 }
