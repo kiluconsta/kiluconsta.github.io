@@ -7,12 +7,10 @@
 //   Keep the trailing comma on every line. Order here = order on the page.
 // ═══════════════════════════════════════════════════════════════
 var IMGS = [
-  "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:3djoqvqmlv62ypemq6l5nkaw/bafkreigbn6gvxxtn2kjgjrpyyu6irmzsovauewtdzf3uwrva7sopcvhez4",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pd6lhsozytmjjfovivwk3qct/bafkreiereqxwxor7uhoarb67jxuuw2osydhvb54yndtny4so4isms6ursy",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pd6lhsozytmjjfovivwk3qct/bafkreihwxvm2a3b6r35zp2qkmp2qzmokfahk4x4jdlriryth3oudjgmrt4",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:xb7rhqx72kk5rg4pofg6wvl6/bafkreihr5hmtk7ye6b2h2otbgskkag577oz3pqthn7uyjxty27tybe6ii4",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:xb7rhqx72kk5rg4pofg6wvl6/bafkreibkumqj63iv345ypo34rih6lrkzzoticulrj7tjf6q2l2ot227wqi",
-  "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:3djoqvqmlv62ypemq6l5nkaw/bafkreifvhr42dhs5bxexcwrv5ehvsnw5gqfu7olxjxe4kip5nzguooqqry",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2vbpb5n2hmwnypbynworof5c/bafkreif3e6coykeqq7ywdt75aojwxdyiicnf74tyiq6fxkz7o246gn5she",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:4se4bc4jbz6j7udp2u5vajp4/bafkreifztzrvunmg2galvmsxsbe4quqheb65nymvuptxe7f4dhuxb4ks5a",
   "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:mpc6c7r2t2iw6m63qevbyva2/bafkreibphomemmladps74oy66mto4f7xcynqlz3aiz7nhwg22cylv7dcrq",
