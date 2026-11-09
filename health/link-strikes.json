@@ -1,37 +1,42 @@
 {
-  "https://media.redgifs.com/ShoddyGruesomeBluet.mp4": {
-    "count": 2,
-    "last": "2026-11-02",
-    "reason": "dead:403"
-  },
-  "https://video.twimg.com/ext_tw_video/1936219409665658880/pu/pl/SXkyPvlYE6cQhIjN.m3u8?tag=12&variant_version=1": {
-    "count": 2,
-    "last": "2026-11-02",
-    "reason": "dead:404"
-  },
-  "https://video.twimg.com/amplify_video/2106515677955899392/pl/tYjZZQbXy5kOTvG2.m3u8?tag=29&variant_version=1": {
-    "count": 2,
-    "last": "2026-11-02",
-    "reason": "dead:404"
-  },
   "https://video.twimg.com/amplify_video/1740436106066251776/vid/avc1/320x568/OZopQCsmVtShKQVZ.mp4": {
-    "count": 1,
-    "last": "2026-11-02",
+    "count": 2,
+    "last": "2026-11-09",
     "reason": "dead:403"
-  },
-  "https://video-s.twimg.com/amplify_video/1900417551269580800/vid/avc1/720x1280/-x6uXIltYhQNoykl.mp4?tag=14": {
-    "count": 1,
-    "last": "2026-11-02",
-    "reason": "dead:404"
   },
   "https://video-s.twimg.com/amplify_video/1959606104540733440/vid/avc1/1080x1920/223a6L9P4yVv5nnG.mp4": {
-    "count": 1,
-    "last": "2026-11-02",
+    "count": 2,
+    "last": "2026-11-09",
     "reason": "dead:404"
   },
   "https://video-s.twimg.com/amplify_video/1798734660824162304/vid/avc1/720x1280/_qgnutXujudTFaxX.mp4": {
+    "count": 2,
+    "last": "2026-11-09",
+    "reason": "dead:404"
+  },
+  "https://video.bsky.app/watch/did%3Aplc%3Aopsosud4y6zfhzjklmgprxhc/bafkreigmcekinvfxew5qwf5b57rh22dnv2rgeuijikcqwd3zbzuvcxd354/playlist.m3u8": {
     "count": 1,
-    "last": "2026-11-02",
+    "last": "2026-11-09",
+    "reason": "dead:404"
+  },
+  "https://video.bsky.app/watch/did%3Aplc%3Aopsosud4y6zfhzjklmgprxhc/bafkreiahmk22rea5nwiz3gixk63lfngq4yk7tzo7ujmdxoou4a2av5cgla/playlist.m3u8": {
+    "count": 1,
+    "last": "2026-11-09",
+    "reason": "dead:404"
+  },
+  "https://video-s.twimg.com/amplify_video/1674856078478114816/vid/720x1280/T7qYt6vqPVNtfnMi.mp4": {
+    "count": 1,
+    "last": "2026-11-09",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/amplify_video/1928824737511219200/vid/avc1/720x1280/G6nLrhT237VYac8m.mp4": {
+    "count": 1,
+    "last": "2026-11-09",
+    "reason": "dead:404"
+  },
+  "https://video.twimg.com/ext_tw_video/1907774082562641920/pu/vid/avc1/720x1280/zSXWMeANkVt3ekK5.mp4": {
+    "count": 1,
+    "last": "2026-11-09",
     "reason": "dead:404"
   }
 }

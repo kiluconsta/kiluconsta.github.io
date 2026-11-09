@@ -622,7 +622,6 @@ var SOURCES = [
   "https://media.redgifs.com/CraftyLightpinkSablefish.mp4",
   "https://media.redgifs.com/PaltryLikelyHorsemouse.mp4",
   "https://media.redgifs.com/FearlessUntidyGermanshepherd.mp4",
-  "https://media.redgifs.com/ShoddyGruesomeBluet.mp4",
   null,
   "https://video.twimg.com/amplify_video/1914475571884777472/vid/avc1/1080x1920/NcL6VR_Mb_nyI0qb.mp4",
   "https://video.twimg.com/amplify_video/1913403329390288897/vid/avc1/720x1280/xmmZazvqVkYurVvW.mp4",
