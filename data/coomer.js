@@ -8,7 +8,7 @@
 //   • Remove a video: delete its line.
 //   Keep the trailing comma on every line. Order here = order on the page.
 // ═══════════════════════════════════════════════════════════════
-var DIV_LABELS = ["① Coomer Tings", "More Quick 🥜", "G0Q", "🍆✊🏾🥜🎥", "🍆💦"];
+var DIV_LABELS = ["① Coomer Tings", "More Quick 🥜", "G0Q", "🍆✊🏾🥜🎥", "🍆💦", "LPSG"];
 
 var SOURCES = [
   null,
@@ -284,4 +284,5 @@ var SOURCES = [
   "https://video.twimg.com/ext_tw_video/2123476463718391808/pr/pl/nDvC99U4yaINUKIH.m3u8?tag=12&variant_version=1",
   "https://video.twimg.com/ext_tw_video/2123476462237872128/pr/pl/d0NsNWhX3QvSeff5.m3u8?tag=12&variant_version=1",
   "https://video.twimg.com/ext_tw_video/2123476461621256192/pr/pl/FF6TMO4x451FNOAw.m3u8?tag=12&variant_version=1",
+  null,
 ];
