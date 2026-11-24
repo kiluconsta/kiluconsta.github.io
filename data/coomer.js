@@ -286,4 +286,5 @@ var SOURCES = [
   "https://video.twimg.com/ext_tw_video/2123476461621256192/pr/pl/FF6TMO4x451FNOAw.m3u8?tag=12&variant_version=1",
   null,
   { url: "https://cdn-videos.lpsg.com/data/video/72694/72694871-e0d09dc36d37ac424c71910e821bab6d.mp4", start: 40 },
+  "https://cdn-videos.lpsg.com/data/video/71194/71194191-fd5e9e2ac18a9d23dde104b2fb59d0e3.mp4",
 ];
