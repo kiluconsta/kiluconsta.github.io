@@ -31,6 +31,7 @@ https://video.twimg.com/amplify_video/2123145170934005760/vid/avc1/0/0/720x1234/
 https://video.twimg.com/amplify_video/2125284572833394688/pl/pVS2HLRKXZrP9Klw.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2125265868959649792/pl/tklB0nmMK9E1Qr2S.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2125298366905266176/pl/4s9jYXdHcsxEWMTi.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
+https://video.twimg.com/amplify_video/2125669534698749952/pl/EMw_dcMiX9dQ7rNP.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2124738624025497600/pl/VKQtgesEANa8SZ3I.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/ext_tw_video/1886533925922566144/pu/pl/eQjFmFX2mD26Qndp.m3u8?tag=14&variant_version=1	spawn ffmpeg ENOENT
 https://video.twimg.com/amplify_video/2103145595011465218/pl/Pm3w3mmbiHi-F5-h.m3u8?tag=29&variant_version=1	spawn ffmpeg ENOENT
